@@ -277,8 +277,17 @@
             transition: all 0.3s ease;
             font-family: 'DM Sans', sans-serif;
         }
-        .search-input:focus { background: white; box-shadow: 0 8px 30px rgba(0,0,0,0.15); transform: scale(1.02); }
+        .search-input:hover { background: rgba(211, 203, 203, 0.95); }
+        .search-input:focus { background: white; box-shadow: 0 8px 30px rgba(0,0,0,0.15); transform: scale(1.01); }
         .search-input::placeholder { color: #aaa; }
+
+        /* When hiding sections during search, keep their layout space to avoid shifts */
+        .search-hidden {
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transition: opacity 0.18s ease;
+        }
 
         /* Suggestions */
         .suggestions {
@@ -305,10 +314,20 @@
             transition: background 0.15s;
             transition: all 0.15s ease;
         }
-        .suggestion-item:hover, .suggestion-item.active { background: #cbcdd3; }
+        .suggestion-item:hover, .suggestion-item.active { background: #cbcdd3; transform: scale(1.02);}
         .suggestion-item svg { width: 14px; height: 14px; stroke: #999; fill: none; opacity: 0.7; }
+        .suggestion-item:hover svg { stroke: #555; opacity: 1; }
         .suggestion-item.active svg { stroke: #a09d9d; opacity: 1; }
-        .suggestion-item.active { color: #807e7e; font-weight: 500; }
+        .suggestion-item.active { color: #807e7e; font-weight: 500;}
+        .suggestions::before {
+            content: '';
+            position: absolute;
+            top: -6px; left: 20px;
+            width: 12px; height: 12px;
+            background: white;
+            transform: rotate(45deg);
+            box-shadow: -2px -2px 5px rgba(0,0,0,0.1);
+        }
 
         /* Shortcuts */
         .shortcuts-section {}
@@ -563,6 +582,7 @@
         <div class="sidebar-section">
             <div class="sidebar-section-title">Profil</div>
             <button class="sidebar-btn" onclick="openNameModal()">Changer le prénom</button>
+            <button class="sidebar-btn" onclick="window.open('https://github.com/Devlaubin')">Soutenir Devlaubin</button>
         </div>
         <div class="sidebar-section">
             <div class="sidebar-section-title">Recherche</div>
@@ -731,7 +751,7 @@ const themes = [
 const engines = [
     { id: 'google', name: 'Google', icon: 'https://www.google.com/favicon.ico', url: 'https://www.google.com/search?q=' },
     { id: 'bing', name: 'Bing', icon: 'https://www.bing.com/favicon.ico', url: 'https://www.bing.com/search?q=' },
-    { id: 'duckduckgo', name: 'DuckGo', icon: 'https://duckduckgo.com/favicon.ico', url: 'https://duckduckgo.com/?q=' },
+    { id: 'duckduckgo', name: 'Duck', icon: 'https://duckduckgo.com/favicon.ico', url: 'https://duckduckgo.com/?q=' },
     { id: 'brave', name: 'Brave', icon: 'https://brave.com/favicon.ico', url: 'https://search.brave.com/search?q=' },
     { id: 'qwant', name: 'Qwant', icon: 'images/qwant_logo_icon_170813.png', url: 'https://www.qwant.com/?q=' },
 ];
@@ -740,8 +760,13 @@ const engines = [
 const defaultShortcuts = [
     { name: 'YouTube', url: 'https://youtube.com', icon: 'https://www.youtube.com/favicon.ico' },
     { name: 'GitHub', url: 'https://github.com/Devlaubin', icon: 'https://github.com/favicon.ico' },
-    { name: 'Gmail', url: 'https://mail.google.com', icon: 'https://mail.google.com/favicon.ico' },
+    { name: 'Gmail', url: 'https://mail.google.com', icon: 'https://www.google.com/favicon.ico' },
     { name: 'Netflix', url: 'https://netflix.com', icon: 'https://www.netflix.com/favicon.ico' },
+    { name: 'Twitter', url: 'https://twitter.com', icon: 'https://twitter.com/favicon.ico' },
+    { name: 'Reddit', url: 'https://reddit.com', icon: 'https://www.reddit.com/favicon.ico' },
+    { name: 'LinkedIn', url: 'https://linkedin.com', icon: 'https://www.linkedin.com/favicon.ico' },
+    { name: 'Amazon', url: 'https://amazon.com', icon: 'https://www.amazon.com/favicon.ico' },
+    { name: 'Spotify', url: 'https://spotify.com', icon: 'https://www.spotify.com/favicon.ico' },
 ];
 
 // ===================== STATE =====================
@@ -919,14 +944,23 @@ function initSearch() {
         _searchToggleIds.forEach(id => {
             const el = document.getElementById(id);
             if (!el) return;
+            const cs = window.getComputedStyle(el);
             if (active) {
-                if (el.dataset.savedDisplay === undefined) el.dataset.savedDisplay = el.style.display || '';
-                el.style.display = 'none';
+                // only visually hide if currently rendered (display != 'none')
+                if (cs.display !== 'none') {
+                    if (el.dataset.savedVisibility === undefined) el.dataset.savedVisibility = 'visible';
+                    el.classList.add('search-hidden');
+                }
             } else {
+                // restore only those we visually hid
+                if (el.dataset.savedVisibility !== undefined) {
+                    el.classList.remove('search-hidden');
+                    delete el.dataset.savedVisibility;
+                }
+                // ensure permanent user toggles are respected
                 if (id === 'weatherSection') el.style.display = showWeather ? '' : 'none';
                 if (id === 'shortcutsSection') el.style.display = showShortcuts ? '' : 'none';
                 if (id === 'notesSection') el.style.display = showNotes ? '' : 'none';
-                delete el.dataset.savedDisplay;
             }
         });
     }
