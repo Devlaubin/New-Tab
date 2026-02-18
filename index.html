@@ -1,37 +1,88 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New tab</title>
+    <title>New Tab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
     <link rel="icon" href="images/search.png" type="image/png">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg: linear-gradient(135deg, #888a96 0%, #71a5cf 100%);
+            --glass: rgba(255,255,255,0.14);
+            --glass-border: rgba(255,255,255,0.25);
+            --text: #ffffff;
+            --text-sub: rgba(255,255,255,0.75);
+            --accent: #ffffff;
+            --radius: 18px;
+            --sidebar-bg: rgba(255,255,255,0.97);
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #888a96 0%, #71a5cf 100%);
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            color: white;
+            color: var(--text);
             overflow-x: hidden;
+            transition: background 0.6s ease;
         }
 
+        /* Animated background particles */
+        .bg-particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            animation: float linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Main container */
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 780px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
 
-        /* Menu burger */
+        /* Fade-in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(16px);
+            animation: fadeUp 0.5s ease forwards;
+        }
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in:nth-child(1) { animation-delay: 0.05s; }
+        .fade-in:nth-child(2) { animation-delay: 0.15s; }
+        .fade-in:nth-child(3) { animation-delay: 0.25s; }
+        .fade-in:nth-child(4) { animation-delay: 0.35s; }
+        .fade-in:nth-child(5) { animation-delay: 0.45s; }
+
+       /* Menu burger */
         .menu-toggle {
             position: fixed;
             top: 20px;
@@ -69,558 +120,1088 @@
             stroke-linejoin: round;
         }
 
-        /* Menu latéral */
+        /* Sidebar */
+        .overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0; visibility: hidden;
+            transition: all 0.3s;
+        }
+        .overlay.active { opacity: 1; visibility: visible; }
+
         .sidebar {
             position: fixed;
-            top: 50px;
-            left: -350px;
-            width: 350px;
-            height: 80vh;
-            background: rgba(255, 255, 255, 0.98);
+            top: 0; left: -340px;
+            width: 320px;
+            height: 100vh;
+            background: var(--sidebar-bg);
             backdrop-filter: blur(20px);
-            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 4px 0 30px rgba(0,0,0,0.15);
             z-index: 1000;
-            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: left 0.4s cubic-bezier(0.4,0,0.2,1);
             overflow-y: auto;
-            border-radius: 0px 30px 30px 0px;
+            display: flex;
+            flex-direction: column;
         }
-
-        .sidebar.active {
-            left: 0;
-        }
+        .sidebar.active { left: 0; }
 
         .sidebar-header {
-            padding: 30px;
-            background-color: #71a5cf;
+            padding: 28px 24px 22px;
+            background: linear-gradient(135deg, #888a96, #71a5cf);
             color: white;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
+        .sidebar-header svg { width: 28px; height: 28px; stroke: white; fill: none; stroke-width: 1.8; }
+        .sidebar-title { font-size: 20px; font-weight: 500; }
 
-        .sidebar-icon {
-            width: 40px;
-            height: 40px;
-        }
+        .sidebar-body { padding: 20px; flex: 1; color: #222; }
 
-        .sidebar-title {
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .sidebar-content {
-            padding: 20px;
-            color: #333;
-        }
-
-        .sidebar-section {
-            margin-bottom: 30px;
-        }
-
+        .sidebar-section { margin-bottom: 28px; }
         .sidebar-section-title {
-            font-size: 14px;
+            font-size: 11px;
             font-weight: 600;
-            color: #333;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-        }
-
-        .sidebar-item {
-            padding: 15px;
-            background: #f5f5f5;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .sidebar-item:hover {
-            background: #e8e8e8;
-            transform: translateX(5px);
-        }
-
-        .sidebar-item-icon {
-            font-size: 20px;
-        }
-
-        .sidebar-item-text {
-            flex: 1;
-            font-weight: 500;
-        }
-
-        .color-picker-container {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .color-option {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 3px solid transparent;
-            transition: all 0.3s;
-            border-color: #ffffff;
-        }
-
-        .color-option:hover {
-            transform: scale(1.1);
-            border-color: #333;
-        }
-
-        .color-option.active {
-            border-color: #000000;
-            box-shadow: 0 0 0 2px white, 0 0 0 4px #ffffff;
-        }
-
-        /* Overlay */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(3px);
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-        }
-
-        .overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .time-section {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .time {
-            font-size: 72px;
-            font-weight: 200;
-            letter-spacing: -2px;
-            margin-bottom: 10px;
-        }
-
-        .date {
-            font-size: 20px;
-            opacity: 0.9;
-        }
-
-        .search-section {
-            margin-bottom: 40px;
-        }
-
-        .search-box {
-            position: relative;
-            width: 100%;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 18px 24px;
-            font-size: 16px;
-            border: none;
-            border-radius: 50px;
-            background: rgba(255, 255, 255, 0.95);
-            color: #333;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            background: white;
-            transform: scale(1.05);
-        }
-
-        .search-input::placeholder {
             color: #999;
-        }
-        
-        .weather-section {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 20px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .weather-info {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .weather-temp {
-            font-size: 36px;
-            font-weight: 300;
-        }
-
-        .weather-desc {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-            z-index: 1002;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 32px;
-            width: 90%;
-            max-width: 400px;
-            color: #333;
-        }
-
-        .modal-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 24px;
-            color: #000000;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: #667eea;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #5568d3;
-        }
-
-        .btn-secondary {
-            background: #e0e0e0;
-            color: #555;
-        }
-
-        .btn-secondary:hover {
-            background: #d0d0d0;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 26px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked+.slider {
-            background-color: #71a5cf;
-        }
-
-        input:checked+.slider:before {
-            transform: translateX(24px);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
         }
 
         .setting-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
+            padding: 13px 16px;
             background: #f5f5f5;
             border-radius: 12px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+        .setting-row span { display: flex; align-items: center; gap: 8px; }
+
+        .sidebar-btn {
+            width: 100%;
+            padding: 13px 16px;
+            background: #f5f5f5;
+            border: 1px solid #e8e8e8;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+        .sidebar-btn:hover { background: #eaeaea; transform: translateX(3px); }
+
+        /* Toggle switch */
+        .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; inset: 0;
+            background: #ccc; border-radius: 34px; transition: .3s;
+        }
+        .slider:before {
+            content: ""; position: absolute;
+            height: 16px; width: 16px; left: 4px; bottom: 4px;
+            background: white; border-radius: 50%; transition: .3s;
+        }
+        input:checked + .slider { background: #71a5cf; }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* Greeting */
+        .greeting-section { text-align: center; }
+        .greeting-name {
+            font-family: 'DM Serif Display', serif;
+            font-size: 18px;
+            font-weight: 400;
+            opacity: 0.85;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+        .time {
+            font-family: 'DM Serif Display', serif;
+            font-size: 86px;
+            font-weight: 400;
+            letter-spacing: -3px;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .date {
+            font-size: 16px;
+            opacity: 0.8;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        /* Search */
+        .search-section { position: relative; }
+        .search-box { position: relative; }
+        .search-engine-btn {
+            position: absolute;
+            left: 16px; top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.08);
+            border: none;
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+            cursor: pointer;
+            z-index: 2;
+            transition: all 0.2s;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .search-engine-btn:hover { background: rgba(0,0,0,0.14); }
+        .search-engine-btn img { width: 14px; height: 14px; border-radius: 2px; }
+
+        .search-input {
+            width: 100%;
+            padding: 17px 24px 17px 105px;
+            font-size: 16px;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255,255,255,0.93);
+            color: #333;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .search-input:focus { background: white; box-shadow: 0 8px 30px rgba(0,0,0,0.15); transform: scale(1.02); }
+        .search-input::placeholder { color: #aaa; }
+
+        /* Suggestions */
+        .suggestions {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0; right: 0;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            z-index: 100;
+            display: none;
+            transition: all 0.15s ease;
+        }
+        .suggestions.visible { display: block; }
+        .suggestion-item {
+            padding: 12px 20px;
+            color: #333;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.15s;
+            transition: all 0.15s ease;
+        }
+        .suggestion-item:hover, .suggestion-item.active { background: #cbcdd3; }
+        .suggestion-item svg { width: 14px; height: 14px; stroke: #999; fill: none; opacity: 0.7; }
+        .suggestion-item.active svg { stroke: #a09d9d; opacity: 1; }
+        .suggestion-item.active { color: #807e7e; font-weight: 500; }
+
+        /* Shortcuts */
+        .shortcuts-section {}
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 12px;
+        }
+        .shortcut {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 8px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.25s;
+            text-decoration: none;
+            color: white;
+            position: relative;
+        }
+        .shortcut:hover { background: rgba(255,255,255,0.25); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .shortcut-icon {
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            background: white;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        .shortcut-icon img { width: 24px; height: 24px; }
+        .shortcut-label { font-size: 12px; font-weight: 500; text-align: center; opacity: 0.92; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .shortcut-delete {
+            position: absolute; top: 4px; right: 4px;
+            width: 18px; height: 18px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 50%;
+            display: none;
+            align-items: center; justify-content: center;
+            font-size: 10px; color: white;
+            cursor: pointer;
+            border: none;
+        }
+        .shortcut:hover .shortcut-delete { display: flex; }
+        .shortcut-delete:hover { background: rgba(0,0,0,0.7); transform: scale(1.05);}
+        .shortcut-add {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 8px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1.5px dashed var(--glass-border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.25s;
+            color: rgba(255,255,255,0.7);
+        }
+        .shortcut-add:hover { background: rgba(255,255,255,0.2); color: white; }
+        .shortcut-add-icon { width: 38px; height: 38px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 300; }
+        .shortcut-add-label { font-size: 12px; }
+        .shortcut-add-icon img { width: 22px; height: 22px; }
+        .shortcut-delete img { width: 12px; height: 12px; }
+
+        /* Weather */
+        .weather-section {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 18px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .weather-left { display: flex; align-items: center; gap: 14px; }
+        .weather-icon-big { font-size: 40px; line-height: 1; }
+        .weather-temp { font-size: 34px; font-weight: 300; }
+        .weather-desc { font-size: 14px; opacity: 0.8; margin-top: 2px; }
+        .weather-city { font-size: 12px; opacity: 0.6; display: flex; align-items: center; gap: 4px; }
+        .weather-forecast { display: flex; gap: 10px; }
+        .forecast-day {
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+        .forecast-day-name { opacity: 0.7; margin-bottom: 4px; }
+        .forecast-icon { font-size: 18px; margin-bottom: 2px; }
+        .forecast-temp { font-weight: 500; }
+
+        /* Notes */
+        .notes-section {}
+        .notes-area {
+            width: 100%;
+            min-height: 70px;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            color: white;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            transition: all 0.25s;
+            line-height: 1.6;
+        }
+        .notes-area::placeholder { color: rgba(255,255,255,0.45); }
+        .notes-area:focus { background: rgba(255,255,255,0.2); min-height: 100px; }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: white;
+            border-radius: 22px;
+            padding: 28px;
+            width: 90%;
+            max-width: 420px;
+            color: #333;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            animation: modalIn 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.92) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .modal-title { font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #111; }
+
+        .color-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+        .color-swatch {
+            width: 52px; height: 52px;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .color-swatch:hover { transform: scale(1.1); border-color: rgba(0,0,0,0.3); }
+        .color-swatch.active::after {
+            content: '✓';
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: white; font-weight: 700;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        }
+        .color-swatch.active { border-color: #333; }
+
+        .modal-input {
+            width: 100%; padding: 12px 16px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            outline: none;
+            transition: border 0.2s;
             margin-bottom: 10px;
+        }
+        .modal-input:focus { border-color: #71a5cf; }
+
+        .modal-btns { display: flex; gap: 10px; margin-top: 18px; }
+        .btn {
+            flex: 1; padding: 12px;
+            border: none; border-radius: 10px;
+            font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .btn-primary { background: #71a5cf; color: white; }
+        .btn-primary:hover { background: #5990c0; }
+        .btn-secondary { background: #f0f0f0; color: #555; }
+        .btn-secondary:hover { background: #e4e4e4; }
+
+        /* Name modal */
+        .name-label { font-size: 13px; color: #666; margin-bottom: 6px; }
+
+        /* Engine selector in modal */
+        .engine-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+        .engine-option {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1.5px solid #e0e0e0;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex; align-items: center; gap: 6px;
+            transition: all 0.2s;
+            background: white;
+        }
+        .engine-option:hover { border-color: #71a5cf; }
+        .engine-option.active { border-color: #71a5cf; background: #eef5fb; color: #2d78a8; }
+        .engine-option img { width: 16px; height: 16px; }
+
+        /* Section labels */
+        .section-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            opacity: 0.6;
+            margin-bottom: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .time { font-size: 64px; }
+            .weather-forecast { display: none; }
+            .shortcuts-grid { grid-template-columns: repeat(4, 1fr); }
         }
     </style>
 </head>
-
 <body>
-    <!-- Menu Toggle Button -->
-    <div class="menu-toggle" id="menuToggle">
-        <svg viewBox="0 0 24 24">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
+
+<!-- Background particles -->
+<div class="bg-particles" id="bgParticles"></div>
+
+<!-- Menu Toggle Button -->
+<div class="menu-toggle" id="menuToggle">
+    <svg viewBox="0 0 24 24">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar" aria-label="Paramètres">
+    <div class="sidebar-header">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span class="sidebar-title">Paramètres</span>
     </div>
-
-    <!-- Overlay -->
-    <div class="overlay" id="overlay"></div>
-
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-            </svg>
-            <div class="sidebar-title">Paramètres</div>
+    <div class="sidebar-body">
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Apparence</div>
+            <button class="sidebar-btn" onclick="openThemeModal()">Changer le thème</button>
         </div>
-
-        <div class="sidebar-content">
-            <div class="sidebar-section">
-                <div class="sidebar-section-title">Apparence</div>
-                <div class="sidebar-item" onclick="openColorPicker()">
-                    <div class="sidebar-item-text">Changer le thème</div>
-                </div>
-                <div class="setting-row">
-                    <span>Afficher l'heure</span>
-                    <label class="switch">
-                        <input type="checkbox" id="toggleTime" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="setting-row">
-                    <span>Afficher la météo</span>
-                    <label class="switch">
-                        <input type="checkbox" id="toggleWeather" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Profil</div>
+            <button class="sidebar-btn" onclick="openNameModal()">Changer le prénom</button>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Recherche</div>
+            <button class="sidebar-btn" onclick="openEngineModal()">Moteur de recherche</button>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Affichage</div>
+            <div class="setting-row">
+                <span>Afficher l'heure</span>
+                <label class="switch">
+                    <input type="checkbox" id="toggleTime" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="time-section" id="timeSection">
-            <div class="time" id="time">12:00</div>
-            <div class="date" id="date">Lundi 1er janvier 2024</div>
-        </div>
-
-        <div class="search-section">
-            <div class="search-box">
-                <input type="text" class="search-input" id="searchInput"
-                    placeholder="Rechercher sur Google ou entrer une URL..." autocomplete="off">
+            <div class="setting-row">
+                <span>Afficher la météo</span>
+                <label class="switch">
+                    <input type="checkbox" id="toggleWeather" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
-        </div>
-
-        <div class="weather-section" id="weather">
-            <div class="weather-info">
-                <div class="weather-temp">--°</div>
-                <div class="weather-desc">Chargement...</div>
+            <div class="setting-row">
+                <span>Afficher les notes</span>
+                <label class="switch">
+                    <input type="checkbox" id="toggleNotes" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
-        </div>
-    </div>
-
-    <!-- Modal pour changer les couleurs -->
-    <div class="modal" id="colorModal">
-        <div class="modal-content">
-            <h2 class="modal-title">Choisir un thème</h2>
-            <div class="color-picker-container" id="colorPicker">
-                <!-- Les options de couleur seront ajoutées ici -->
-            </div>
-            <div class="modal-buttons">
-                <button type="button" class="btn btn-secondary" onclick="closeColorPicker()">Fermer</button>
+            <div class="setting-row">
+                <span>Afficher les raccourcis</span>
+                <label class="switch">
+                    <input type="checkbox" id="toggleShortcuts" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
         </div>
     </div>
+</aside>
 
-    <script>
-        // Thèmes de couleurs
-        const themes = [
-            { name: 'Par default', gradient: 'linear-gradient(135deg, #888a96 0%, #71a5cf 100%)' },
-            { name: 'Océan', gradient: 'linear-gradient(135deg, #2E3192 0%, #1BFFFF 100%)' },
-            { name: 'Coucher de soleil', gradient: 'linear-gradient(135deg, #FF6B6B 0%, #FFE66D 100%)' },
-            { name: 'Forêt', gradient: 'linear-gradient(135deg, #134E5E 0%, #71B280 100%)' },
-            { name: 'Nuit', gradient: 'linear-gradient(135deg, #0F2027 0%, #203A43 50%, #2C5364 100%)' }
-        ];
+<!-- Main container -->
+<main class="container" id="mainContainer">
 
-        // Charger les paramètres
-        let currentTheme = localStorage.getItem('theme') || themes[0].gradient;
-        let showTime = localStorage.getItem('showTime') !== 'false';
-        let showWeather = localStorage.getItem('showWeather') !== 'false';
+    <!-- Time & Greeting -->
+    <div class="time-section fade-in" id="timeSection">
+        <div class="greeting-name" id="greetingName"></div>
+        <div class="time" id="time">00:00</div>
+        <div class="date" id="date"></div>
+    </div>
 
-        // Appliquer le thème
-        document.body.style.background = currentTheme;
+    <!-- Search -->
+    <div class="search-section fade-in">
+        <div class="search-box">
+            <button class="search-engine-btn" id="engineBtn" onclick="openEngineModal()">
+                <img id="engineIcon" src="" alt=""> <span id="engineLabel">Google</span>
+            </button>
+            <input type="text" class="search-input" id="searchInput"
+                placeholder="Rechercher ou entrer une URL..." autocomplete="off" aria-label="Recherche">
+            <div class="suggestions" id="suggestions"></div>
+        </div>
+    </div>
 
-        // Gestion du menu
-        const menuToggle = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
+    <!-- Shortcuts -->
+    <div class="shortcuts-section fade-in" id="shortcutsSection">
+        <div class="shortcuts-grid" id="shortcutsGrid"></div>
+    </div>
 
-        function toggleMenu() {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
+    <!-- Weather -->
+    <div class="weather-section fade-in" id="weatherSection">
+        <div class="weather-left">
+            <div class="weather-icon-big" id="weatherIcon">⏳</div>
+            <div>
+                <div class="weather-temp" id="weatherTemp">--°C</div>
+                <div class="weather-desc" id="weatherDesc">Chargement...</div>
+                <div class="weather-city" id="weatherCity">📍 Tours</div>
+            </div>
+        </div>
+        <div class="weather-forecast" id="weatherForecast"></div>
+    </div>
+
+    <!-- Notes -->
+    <div class="notes-section fade-in" id="notesSection">
+        <textarea class="notes-area" id="notesArea" placeholder="Notes rapides... (sauvegardées automatiquement)" rows="2"></textarea>
+    </div>
+
+</main>
+
+<!-- THEME MODAL -->
+<div class="modal-overlay" id="themeModal">
+    <div class="modal">
+        <div class="modal-title">Choisir un thème</div>
+        <div class="color-grid" id="colorGrid"></div>
+        <div class="modal-btns">
+            <button class="btn btn-secondary" onclick="closeModal('themeModal')">Fermer</button>
+        </div>
+    </div>
+</div>
+
+<!-- NAME MODAL -->
+<div class="modal-overlay" id="nameModal">
+    <div class="modal">
+        <div class="modal-title">Votre prénom</div>
+        <p class="name-label">Entrez votre prénom pour personnaliser la page :</p>
+        <input type="text" class="modal-input" id="nameInput" placeholder="ex: Alex" maxlength="30">
+        <div class="modal-btns">
+            <button class="btn btn-secondary" onclick="closeModal('nameModal')">Annuler</button>
+            <button class="btn btn-primary" onclick="saveName()">Enregistrer</button>
+        </div>
+    </div>
+</div>
+
+<!-- ENGINE MODAL -->
+<div class="modal-overlay" id="engineModal">
+    <div class="modal">
+        <div class="modal-title"> Moteur de recherche</div>
+        <div class="engine-grid" id="engineGrid"></div>
+        <div class="modal-btns">
+            <button class="btn btn-secondary" onclick="closeModal('engineModal')">Fermer</button>
+        </div>
+    </div>
+</div>
+
+<!-- SHORTCUT MODAL -->
+<div class="modal-overlay" id="shortcutModal">
+    <div class="modal">
+        <div class="modal-title">Ajouter un raccourci</div>
+        <p class="name-label">Nom du site :</p>
+        <input type="text" class="modal-input" id="shortcutName" placeholder="ex: GitHub" maxlength="25">
+        <p class="name-label">URL :</p>
+        <input type="text" class="modal-input" id="shortcutUrl" placeholder="ex: https://github.com">
+        <div class="modal-btns">
+            <button class="btn btn-secondary" onclick="closeModal('shortcutModal')">Annuler</button>
+            <button class="btn btn-primary" onclick="saveShortcut()">Ajouter</button>
+        </div>
+    </div>
+</div>
+
+<!-- FIRST VISIT NAME MODAL -->
+<div class="modal-overlay" id="firstVisitModal">
+    <div class="modal">
+        <div class="modal-title">👋 Bienvenue !</div>
+        <p class="name-label" style="margin-bottom:12px;font-size:14px;color:#555;">Comment vous appelez-vous ? (optionnel)</p>
+        <input type="text" class="modal-input" id="firstNameInput" placeholder="Votre prénom..." maxlength="30">
+        <div class="modal-btns">
+            <button class="btn btn-secondary" onclick="saveFirstName(false)">Passer</button>
+            <button class="btn btn-primary" onclick="saveFirstName(true)">Commencer</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ===================== THEMES =====================
+const themes = [
+    { name: 'Défaut', gradient: 'linear-gradient(135deg, #888a96 0%, #71a5cf 100%)' },
+    { name: 'Océan', gradient: 'linear-gradient(135deg, #1a3a5c 0%, #2980b9 100%)' },
+    { name: 'Aurore', gradient: 'linear-gradient(135deg, #f7971e 0%, #ffd200 100%)' },
+    { name: 'Forêt', gradient: 'linear-gradient(135deg, #134E5E 0%, #71B280 100%)' },
+    { name: 'Nuit', gradient: 'linear-gradient(135deg, #0F2027 0%, #2C5364 100%)' },
+    { name: 'Rose', gradient: 'linear-gradient(135deg, #c94b9e 0%, #f8a5c2 100%)' },
+    { name: 'Lavande', gradient: 'linear-gradient(135deg, #4a3f8c 0%, #9b59b6 100%)' },
+    { name: 'Menthe', gradient: 'linear-gradient(135deg, #1abc9c 0%, #2ecc71 100%)' },
+    { name: 'Cramoisi', gradient: 'linear-gradient(135deg, #900 0%, #e74c3c 100%)' },
+    { name: 'Nuit étoilée', gradient: 'linear-gradient(135deg, #141e30 0%, #243b55 100%)' },
+];
+
+// ===================== SEARCH ENGINES =====================
+const engines = [
+    { id: 'google', name: 'Google', icon: 'https://www.google.com/favicon.ico', url: 'https://www.google.com/search?q=' },
+    { id: 'bing', name: 'Bing', icon: 'https://www.bing.com/favicon.ico', url: 'https://www.bing.com/search?q=' },
+    { id: 'duckduckgo', name: 'DuckGo', icon: 'https://duckduckgo.com/favicon.ico', url: 'https://duckduckgo.com/?q=' },
+    { id: 'brave', name: 'Brave', icon: 'https://brave.com/favicon.ico', url: 'https://search.brave.com/search?q=' },
+    { id: 'qwant', name: 'Qwant', icon: 'images/qwant_logo_icon_170813.png', url: 'https://www.qwant.com/?q=' },
+];
+
+// ===================== DEFAULT SHORTCUTS =====================
+const defaultShortcuts = [
+    { name: 'YouTube', url: 'https://youtube.com', icon: 'https://www.youtube.com/favicon.ico' },
+    { name: 'GitHub', url: 'https://github.com/Devlaubin', icon: 'https://github.com/favicon.ico' },
+    { name: 'Gmail', url: 'https://mail.google.com', icon: 'https://mail.google.com/favicon.ico' },
+    { name: 'Netflix', url: 'https://netflix.com', icon: 'https://www.netflix.com/favicon.ico' },
+];
+
+// ===================== STATE =====================
+let currentTheme = localStorage.getItem('theme') || themes[0].gradient;
+let currentEngine = localStorage.getItem('engine') || 'google';
+let userName = localStorage.getItem('userName') || '';
+let showTime = localStorage.getItem('showTime') !== 'false';
+let showWeather = localStorage.getItem('showWeather') !== 'false';
+let showNotes = localStorage.getItem('showNotes') !== 'false';
+let showShortcuts = localStorage.getItem('showShortcuts') !== 'false';
+let shortcuts = JSON.parse(localStorage.getItem('shortcuts') || 'null') || defaultShortcuts;
+let notes = localStorage.getItem('notes') || '';
+let notesTimer = null;
+
+// ===================== INIT =====================
+function init() {
+    applyTheme(currentTheme);
+    applyVisibility();
+    updateTime();
+    setInterval(updateTime, 1000);
+    renderEngine();
+    renderShortcuts();
+    renderThemeModal();
+    renderEngineModal();
+    initToggles();
+    initSearch();
+    initNotes();
+    createParticles();
+    updateWeather();
+
+    // First visit
+    if (!localStorage.getItem('visited')) {
+        setTimeout(() => openModal('firstVisitModal'), 600);
+    }
+}
+
+// ===================== BACKGROUND PARTICLES =====================
+function createParticles() {
+    const container = document.getElementById('bgParticles');
+    for (let i = 0; i < 12; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 80 + 20;
+        p.style.cssText = `
+            width: ${size}px; height: ${size}px;
+            left: ${Math.random() * 100}%;
+            animation-duration: ${Math.random() * 20 + 15}s;
+            animation-delay: ${Math.random() * 15}s;
+            opacity: ${Math.random() * 0.08 + 0.02};
+        `;
+        container.appendChild(p);
+    }
+}
+
+// ===================== THEME =====================
+function applyTheme(gradient) {
+    document.body.style.background = gradient;
+    document.documentElement.style.setProperty('--bg', gradient);
+    currentTheme = gradient;
+    localStorage.setItem('theme', gradient);
+}
+
+function renderThemeModal() {
+    const grid = document.getElementById('colorGrid');
+    grid.innerHTML = '';
+    themes.forEach(t => {
+        const el = document.createElement('div');
+        el.className = 'color-swatch' + (t.gradient === currentTheme ? ' active' : '');
+        el.style.background = t.gradient;
+        el.title = t.name;
+        el.onclick = () => {
+            applyTheme(t.gradient);
+            document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+            el.classList.add('active');
+        };
+        grid.appendChild(el);
+    });
+}
+
+// ===================== TIME =====================
+function updateTime() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('time').textContent = `${h}:${m}`;
+
+    const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const ds = now.toLocaleDateString('fr-FR', opts);
+    document.getElementById('date').textContent = ds.charAt(0).toUpperCase() + ds.slice(1);
+
+    // Greeting based on hour
+    if (userName) {
+        const hr = now.getHours();
+        let greet = hr < 6 ? 'Bonne nuit' : hr < 12 ? 'Bonjour' : hr < 18 ? 'Bonjour' : 'Bonsoir';
+        document.getElementById('greetingName').textContent = `${greet}, ${userName} 👋`;
+    } else {
+        document.getElementById('greetingName').textContent = '';
+    }
+}
+
+// ===================== SEARCH =====================
+function renderEngine() {
+    const e = engines.find(e => e.id === currentEngine) || engines[0];
+    document.getElementById('engineIcon').src = e.icon;
+    document.getElementById('engineLabel').textContent = e.name;
+}
+
+function renderEngineModal() {
+    const grid = document.getElementById('engineGrid');
+    grid.innerHTML = '';
+    engines.forEach(e => {
+        const btn = document.createElement('button');
+        btn.className = 'engine-option' + (e.id === currentEngine ? ' active' : '');
+        btn.innerHTML = `<img src="${e.icon}" alt=""> ${e.name}`;
+        btn.onclick = () => {
+            currentEngine = e.id;
+            localStorage.setItem('engine', e.id);
+            renderEngine();
+            document.querySelectorAll('.engine-option').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        };
+        grid.appendChild(btn);
+    });
+}
+
+function doSearch(query) {
+    if (!query.trim()) return;
+    hideSuggestions();
+    if (query.match(/^https?:\/\//)) {
+        window.location.href = query;
+    } else if (query.match(/^[\w.-]+\.[a-z]{2,}(\/.*)?$/) && !query.includes(' ')) {
+        window.location.href = 'https://' + query;
+    } else {
+        const e = engines.find(e => e.id === currentEngine) || engines[0];
+        window.location.href = e.url + encodeURIComponent(query);
+    }
+}
+
+let suggestTimer = null;
+function initSearch() {
+    const input = document.getElementById('searchInput');
+    const sugg = document.getElementById('suggestions');
+    let activeSugg = -1;
+
+    input.addEventListener('keydown', (e) => {
+        const items = sugg.querySelectorAll('.suggestion-item');
+        if (e.key === 'ArrowDown') {
+            activeSugg = Math.min(activeSugg + 1, items.length - 1);
+            items.forEach((it, i) => it.classList.toggle('active', i === activeSugg));
+            if (items[activeSugg]) input.value = items[activeSugg].dataset.value;
+            e.preventDefault();
+        } else if (e.key === 'ArrowUp') {
+            activeSugg = Math.max(activeSugg - 1, -1);
+            items.forEach((it, i) => it.classList.toggle('active', i === activeSugg));
+            if (activeSugg >= 0 && items[activeSugg]) input.value = items[activeSugg].dataset.value;
+            e.preventDefault();
+        } else if (e.key === 'Enter') {
+            doSearch(input.value);
+        } else if (e.key === 'Escape') {
+            hideSuggestions();
         }
+    });
 
-        menuToggle.addEventListener('click', toggleMenu);
-        overlay.addEventListener('click', toggleMenu);
-
-        // Fonction pour ouvrir le sélecteur de couleur
-        function openColorPicker() {
-            const picker = document.getElementById('colorPicker');
-            picker.innerHTML = '';
-
-            themes.forEach((theme, index) => {
-                const div = document.createElement('div');
-                div.className = 'color-option';
-                div.style.background = theme.gradient;
-                if (theme.gradient === currentTheme) {
-                    div.classList.add('active');
-                }
-                div.onclick = () => changeTheme(theme.gradient);
-                picker.appendChild(div);
-            });
-
-            document.getElementById('colorModal').classList.add('active');
-        }
-
-        function closeColorPicker() {
-            document.getElementById('colorModal').classList.remove('active');
-        }
-
-        function changeTheme(gradient) {
-            currentTheme = gradient;
-            document.body.style.background = gradient;
-            localStorage.setItem('theme', gradient);
-            closeColorPicker();
-
-            // Mettre à jour l'affichage des options actives
-            document.querySelectorAll('.color-option').forEach(opt => {
-                opt.classList.remove('active');
-            });
-            event.target.classList.add('active');
-        }
-
-        // Fonction pour mettre à jour l'heure
-        function updateTime() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            document.getElementById('time').textContent = `${hours}:${minutes}`;
-
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const dateStr = now.toLocaleDateString('fr-FR', options);
-            document.getElementById('date').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-        }
-
-        // Toggles
-        document.getElementById('toggleTime').checked = showTime;
-        document.getElementById('toggleWeather').checked = showWeather;
-
-        document.getElementById('toggleTime').addEventListener('change', (e) => {
-            showTime = e.target.checked;
-            localStorage.setItem('showTime', showTime);
-            document.getElementById('timeSection').style.display = showTime ? 'block' : 'none';
-        });
-
-        document.getElementById('toggleWeather').addEventListener('change', (e) => {
-            showWeather = e.target.checked;
-            localStorage.setItem('showWeather', showWeather);
-            document.getElementById('weather').style.display = showWeather ? 'flex' : 'none';
-        });
-
-        // Appliquer les paramètres au chargement
-        document.getElementById('timeSection').style.display = showTime ? 'block' : 'none';
-        document.getElementById('weather').style.display = showWeather ? 'flex' : 'none';
-
-        // Gestion de la recherche
-        document.getElementById('searchInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const query = e.target.value;
-                if (query.includes('.') && !query.includes(' ')) {
-                    window.location.href = query.startsWith('http') ? query : `https://${query}`;
-                } else {
-                    window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-                }
+    input.addEventListener('input', () => {
+        activeSugg = -1;
+        const q = input.value.trim();
+        if (!q) { hideSuggestions(); return; }
+        clearTimeout(suggestTimer);
+        suggestTimer = setTimeout(() => fetchSuggestions(q), 250);
+    });
+    
+    // During search: hide other sections (weather, shortcuts, notes)
+    const _searchToggleIds = ['weatherSection', 'shortcutsSection', 'notesSection'];
+    function setSearchActive(active) {
+        _searchToggleIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (active) {
+                if (el.dataset.savedDisplay === undefined) el.dataset.savedDisplay = el.style.display || '';
+                el.style.display = 'none';
+            } else {
+                if (id === 'weatherSection') el.style.display = showWeather ? '' : 'none';
+                if (id === 'shortcutsSection') el.style.display = showShortcuts ? '' : 'none';
+                if (id === 'notesSection') el.style.display = showNotes ? '' : 'none';
+                delete el.dataset.savedDisplay;
             }
         });
+    }
 
-        // Météo
-        async function updateWeather() {
-            if (!showWeather) return;
-            try {
-                const response = await fetch('https://wttr.in/Chambray-les-Tours?format=j1');
-                const data = await response.json();
-                const current = data.current_condition[0];
-                const temp = current.temp_C;
-                const desc = current.lang_fr?.[0]?.value || current.weatherDesc[0].value;
+    input.addEventListener('focus', () => setSearchActive(true));
+    input.addEventListener('blur', () => setTimeout(() => setSearchActive(false), 180));
 
-                document.getElementById('weather').innerHTML = `
-                    <div class="weather-info">
-                        <div class="weather-temp">${temp}°C</div>
-                        <div class="weather-desc">${desc}</div>
-                    </div>
-                `;
-            } catch (error) {
-                document.getElementById('weather').innerHTML = `
-                    <div class="weather-info">
-                        <div class="weather-desc">Météo non disponible</div>
-                    </div>
-                `;
-            }
-        }
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-box')) hideSuggestions();
+    });
+}
 
-        // Initialisation
-        updateTime();
-        setInterval(updateTime, 1000);
-        updateWeather();
-    </script>
+function fetchSuggestions(q) {
+    // Use a CORS-friendly approach via script tag (Google suggestions)
+    const old = document.getElementById('suggScript');
+    if (old) old.remove();
+    window._suggCallback = function(data) {
+        const suggestions = data[1].slice(0, 6);
+        showSuggestions(q, suggestions);
+    };
+    const script = document.createElement('script');
+    script.id = 'suggScript';
+    script.src = `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(q)}&callback=_suggCallback`;
+    script.onerror = () => {};
+    document.head.appendChild(script);
+}
+
+// Fallback: if suggestions fail, just show the query itself
+setTimeout(() => {
+    if (!window._suggCallback) window._suggCallback = function() {};
+}, 2000);
+
+function showSuggestions(query, items) {
+    const sugg = document.getElementById('suggestions');
+    sugg.innerHTML = '';
+    if (!items.length) { hideSuggestions(); return; }
+    items.forEach(text => {
+        const div = document.createElement('div');
+        div.className = 'suggestion-item';
+        div.dataset.value = text;
+        div.innerHTML = `<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> ${escHtml(text)}`;
+        div.onclick = () => doSearch(text);
+        sugg.appendChild(div);
+    });
+    sugg.classList.add('visible');
+}
+
+function hideSuggestions() {
+    document.getElementById('suggestions').classList.remove('visible');
+}
+
+function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ===================== SHORTCUTS =====================
+function renderShortcuts() {
+    const grid = document.getElementById('shortcutsGrid');
+    grid.innerHTML = '';
+    shortcuts.forEach((s, i) => {
+        const a = document.createElement('a');
+        a.className = 'shortcut';
+        a.href = s.url;
+        a.title = s.name;
+        a.innerHTML = `
+            <div class="shortcut-icon">
+                <img src="${s.icon}" alt="${escHtml(s.name)}" onerror="this.style.display='none';this.parentElement.textContent='${escHtml(s.name[0].toUpperCase())}'">
+            </div>
+            <span class="shortcut-label">${escHtml(s.name)}</span>
+            <button class="shortcut-delete" onclick="deleteShortcut(event,${i})" aria-label="Supprimer">
+                <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false">
+                    <line x1="4" y1="4" x2="20" y2="20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="20" y1="4" x2="4" y2="20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        `;
+        grid.appendChild(a);
+    });
+    // Add button
+    const add = document.createElement('div');
+    add.className = 'shortcut-add';
+    add.onclick = () => openModal('shortcutModal');
+    add.innerHTML = `<div class="shortcut-add-icon"><img src="images/plus_icon.png" alt="Ajouter"></div><span class="shortcut-add-label">Ajouter</span>`;
+    grid.appendChild(add);
+}
+
+function deleteShortcut(e, i) {
+    e.preventDefault();
+    e.stopPropagation();
+    shortcuts.splice(i, 1);
+    localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
+    renderShortcuts();
+}
+
+function saveShortcut() {
+    let name = document.getElementById('shortcutName').value.trim();
+    let url = document.getElementById('shortcutUrl').value.trim();
+    if (!name || !url) return;
+    if (!url.startsWith('http')) url = 'https://' + url;
+    let domain = '';
+    try { domain = new URL(url).hostname; } catch(e) {}
+    const icon = domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=32` : '';
+    shortcuts.push({ name, url, icon });
+    localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
+    renderShortcuts();
+    document.getElementById('shortcutName').value = '';
+    document.getElementById('shortcutUrl').value = '';
+    closeModal('shortcutModal');
+}
+
+// ===================== WEATHER =====================
+const weatherIcons = {
+    sunny: '☀️', clear: '🌙', cloudy: '☁️', overcast: '☁️',
+    rain: '🌧️', drizzle: '🌦️', snow: '❄️', sleet: '🌨️',
+    thunder: '⛈️', fog: '🌫️', mist: '🌫️', haze: '🌫️',
+    default: '🌡️'
+};
+
+function getWeatherIcon(desc) {
+    const d = desc.toLowerCase();
+    if (d.includes('soleil') || d.includes('ensoleillé') || d.includes('sunny') || d.includes('clear')) return '☀️';
+    if (d.includes('nuage') || d.includes('nuageux') || d.includes('cloud')) return '☁️';
+    if (d.includes('pluie') || d.includes('rain') || d.includes('averse')) return '🌧️';
+    if (d.includes('brume') || d.includes('brouillard') || d.includes('fog') || d.includes('mist')) return '🌫️';
+    if (d.includes('neige') || d.includes('snow')) return '❄️';
+    if (d.includes('orage') || d.includes('thunder')) return '⛈️';
+    if (d.includes('couvert') || d.includes('overcast')) return '🌥️';
+    if (d.includes('éclair') || d.includes('éclaircies') || d.includes('partly')) return '⛅';
+    return '🌡️';
+}
+
+async function updateWeather() {
+    if (!showWeather) return;
+    try {
+        const res = await fetch('https://wttr.in/Chambray-les-Tours?format=j1');
+        const data = await res.json();
+        const cur = data.current_condition[0];
+        const temp = cur.temp_C;
+        const desc = cur.lang_fr?.[0]?.value || cur.weatherDesc[0].value;
+        const icon = getWeatherIcon(desc);
+
+        document.getElementById('weatherIcon').textContent = icon;
+        document.getElementById('weatherTemp').textContent = `${temp}°C`;
+        document.getElementById('weatherDesc').textContent = desc;
+
+        // 3-day forecast
+        const forecastEl = document.getElementById('weatherForecast');
+        forecastEl.innerHTML = '';
+        const days = data.weather.slice(0, 3);
+        const dayNames = ['Aujourd\'hui', 'Demain', 'Après-dem.'];
+        days.forEach((day, i) => {
+            const maxT = day.maxtempC;
+            const minT = day.mintempC;
+            const dayDesc = day.hourly[4]?.lang_fr?.[0]?.value || day.hourly[4]?.weatherDesc?.[0]?.value || '';
+            const dayIcon = getWeatherIcon(dayDesc);
+            const el = document.createElement('div');
+            el.className = 'forecast-day';
+            el.innerHTML = `
+                <div class="forecast-day-name">${dayNames[i]}</div>
+                <div class="forecast-icon">${dayIcon}</div>
+                <div class="forecast-temp">${maxT}° / ${minT}°</div>
+            `;
+            forecastEl.appendChild(el);
+        });
+    } catch (e) {
+        document.getElementById('weatherDesc').textContent = 'Météo non disponible';
+        document.getElementById('weatherIcon').textContent = '🌡️';
+    }
+}
+
+// ===================== NOTES =====================
+function initNotes() {
+    const area = document.getElementById('notesArea');
+    area.value = notes;
+    area.addEventListener('input', () => {
+        clearTimeout(notesTimer);
+        notesTimer = setTimeout(() => {
+            localStorage.setItem('notes', area.value);
+        }, 500);
+    });
+}
+
+// ===================== VISIBILITY =====================
+function applyVisibility() {
+    document.getElementById('timeSection').style.display = showTime ? '' : 'none';
+    document.getElementById('weatherSection').style.display = showWeather ? '' : 'none';
+    document.getElementById('notesSection').style.display = showNotes ? '' : 'none';
+    document.getElementById('shortcutsSection').style.display = showShortcuts ? '' : 'none';
+    document.getElementById('toggleTime').checked = showTime;
+    document.getElementById('toggleWeather').checked = showWeather;
+    document.getElementById('toggleNotes').checked = showNotes;
+    document.getElementById('toggleShortcuts').checked = showShortcuts;
+}
+
+function initToggles() {
+    document.getElementById('toggleTime').addEventListener('change', e => {
+        showTime = e.target.checked;
+        localStorage.setItem('showTime', showTime);
+        document.getElementById('timeSection').style.display = showTime ? '' : 'none';
+    });
+    document.getElementById('toggleWeather').addEventListener('change', e => {
+        showWeather = e.target.checked;
+        localStorage.setItem('showWeather', showWeather);
+        document.getElementById('weatherSection').style.display = showWeather ? '' : 'none';
+    });
+    document.getElementById('toggleNotes').addEventListener('change', e => {
+        showNotes = e.target.checked;
+        localStorage.setItem('showNotes', showNotes);
+        document.getElementById('notesSection').style.display = showNotes ? '' : 'none';
+    });
+    document.getElementById('toggleShortcuts').addEventListener('change', e => {
+        showShortcuts = e.target.checked;
+        localStorage.setItem('showShortcuts', showShortcuts);
+        document.getElementById('shortcutsSection').style.display = showShortcuts ? '' : 'none';
+    });
+}
+
+// ===================== MODALS =====================
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+function openThemeModal() { renderThemeModal(); openModal('themeModal'); closeSidebar(); }
+function openNameModal() {
+    document.getElementById('nameInput').value = userName;
+    openModal('nameModal');
+    closeSidebar();
+}
+function openEngineModal() { renderEngineModal(); openModal('engineModal'); closeSidebar(); }
+
+function saveName() {
+    userName = document.getElementById('nameInput').value.trim();
+    localStorage.setItem('userName', userName);
+    updateTime();
+    closeModal('nameModal');
+}
+
+function saveFirstName(save) {
+    if (save) {
+        userName = document.getElementById('firstNameInput').value.trim();
+        localStorage.setItem('userName', userName);
+    }
+    localStorage.setItem('visited', '1');
+    closeModal('firstVisitModal');
+    updateTime();
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o => {
+    o.addEventListener('click', e => {
+        if (e.target === o) o.classList.remove('active');
+    });
+});
+
+// ===================== SIDEBAR =====================
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+
+function toggleSidebar() {
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+}
+function closeSidebar() {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+}
+menuToggle.addEventListener('click', toggleSidebar);
+overlay.addEventListener('click', closeSidebar);
+
+// Enter on modal inputs
+document.getElementById('nameInput').addEventListener('keydown', e => { if (e.key === 'Enter') saveName(); });
+document.getElementById('firstNameInput').addEventListener('keydown', e => { if (e.key === 'Enter') saveFirstName(true); });
+document.getElementById('shortcutUrl').addEventListener('keydown', e => { if (e.key === 'Enter') saveShortcut(); });
+
+// ===================== START =====================
+init();
+</script>
 </body>
-
 </html>
