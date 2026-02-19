@@ -18,9 +18,9 @@ Une page de nouvel onglet personnalisée avec horloge, barre de recherche et mé
 ### Google Chrome
 
 1. Installez l'extension **[Custom New Tab URL](https://chromewebstore.google.com/detail/custom-new-tab-url/mmjkeaogbplhcaoilhmklgbbomgjhkdj)** depuis le Chrome Web Store
-2. Dans les paramètres de l'extension, entrez le chemin vers le fichier :
+2. Dans les paramètres de l'extension, entrez le chemin :
    ```
-   file:///chemin/absolu/vers/index.html
+   https://new-tab-devlaubin.netlify.app/
    ```
 3. Ouvrez un nouvel onglet — la page s'affiche automatiquement
 
@@ -31,8 +31,8 @@ Une page de nouvel onglet personnalisée avec horloge, barre de recherche et mé
 ### Mozilla Firefox
 
 1. Installez l'extension **[New Tab Override](https://addons.mozilla.org/fr/firefox/addon/new-tab-override/)** depuis Firefox Add-ons
-2. Dans les paramètres de l'extension, choisissez **"Local file"**
-3. Sélectionnez le fichier `index.html` depuis votre ordinateur
+2. Dans les paramètres de l'extension, choisissez **"Url"**
+3. Entrer le lien : https://new-tab-devlaubin.netlify.app/
 4. Ouvrez un nouvel onglet pour vérifier
 
 ---
@@ -41,9 +41,9 @@ Une page de nouvel onglet personnalisée avec horloge, barre de recherche et mé
 
 1. Installez l'extension **[Custom New Tab Page](https://microsoftedge.microsoft.com/addons/Microsoft-Edge-Extensions-Home)** depuis le Edge Add-ons Store  
    *(cherchez "Custom New Tab" ou "New Tab Redirect")*
-2. Renseignez le chemin local vers `index.html` :
+2. Renseignez le chemin vers le site ou le fichier local :
    ```
-   file:///C:/chemin/vers/index.html
+   [file:///C:/chemin/vers/index.html] ou (https://new-tab-devlaubin.netlify.app/)
    ```
 3. Ouvrez un nouvel onglet pour confirmer
 
@@ -76,6 +76,7 @@ new-tab/
 ├── index.html       # Fichier principal (tout-en-un)
 └── images/
     └── search.png   # Icône de l'onglet
+└── autre fichiers du projet   
 ```
 
 ---
