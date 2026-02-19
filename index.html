@@ -149,7 +149,7 @@
 
         .sidebar-header {
             padding: 28px 24px 22px;
-            background: linear-gradient(135deg, #888a96, #71a5cf);
+            background-color: #cbcdd3;
             color: white;
             display: flex;
             align-items: center;
@@ -277,7 +277,7 @@
             transition: all 0.3s ease;
             font-family: 'DM Sans', sans-serif;
         }
-        .search-input:hover { background: rgba(211, 203, 203, 0.95); }
+        .search-input:hover { background: rgba(211, 211, 211, 0.95); }
         .search-input:focus { background: white; box-shadow: 0 8px 30px rgba(0,0,0,0.15); transform: scale(1.01); }
         .search-input::placeholder { color: #aaa; }
 
@@ -295,7 +295,7 @@
             top: calc(100% + 8px);
             left: 0; right: 0;
             background: white;
-            border-radius: 16px;
+            border-radius: 26px;
             box-shadow: 0 12px 40px rgba(0,0,0,0.15);
             overflow: hidden;
             z-index: 100;
@@ -317,8 +317,7 @@
         .suggestion-item:hover, .suggestion-item.active { background: #cbcdd3; transform: scale(1.02);}
         .suggestion-item svg { width: 14px; height: 14px; stroke: #999; fill: none; opacity: 0.7; }
         .suggestion-item:hover svg { stroke: #555; opacity: 1; }
-        .suggestion-item.active svg { stroke: #a09d9d; opacity: 1; }
-        .suggestion-item.active { color: #807e7e; font-weight: 500;}
+        .suggestion-item.active svg { stroke: #555; opacity: 1; }
         .suggestions::before {
             content: '';
             position: absolute;
@@ -582,7 +581,7 @@
         <div class="sidebar-section">
             <div class="sidebar-section-title">Profil</div>
             <button class="sidebar-btn" onclick="openNameModal()">Changer le prénom</button>
-            <button class="sidebar-btn" onclick="window.open('https://github.com/Devlaubin')">Soutenir Devlaubin</button>
+            <button class="sidebar-btn" onclick="window.open('https://github.com/')">Soutenir Devlaubin</button>
         </div>
         <div class="sidebar-section">
             <div class="sidebar-section-title">Recherche</div>
