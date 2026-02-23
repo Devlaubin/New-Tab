@@ -64,7 +64,7 @@
         font-size: 16px;
         cursor: pointer;
         border-radius: 5px;
-            transition: background-color 0.3s ease, border 0.3s ease;
+        transition: background-color 0.3s ease, border 0.3s ease;
         
     }
     button:hover {
@@ -94,8 +94,13 @@
     <header>
         <h1>Télécharger Aegis Browser</h1>
         <p>Pour profiter pleinement de toutes les fonctionnalités, téléchargez le navigateur AEGIS.</p>
-        <button><a href="Download/AegisBrowser.exe">Télécharger AEGIS Browser</a></button>
+        <button onclick="downloadBrowser()">Télécharger AEGIS Browser</button>
     </header>
     <img src="images/image.png" alt="image du navigateur AEGIS" style="width: 50%; height: auto;">
 </body>
+<script>
+    function downloadBrowser() {
+        window.location.href = "Download/AegisBrowser.exe";
+    }
+</script>
 </html>
