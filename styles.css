@@ -135,6 +135,13 @@
             display: flex;
             flex-direction: column;
         }
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
         .sidebar.active { left: 0; }
 
         .sidebar-header {
@@ -144,6 +151,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            border-radius: 0px 0px 10px 0;
         }
         .sidebar-header svg { width: 28px; height: 28px; stroke: white; fill: none; stroke-width: 1.8; }
         .sidebar-title { font-size: 20px; font-weight: 500; }
@@ -151,7 +159,24 @@
         .sidebar-body { padding: 20px; flex: 1; color: #222; }
 
         .sidebar-section { margin-bottom: 28px; }
+
+                .sidebar-section-new {
+                    margin-bottom: 28px;
+                    background: #f0f0f0;
+                    padding: 16px;
+                    border-radius: 12px;
+                }
+
         .sidebar-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+        }
+
+        .sidebar-section-title-new {
             font-size: 11px;
             font-weight: 600;
             color: #999;
@@ -592,3 +617,15 @@
             .weather-forecast { display: none; }
             .shortcuts-grid { grid-template-columns: repeat(4, 1fr); }
         }
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+#sidebar-nav{
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}

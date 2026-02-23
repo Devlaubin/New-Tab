@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Télécharger Aegis</title>
+    <link rel="icon" href="images/search.png" type="image/png">
+</head>
+<style>
+
+    :root {
+            --bg: #0d0f14;
+            --text: #333;
+        }
+    body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 60px 24px 40px;
+            overflow-x: hidden;
+        }
+
+        /* Ambient background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 40% at 20% 10%, rgba(200, 169, 110, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 50% at 80% 80%, rgba(110, 168, 200, 0.07) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        /* Grain overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: 0.6;
+        }
+    header {
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+    header h1 {
+        margin: 0;
+    }
+    header p {
+        margin: 10px 0 20px 0;
+    }
+    button {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        padding: 15px 23px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+            transition: background-color 0.3s ease, border 0.3s ease;
+        
+    }
+    button:hover {
+        background-color: #0056b3;
+        border: #007BFF solid 1px;
+    }
+    button a {
+        color: white;
+        text-decoration: none;
+    }
+    img {
+        display: block;
+        margin: 30px auto;
+        transition: transform 0.3s ease;
+        border-radius: 26px;
+        border: 5px solid #333;
+        transform: rotate(-5deg);
+    }
+    img:hover {
+        transform: scale(1.1) rotate(5deg);
+        transition: transform 0.3s ease;
+        animation: rotate 2s linear infinite;
+        border: 2px solid #0056b3;
+    }
+</style>
+<body>
+    <header>
+        <h1>Télécharger Aegis Browser</h1>
+        <p>Pour profiter pleinement de toutes les fonctionnalités, téléchargez le navigateur AEGIS.</p>
+        <button><a href="Download/AegisBrowser.exe">Télécharger AEGIS Browser</a></button>
+    </header>
+    <img src="images/image.png" alt="image du navigateur AEGIS" style="width: 50%; height: auto;">
+</body>
+</html>

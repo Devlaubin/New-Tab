@@ -405,15 +405,71 @@ async function updateWeather() {
 // ===================== NEWS =====================
 async function updateNews() {
     if (!showNews) return;
+    const newsContainer = document.getElementById('newsContainer');
+    newsContainer.innerHTML = '<div class="news-loading">📰 Chargement des actualités...</div>';
+
+    // Votre clé fournie — gardez-la secrète pour production (proxy côté serveur recommandé)
+    const API_KEY = 'cead96b540354b94bf4ab0bfa9a52c0d';
+
     try {
-        // Using NewsAPI with a free tier approach (you can get your own key at newsapi.org)
-        // For this example, we'll use a CORS-friendly news source with RSS
-        const newsContainer = document.getElementById('newsContainer');
-        
-        // Using RSSHub (free, no auth required) to fetch news
-        const response = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://feeds.bbc.co.uk/news/rss.xml&count=8');
-        const data = await response.json();
-        
+        // Utilise NewsData (ex: https://newsdata.io/) pour récupérer des actualités en français
+        const url = `https://newsdata.io/api/1/news?apikey=${API_KEY}&language=fr&country=fr&page=1`;
+        const res = await fetch(url);
+
+        if (!res.ok) {
+            console.warn('Request to NewsData failed with status', res.status);
+            // fallback to RSS
+            return fetchRSSFallback();
+        }
+
+        const data = await res.json();
+
+        if (data && data.results && data.results.length > 0) {
+            newsContainer.innerHTML = '';
+            data.results.slice(0, 8).forEach(item => {
+                const newsItem = document.createElement('a');
+                newsItem.className = 'news-item';
+                newsItem.href = item.link || item.source_url || '#';
+                newsItem.target = '_blank';
+                newsItem.rel = 'noopener noreferrer';
+
+                const title = item.title || item.description || 'Sans titre';
+                const source = item.source_id || item.source || '';
+                const pubDate = item.pubDate ? new Date(item.pubDate).toLocaleDateString('fr-FR') : '';
+                const image = item.image_url || item.image || '';
+
+                newsItem.innerHTML = `
+                    ${image ? `<div class="news-thumb"><img src="${image}" alt=""></div>` : ''}
+                    <div class="news-body">
+                        <div class="news-title">${escHtml(title)}</div>
+                        <div class="news-source">📰 ${escHtml(source)}${pubDate ? ' • ' + pubDate : ''}</div>
+                    </div>
+                `;
+
+                newsContainer.appendChild(newsItem);
+            });
+            applySecurityToNewLinks();
+        } else {
+            console.info('NewsData returned no results, falling back to RSS');
+            fetchRSSFallback();
+        }
+    } catch (err) {
+        console.error('Erreur chargement actualités:', err);
+        // probablement CORS ou réseau — essayer le fallback RSS
+        fetchRSSFallback();
+    }
+}
+
+// Fallback: récupérer un flux RSS via rss2json si l'API principale échoue
+async function fetchRSSFallback() {
+    const newsContainer = document.getElementById('newsContainer');
+    newsContainer.innerHTML = '<div class="news-loading">📰 Chargement via flux RSS...</div>';
+    try {
+        // Flux RSS français (ex: Le Monde) — rss2json offre un endpoint simple
+        const rssUrl = 'https://www.lemonde.fr/rss/une.xml';
+        const url = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}&count=8`;
+        const res = await fetch(url);
+        const data = await res.json();
         if (data.items && data.items.length > 0) {
             newsContainer.innerHTML = '';
             data.items.slice(0, 8).forEach(item => {
@@ -422,25 +478,22 @@ async function updateNews() {
                 newsItem.href = item.link;
                 newsItem.target = '_blank';
                 newsItem.rel = 'noopener noreferrer';
-                
-                const source = item.source?.title || 'BBC News';
                 const title = item.title || 'Sans titre';
+                const source = item.source?.title || '';
                 const pubDate = item.pubDate ? new Date(item.pubDate).toLocaleDateString('fr-FR') : '';
-                
                 newsItem.innerHTML = `
                     <div class="news-title">${escHtml(title)}</div>
                     <div class="news-source">📰 ${source}${pubDate ? ' • ' + pubDate : ''}</div>
                 `;
                 newsContainer.appendChild(newsItem);
             });
-            // Apply security to newly added news links
             applySecurityToNewLinks();
         } else {
             newsContainer.innerHTML = '<div class="news-loading">Aucune actualité disponible</div>';
         }
-    } catch (error) {
-        console.log('Erreur lors du chargement des actualités:', error);
-        document.getElementById('newsContainer').innerHTML = '<div class="news-loading">Actualités non disponibles</div>';
+    } catch (e) {
+        console.error('Fallback RSS failed:', e);
+        newsContainer.innerHTML = '<div class="news-loading">Actualités non disponibles</div>';
     }
 }
 
@@ -602,7 +655,6 @@ function saveName() {
     updateTime();
     closeModal('nameModal');
 }
-
 function saveFirstName(save) {
     if (save) {
         userName = document.getElementById('firstNameInput').value.trim();
