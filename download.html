@@ -56,7 +56,7 @@
     header p {
         margin: 10px 0 20px 0;
     }
-    button {
+    #download a{
         background-color: #007BFF;
         color: white;
         border: none;
@@ -67,13 +67,9 @@
         transition: background-color 0.3s ease, border 0.3s ease;
         
     }
-    button:hover {
+    #download a:hover {
         background-color: #0056b3;
         border: #007BFF solid 1px;
-    }
-    button a {
-        color: white;
-        text-decoration: none;
     }
     img {
         display: block;
@@ -89,18 +85,33 @@
         animation: rotate 2s linear infinite;
         border: 2px solid #0056b3;
     }
+    a {
+        text-decoration: none;
+        color: white;
+        padding: 12px 20px;
+        background-color: #007BFF;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, border 0.3s ease;
+        margin: 20px  auto;
+        display: inline-block;
+    }
+    a:hover {
+        background-color: #0056b3;
+        border: #007BFF solid 1px;
+    }
 </style>
 <body>
     <header>
-        <h1>Télécharger Aegis Browser</h1>
+        <h1>Aegis Browser</h1>
         <p>Pour profiter pleinement de toutes les fonctionnalités, téléchargez le navigateur AEGIS.</p>
-        <button onclick="downloadBrowser()">Télécharger AEGIS Browser</button>
+        <a href="https://github.com/Devlaubin/New-Tab/releases/download/v1/AegisBrowser.exe">Télécharger AEGIS Browser</a>
     </header>
     <img src="images/image.png" alt="image du navigateur AEGIS" style="width: 50%; height: auto;">
 </body>
 <script>
-    function downloadBrowser() {
-        window.location.href = "Download/AegisBrowser.exe";
-    }
+    // Redirection après 5 secondes
+    setTimeout(() => {
+        window.location.href = "index.html";
+    }, 5000);
 </script>
 </html>
