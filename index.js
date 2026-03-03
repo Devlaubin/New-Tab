@@ -44,6 +44,10 @@ let showNotes = localStorage.getItem('showNotes') !== 'false';
 let showShortcuts = localStorage.getItem('showShortcuts') !== 'false';
 let secureMode = localStorage.getItem('secureMode') !== '0';
 let shortcuts = JSON.parse(localStorage.getItem('shortcuts') || 'null') || defaultShortcuts;
+
+// index of shortcut being edited (null when adding new)
+let editingShortcutIndex = null;
+
 let notes = localStorage.getItem('notes') || '';
 let notesTimer = null;
 
@@ -294,34 +298,92 @@ function renderShortcuts() {
         a.className = 'shortcut';
         a.href = s.url;
         a.title = s.name;
-        a.innerHTML = `
-            <div class="shortcut-icon">
-                <img src="${s.icon}" alt="${escHtml(s.name)}" onerror="this.style.display='none';this.parentElement.textContent='${escHtml(s.name[0].toUpperCase())}'">
-            </div>
-            <span class="shortcut-label">${escHtml(s.name)}</span>
-            <button class="shortcut-delete" onclick="deleteShortcut(event,${i})" aria-label="Supprimer">
-                <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false">
+        // if a button inside is clicked, cancel navigation
+        a.addEventListener('click', e => {
+            if (e.target.closest('button')) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+
+        // icon
+        const iconDiv = document.createElement('div');
+        iconDiv.className = 'shortcut-icon';
+        iconDiv.innerHTML = `<img src="${s.icon}" alt="${escHtml(s.name)}" onerror="this.style.display='none';this.parentElement.textContent='${escHtml(s.name[0].toUpperCase())}'">`;
+        a.appendChild(iconDiv);
+
+        // label
+        const label = document.createElement('span');
+        label.className = 'shortcut-label';
+        label.textContent = s.name;
+        a.appendChild(label);
+
+        // edit button
+        const editBtn = document.createElement('button');
+        editBtn.className = 'shortcut-edit';
+        editBtn.setAttribute('aria-label','Modifier');
+        editBtn.innerHTML = `<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false">
+                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/>
+                <path d="M20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
+            </svg>`;
+        editBtn.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            openShortcutModal(i);
+        });
+        a.appendChild(editBtn);
+
+        // delete button
+        const delBtn = document.createElement('button');
+        delBtn.className = 'shortcut-delete';
+        delBtn.setAttribute('aria-label','Supprimer');
+        delBtn.innerHTML = `<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false">
                     <line x1="4" y1="4" x2="20" y2="20" stroke="white" stroke-width="2" stroke-linecap="round"/>
                     <line x1="20" y1="4" x2="4" y2="20" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </button>
-        `;
+                </svg>`;
+        delBtn.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            deleteShortcut(i);
+        });
+        a.appendChild(delBtn);
+
         grid.appendChild(a);
     });
     // Add button
     const add = document.createElement('div');
     add.className = 'shortcut-add';
-    add.onclick = () => openModal('shortcutModal');
+    add.onclick = () => openShortcutModal();
     add.innerHTML = `<div class="shortcut-add-icon"><img src="images/plus_icon.png" alt="Ajouter"></div><span class="shortcut-add-label">Ajouter</span>`;
     grid.appendChild(add);
 }
 
-function deleteShortcut(e, i) {
-    e.preventDefault();
-    e.stopPropagation();
-    shortcuts.splice(i, 1);
+function deleteShortcut(index) {
+    // index already validated by caller
+    shortcuts.splice(index, 1);
     localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
     renderShortcuts();
+}
+
+function openShortcutModal(index = null) {
+    editingShortcutIndex = index !== null ? index : null;
+    const nameInput = document.getElementById('shortcutName');
+    const urlInput = document.getElementById('shortcutUrl');
+    const modalTitle = document.querySelector('#shortcutModal .modal-title');
+    const primaryBtn = document.querySelector('#shortcutModal .btn-primary');
+    if (editingShortcutIndex !== null) {
+        const s = shortcuts[editingShortcutIndex];
+        nameInput.value = s.name;
+        urlInput.value = s.url;
+        modalTitle.textContent = 'Modifier un raccourci';
+        primaryBtn.textContent = 'Enregistrer';
+    } else {
+        nameInput.value = '';
+        urlInput.value = '';
+        modalTitle.textContent = 'Ajouter un raccourci';
+        primaryBtn.textContent = 'Ajouter';
+    }
+    openModal('shortcutModal');
 }
 
 function saveShortcut() {
@@ -332,11 +394,20 @@ function saveShortcut() {
     let domain = '';
     try { domain = new URL(url).hostname; } catch(e) {}
     const icon = domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=32` : '';
-    shortcuts.push({ name, url, icon });
+    if (editingShortcutIndex !== null) {
+        shortcuts[editingShortcutIndex] = { name, url, icon };
+        editingShortcutIndex = null;
+    } else {
+        shortcuts.push({ name, url, icon });
+    }
     localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
     renderShortcuts();
     document.getElementById('shortcutName').value = '';
     document.getElementById('shortcutUrl').value = '';
+    const modalTitle = document.querySelector('#shortcutModal .modal-title');
+    const primaryBtn = document.querySelector('#shortcutModal .btn-primary');
+    modalTitle.textContent = 'Ajouter un raccourci';
+    primaryBtn.textContent = 'Ajouter';
     closeModal('shortcutModal');
 }
 
