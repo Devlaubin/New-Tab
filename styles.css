@@ -578,7 +578,15 @@
         }
         .btn-primary { background: #71a5cf; color: white; }
         .btn-primary:hover { background: #5990c0; }
-        .btn-secondary { background: #f0f0f0; color: #555; }
+        .btn-secondary { 
+            background: #f0f0f0; 
+            color: #555; 
+            border: 1.5px solid #e0e0e0;
+        }
+        #btn-secondary:active { background: #e0e0e0; }
+        #btn-modal-engine{
+            margin-top: -11px;
+        }
         .btn-secondary:hover { background: #e4e4e4; }
 
         /* Name modal */

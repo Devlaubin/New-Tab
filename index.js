@@ -28,11 +28,9 @@ const defaultShortcuts = [
     { name: 'GitHub', url: 'https://github.com/Devlaubin', icon: 'https://github.com/favicon.ico' },
     { name: 'Gmail', url: 'https://mail.google.com', icon: 'https://www.google.com/favicon.ico' },
     { name: 'Netflix', url: 'https://netflix.com', icon: 'https://www.netflix.com/favicon.ico' },
-    { name: 'Twitter', url: 'https://twitter.com', icon: 'https://twitter.com/favicon.ico' },
     { name: 'Reddit', url: 'https://reddit.com', icon: 'https://www.reddit.com/favicon.ico' },
     { name: 'LinkedIn', url: 'https://linkedin.com', icon: 'https://www.linkedin.com/favicon.ico' },
     { name: 'Amazon', url: 'https://amazon.com', icon: 'https://www.amazon.com/favicon.ico' },
-    { name: 'Spotify', url: 'https://spotify.com', icon: 'https://www.spotify.com/favicon.ico' },
 ];
 
 // ===================== STATE =====================
@@ -687,6 +685,15 @@ function closeSidebar() {
 }
 menuToggle.addEventListener('click', toggleSidebar);
 overlay.addEventListener('click', closeSidebar);
+
+ // directement aller sur la barre de recherche quand on appuie sur "/" ou "Ctrl+K"
+document.addEventListener('keydown', e => {
+    if (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'textarea') return;
+    if (e.key === '/' || (e.key.toLowerCase() === 'k' && (e.ctrlKey || e.metaKey))) {
+        e.preventDefault();
+        document.getElementById('searchInput').focus();
+    }
+});
 
 // Enter on modal inputs
 document.getElementById('nameInput').addEventListener('keydown', e => { if (e.key === 'Enter') saveName(); });
