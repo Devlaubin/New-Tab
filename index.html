@@ -1,234 +1,89 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Tab</title>
+    <title>Pika Pika</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
-    <link rel="icon" href="images/search.png" type="image/png">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Lilita+One&display=swap"
+        rel="stylesheet">
+    <link href="style.css" type="text/css" rel="stylesheet">
+    <script src="index.js" type="text/javascript" defer></script>
+    <link rel="icon" type="image/png" href="Images/favicon.png">
 </head>
+
 <body>
+    <!-- Elemento de audio para la música -->
+    <audio id="selectionMusic" preload="auto">
+        <source src="Pica Pica Pito Pito Gorgorito.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
 
-<!-- Background particles -->
-<div class="bg-particles" id="bgParticles"></div>
-
-<!-- Menu Toggle Button -->
-<div class="menu-toggle" id="menuToggle">
-    <svg viewBox="0 0 24 24">
-        <line x1="3" y1="12" x2="21" y2="12"></line>
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="18" x2="21" y2="18"></line>
-    </svg>
-</div>
-
-<!-- Overlay -->
-<div class="overlay" id="overlay"></div>
-
-<!-- Sidebar -->
-<aside class="sidebar" id="sidebar" aria-label="Paramètres">
-    <div class="sidebar-header">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        <span class="sidebar-title">Paramètres</span>
-    </div>
-    <div class="sidebar-body">
-        <div class="sidebar-section-new">
-            <div class="sidebar-section-title-new">Nouveautés</div>
-            <p>Navigateur pour New-Tab !!</p>
+    <!-- Modal para noticias/actualizaciones -->
+    <div id="updateModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="updateTitle">
+        <div class="modal-content">
+            <span class="close-btn" aria-label="Cerrar">&times;</span>
+            <h1>Pika Pika v1.6</h1>
+            <h2 id="updateTitle">Actualizaciones e información</h2>
+            <h4>Última actualización el 26/03/2026</h4>
             <br>
-            <a class="sidebar-btn" href="download.html">Télécharger le navigateur</a>
+            <p>¡Bienvenido a <strong>Pika Pika</strong>! Aquí hay algunas novedades:</p>
+            <br>
+            <p id="modalmajp">ATENCIÓN: El sitio está en versión beta, pueden ocurrir errores mayores y cambios. ¡Gracias por tu comprensión y paciencia!</p>
+            <br>
+            <ul>
+                <li>Recarga automática de la página</li>
+                <li>Muchos errores resueltos</li>
+                <li>Botón para borrar todo agregado (con alerta)</li>
+                <li>Problema de traducción al español solucionado</li>
+                <li>Interfaz responsive mejorada</li>
+                <li><strong>¡Nueva!</strong> Música durante la selección del estudiante</li>
+            </ul>
+            <br>
+            <p id="modalmajp">¡No dudes en compartirme los errores para mejorar el sitio! 
+                <br> Para <a id="mailto" href="mailto:aubin.dev@proton.me">contactarme</a></p>
+            <br>
+            <p>Gracias por usar Pika Pika.</p>
         </div>
-        <div class="sidebar-section">
-            <div class="sidebar-section-title">Apparence</div>
-            <button class="sidebar-btn" onclick="openThemeModal()">Changer le thème</button>
-        </div>
-        <div class="sidebar-section">
-            <div class="sidebar-section-title">Profil</div>
-            <button class="sidebar-btn" onclick="openNameModal()">Changer le prénom</button>
-        </div>
-        <div class="sidebar-section">
-            <div class="sidebar-section-title">Recherche</div>
-            <button class="sidebar-btn" onclick="openEngineModal()">Moteur de recherche</button>
-            <div class="setting-row">
-                <span>Ouverture nouvel onglet</span>
-                <label class="switch">
-                    <input type="checkbox" id="toggleSecurity" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="setting-row">
-                <span>Renforcer la securité</span>
-                <label class="switch">
-                    <input type="checkbox" id="toggletab" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-        <div class="sidebar-section">
-            <div class="sidebar-section-title">Affichage</div>
-            <div class="setting-row">
-                <span>Afficher l'heure</span>
-                <label class="switch">
-                    <input type="checkbox" id="toggleTime" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="setting-row">
-                <span>Afficher la météo</span>
-                <label class="switch">
-                    <input type="checkbox" id="toggleWeather" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="setting-row">
-                <span>Afficher les actualités</span>
-                <label class="switch">
-                    <input type="checkbox" id="toggleNews" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="setting-row">
-                <span>Afficher les notes</span>
-                <label class="switch">
-                    <input type="checkbox" id="toggleNotes" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="setting-row">
-                <span>Afficher les raccourcis</span>
-                <label class="switch">
-                    <input type="checkbox" id="toggleShortcuts" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-        <div class="sidebar-section">
-            <div class="sidebar-section-title">Plus</div>
-        <button class="sidebar-btn" onclick="window.open('https://github.com/')">Soutenir Devlaubin</button>
-        <button class="sidebar-btn" onclick="window.open('https://github.com/Devlaubin/New-Tab/issues/1')">FAQ</button>
-        <button class="sidebar-btn" onclick="window.open('https://github.com/Devlaubin/New-Tab/blob/main/README.md#-new-tab-page')">README</button>
-    </div>
-</aside>
-
-<!-- Main container -->
-<main class="container" id="mainContainer">
-
-    <!-- Time & Greeting -->
-    <div class="time-section fade-in" id="timeSection">
-        <div class="greeting-name" id="greetingName"></div>
-        <div class="time" id="time">00:00</div>
-        <div class="date" id="date"></div>
     </div>
 
-    <!-- Search -->
-    <div class="search-section fade-in">
-        <div class="search-box">
-            <button class="search-engine-btn" id="engineBtn" onclick="openEngineModal()">
-                <img id="engineIcon" src="" alt=""> <span id="engineLabel">Google</span>
+    <div class="container">
+        <h1>🎲 Pika Pika 🎲</h1>
+        <p class="subtitle">¿Quién será elegido hoy?</p>
+        <!-- Botón para mostrar información de actualización -->
+        <div class="update-button-wrapper" style="text-align:center; margin-bottom:1rem;">
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <textarea id="studentInput" placeholder="Escriba aquí..."
+                    autocomplete="off"></textarea>
+                <button class="btn-add" onclick="addStudent()">Añadir</button>
+            </div>
+
+            <div class="students-list" id="studentsList"></div>
+
+            <button class="btn-plouf" id="ploufBtn" onclick="startPlouf()" disabled>
+                ¡Pika Pika!
             </button>
-            <input type="text" class="search-input" id="searchInput"
-                placeholder="Rechercher ou entrer une URL..." autocomplete="off" aria-label="Recherche">
-            <div class="suggestions" id="suggestions"></div>
+            <button class="btn-clear" id="clearBtn" onclick="clearStudents()" disabled style="margin-top:0.5rem; background:#ff6868; color:white;">
+                Borrar todo
+            </button>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <p class="empty-state">Añadir aquí......</p>
         </div>
     </div>
-
-    <!-- Shortcuts -->
-    <div class="shortcuts-section fade-in" id="shortcutsSection">
-        <div class="shortcuts-grid" id="shortcutsGrid"></div>
-    </div>
-
-    <!-- Weather -->
-    <div class="weather-section fade-in" id="weatherSection">
-        <div class="weather-left">
-            <div class="weather-icon-big" id="weatherIcon">⏳</div>
-            <div>
-                <div class="weather-temp" id="weatherTemp">--°C</div>
-                <div class="weather-desc" id="weatherDesc">Chargement...</div>
-                <div class="weather-city" id="weatherCity">📍 Tours</div>
-            </div>
-        </div>
-        <div class="weather-forecast" id="weatherForecast"></div>
-    </div>
-
-    <!-- News -->
-    <div class="news-section fade-in" id="newsSection">
-        <div class="news-container" id="newsContainer">
-            <div class="news-loading">Chargement des actualités...</div>
-        </div>
-    </div>
-
-    <!-- Notes -->
-    <div class="notes-section fade-in" id="notesSection">
-        <textarea class="notes-area" id="notesArea" placeholder="Notes rapides... (sauvegardées automatiquement)" rows="2"></textarea>
-    </div>
-
-</main>
-
-<!-- THEME MODAL -->
-<div class="modal-overlay" id="themeModal">
-    <div class="modal">
-        <div class="modal-title">Choisir un thème</div>
-        <div class="color-grid" id="colorGrid"></div>
-        <div class="modal-btns">
-            <button class="btn btn-secondary" onclick="closeModal('themeModal')">Fermer</button>
-        </div>
-    </div>
-</div>
-
-<!-- NAME MODAL -->
-<div class="modal-overlay" id="nameModal">
-    <div class="modal">
-        <div class="modal-title">Votre prénom</div>
-        <p class="name-label">Entrez votre prénom pour personnaliser la page :</p>
-        <input type="text" class="modal-input" id="nameInput" placeholder="ex: Alex" maxlength="30">
-        <div class="modal-btns">
-            <button class="btn btn-secondary" onclick="closeModal('nameModal')">Annuler</button>
-            <button class="btn btn-primary" onclick="saveName()">Enregistrer</button>
-        </div>
-    </div>
-</div>
-
-<!-- ENGINE MODAL -->
-<div class="modal-overlay" id="engineModal">
-    <div class="modal">
-        <div class="modal-title"> Moteur de recherche</div>
-            <p id="pengine">Moteur recommander > Qwant</p>
-        <div class="engine-grid" id="engineGrid"></div>
-        <div class="modal-btns">
-            <button id="btn-modal-engine" class="btn btn-secondary" onclick="closeModal('engineModal')">Fermer</button>
-        </div>
-    </div>
-</div>
-
-<!-- SHORTCUT MODAL -->
-<div class="modal-overlay" id="shortcutModal">
-    <div class="modal">
-        <div class="modal-title">Ajouter un raccourci</div>
-        <p class="name-label">Nom du site :</p>
-        <input type="text" class="modal-input" id="shortcutName" placeholder="ex: GitHub" maxlength="25">
-        <p class="name-label">URL :</p>
-        <input type="text" class="modal-input" id="shortcutUrl" placeholder="ex: https://github.com">
-        <div class="modal-btns">
-            <button class="btn btn-secondary" onclick="closeModal('shortcutModal')">Annuler</button>
-            <button class="btn btn-primary" onclick="saveShortcut()">Ajouter</button>
-        </div>
-    </div>
-</div>
-
-<!-- FIRST VISIT NAME MODAL -->
-<div class="modal-overlay" id="firstVisitModal">
-    <div class="modal">
-        <div class="modal-title">👋 Bienvenue !</div>
-        <p class="name-label" style="margin-bottom:12px;font-size:14px;color:#555;">Comment vous appelez-vous ? (optionnel)</p>
-        <input type="text" class="modal-input" id="firstNameInput" placeholder="Votre prénom..." maxlength="30">
-        <div class="modal-btns">
-            <button class="btn btn-secondary" onclick="saveFirstName(false)">Passer</button>
-            <button class="btn btn-primary" onclick="saveFirstName(true)">Commencer</button>
-        </div>
-    </div>
-</div>
-
-<script src="index.js"></script>
+    <footer>
+        <p>
+            © 2026 Hecho con ❤️ por <a href="https://github.com/Devlaubin" target="_blank"
+                style="color: var(--secondary); text-decoration: none; font-weight: 600;">Aubin</a>
+        </p>
+        <button id="openUpdateBtn" class="btn-update">Actualización e información</button>
+    </footer>
 </body>
+
 </html>
