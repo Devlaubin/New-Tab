@@ -885,6 +885,27 @@
             flex-shrink: 0;
         }
 
+        /* RESULTS CONTAINERS */
+        #srp {
+            display: none;
+        }
+
+        #wr {
+            display: none;
+        }
+
+        #ig {
+            display: none;
+        }
+
+        #nr {
+            display: none;
+        }
+
+        #vr {
+            display: none;
+        }
+
         /* ANIMATIONS */
         @keyframes slideUp {
             from {
@@ -1072,7 +1093,7 @@
                 <div class="ft-right">
                     <a class="ft-link" href="https://github.com/Devlaubin/New-Tab" target="_blank" rel="noopener noreferrer"
                         title="Code source sur GitHub">OPEN SOURCE</a>
-                    <a class="ft-link" href="/" title="Retour à l'accueil">ACCUEIL</a>
+                    <a class="ft-link" href="index.html" title="Retour à l'accueil">ACCUEIL</a>
                 </div>
             </footer>
         </div>
@@ -1190,6 +1211,7 @@
       showSRP(); pushURL(); doSearch();
     }
         function showSRP() {
+            E.srp.style.display = 'block';
             E.sq.value = Q;
             document.querySelectorAll('.ft').forEach(t => t.classList.toggle('active', t.dataset.tab === TAB));
         }
