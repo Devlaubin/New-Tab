@@ -20,7 +20,7 @@ const engines = [
     { id: 'brave', name: 'Brave', icon: 'https://brave.com/favicon.ico', url: 'https://search.brave.com/search?q=' },
     { id: 'qwant', name: 'Qwant', icon: 'images/qwant_logo.png', url: 'https://www.qwant.com/?q=' },
     { id: 'startpage', name: 'Start', icon: 'https://www.startpage.com/favicon.ico', url: 'https://www.startpage.com/sp/search?q=' },
-    { id: 'Search', name: 'Search', icon: 'https://new-tab-recherche.netlify.app/favicon.png', url: 'https://new-tab-recherche.netlify.app/search?q=' },
+    { id: 'Search', name: 'Search', icon: 'https://new-tab-devlaubin.netlify.app/favicon.png', url: '/search?q=' },
 ];
 
 // ===================== DEFAULT SHORTCUTS =====================
