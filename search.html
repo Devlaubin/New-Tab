@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>SRCH — Le web sans filtre</title>
+    <title>SRCH — New-Tab recherche</title>
     <meta name="description" content="Moteur de recherche libre. Sans pub, sans tracking. Partageable par URL." />
     <meta property="og:title" content="SRCH" />
     <meta property="og:description" content="Le web, sans filtre." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="icon" type="image/x-icon" href="/public/favicon.png">
+    <link rel="icon" type="image/x-icon" href="images/search.png" />
     <link rel="stylesheet" href="">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap"
@@ -1231,27 +1231,7 @@
 
 <body>
 
-    <!-- HOME -->
-    <div id="home">
-        <div id="home-bg"></div>
-        <div id="home-logo">Search</div>
-        <div id="home-sub">Le web, sans filtre.</div>
-        <div id="home-search-wrap">
-            <div class="sbox">
-                <input class="sbox-input" id="hq" type="text" placeholder="Que cherches-tu ?" autocomplete="off"
-                    spellcheck="false" aria-label="Champ de recherche principal" />
-                <button class="sbox-btn" onclick="go('hq')" aria-label="Lancer la recherche"
-                    title="Lancer la recherche">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8" />
-                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                    </svg>
-                </button>
-                <div class="sugg" id="hsugg"></div>
-            </div>
-        </div>
-    </div>
+    <!-- Partie d'accueil supprimée : cette page contient uniquement la SRP (résultats) -->
 
     <!-- SRP -->
     <div id="srp">
@@ -1374,26 +1354,27 @@
     let Q = '', TAB = 'general', PAGE = 1;
     let sgTimer = null, sgIdx = -1, warmupShown = false;
 
-    const $ = id => document.getElementById(id);
-    const E = {
-      home: $('home'), srp: $('srp'),
-      hq: $('hq'), sq: $('sq'),
-      hsugg: $('hsugg'), ssugg: $('ssugg'),
-      meta: $('meta'), warmup: $('warmup'),
-      loading: $('loading'), wr: $('wr'),
-      ig: $('ig'), nr: $('nr'), vr: $('vr'),
-      nores: $('nores'), errmsg: $('errmsg'),
-      pg: $('pg'), sbc: $('sbc'), toast: $('share-toast')
-    };
+        const $ = id => document.getElementById(id);
+        const E = {
+            srp: $('srp'),
+            sq: $('sq'),
+            ssugg: $('ssugg'),
+            meta: $('meta'), warmup: $('warmup'),
+            loading: $('loading'), wr: $('wr'),
+            ig: $('ig'), nr: $('nr'), vr: $('vr'),
+            nores: $('nores'), errmsg: $('errmsg'),
+            pg: $('pg'), sbc: $('sbc'), toast: $('share-toast')
+        };
 
-    // ── URL STATE ── ?q=query&tab=general&p=1
-    function readURL() {
-      const p = new URLSearchParams(location.search);
-      const q = p.get('q') || p.get('Q') || '';
-      const t = p.get('tab') || 'general';
-      const pg = parseInt(p.get('p') || '1', 10) || 1;
-      if (q) { Q = q; TAB = t; PAGE = pg; showSRP(); doSearch(); }
-    }
+        // ── URL STATE ── ?q=query&tab=general&p=1
+        function readURL() {
+            const p = new URLSearchParams(location.search);
+            const q = p.get('q') || p.get('Q') || '';
+            const t = p.get('tab') || 'general';
+            const pg = parseInt(p.get('p') || '1', 10) || 1;
+            if (!q) { window.location.href = 'index.html'; return; }
+            Q = q; TAB = t; PAGE = pg; showSRP(); doSearch();
+        }
     function pushURL() {
       const p = new URLSearchParams();
       p.set('q', Q);
@@ -1401,12 +1382,12 @@
       if (PAGE > 1) p.set('p', PAGE);
       history.pushState({}, '', `?${p.toString()}`);
     }
-    window.addEventListener('popstate', () => {
-      const p = new URLSearchParams(location.search);
-      const q = p.get('q') || p.get('Q') || '';
-      if (q) { Q = q; TAB = p.get('tab') || 'general'; PAGE = parseInt(p.get('p') || '1', 10) || 1; showSRP(); doSearch(); }
-      else { E.srp.style.display = 'none'; E.home.style.display = 'flex'; }
-    });
+        window.addEventListener('popstate', () => {
+            const p = new URLSearchParams(location.search);
+            const q = p.get('q') || p.get('Q') || '';
+            if (q) { Q = q; TAB = p.get('tab') || 'general'; PAGE = parseInt(p.get('p') || '1', 10) || 1; showSRP(); doSearch(); }
+            else { window.location.href = 'index.html'; }
+        });
 
     // ── SHARE ──
     function shareURL() {
@@ -1417,26 +1398,24 @@
       setTimeout(() => E.toast.classList.remove('show'), 2200);
     }
 
-    // ── INIT ──
-    E.hq.addEventListener('keydown', e => onKey(e, 'h'));
-    E.sq.addEventListener('keydown', e => onKey(e, 's'));
-    E.hq.addEventListener('input', () => suggest(E.hq, E.hsugg));
-    E.sq.addEventListener('input', () => suggest(E.sq, E.ssugg));
-    document.addEventListener('click', e => { if (!e.target.closest('.sbox')) closeSg(); });
-    readURL();
+        // ── INIT ──
+        E.sq.addEventListener('keydown', e => onKey(e));
+        E.sq.addEventListener('input', () => suggest(E.sq, E.ssugg));
+        document.addEventListener('click', e => { if (!e.target.closest('.sbox')) closeSg(); });
+        readURL();
 
-    function onKey(e, p) {
-      const box = p === 'h' ? E.hsugg : E.ssugg, inp = p === 'h' ? E.hq : E.sq;
-      const items = box.querySelectorAll('.sugg-item');
-      if (e.key === 'ArrowDown') { e.preventDefault(); sgIdx = Math.min(sgIdx + 1, items.length - 1); hlSg(items); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); sgIdx = Math.max(sgIdx - 1, -1); hlSg(items); }
-      else if (e.key === 'Enter') {
-        if (sgIdx >= 0 && items[sgIdx]) { inp.value = items[sgIdx].dataset.q; closeSg(); sgIdx = -1; }
-        go(p === 'h' ? 'hq' : 'sq');
-      } else if (e.key === 'Escape') closeSg();
-    }
-    function hlSg(items) { items.forEach((it, i) => it.classList.toggle('sel', i === sgIdx)); }
-    function closeSg() { E.hsugg.classList.remove('open'); E.ssugg.classList.remove('open'); }
+        function onKey(e) {
+            const box = E.ssugg, inp = E.sq;
+            const items = box.querySelectorAll('.sugg-item');
+            if (e.key === 'ArrowDown') { e.preventDefault(); sgIdx = Math.min(sgIdx + 1, items.length - 1); hlSg(items); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); sgIdx = Math.max(sgIdx - 1, -1); hlSg(items); }
+            else if (e.key === 'Enter') {
+                if (sgIdx >= 0 && items[sgIdx]) { inp.value = items[sgIdx].dataset.q; closeSg(); sgIdx = -1; }
+                go('sq');
+            } else if (e.key === 'Escape') closeSg();
+        }
+        function hlSg(items) { items.forEach((it, i) => it.classList.toggle('sel', i === sgIdx)); }
+        function closeSg() { if (E.ssugg) E.ssugg.classList.remove('open'); }
 
     // ── SUGGESTIONS ──
     async function suggest(inp, box) {
@@ -1459,29 +1438,26 @@
       }, 220);
     }
     function pickSg(val, el) {
-      const isHome = el.closest('#hsugg');
-      (isHome ? E.hq : E.sq).value = val;
-      closeSg(); go(isHome ? 'hq' : 'sq');
+            E.sq.value = val;
+            closeSg(); go('sq');
     }
 
     // ── NAV ──
-    function quick(q) { E.hq.value = q; go('hq'); }
-    function goHome() {
-      E.srp.style.display = 'none'; E.home.style.display = 'flex';
-      E.hq.value = ''; history.pushState({}, '', location.pathname);
-      E.hq.focus();
-    }
+        function quick(q) { E.sq.value = q; go('sq'); }
+        function goHome() {
+            window.location.href = 'index.html';
+        }
     function go(id) {
       const q = document.getElementById(id).value.trim();
       if (!q) return;
       closeSg(); Q = q; TAB = 'general'; PAGE = 1;
       showSRP(); pushURL(); doSearch();
     }
-    function showSRP() {
-      E.home.style.display = 'none'; E.srp.style.display = 'block';
-      E.sq.value = Q;
-      document.querySelectorAll('.ft').forEach(t => t.classList.toggle('active', t.dataset.tab === TAB));
-    }
+        function showSRP() {
+            E.srp.style.display = 'block';
+            E.sq.value = Q;
+            document.querySelectorAll('.ft').forEach(t => t.classList.toggle('active', t.dataset.tab === TAB));
+        }
     function tab(t) {
       TAB = t; PAGE = 1;
       document.querySelectorAll('.ft').forEach(f => f.classList.toggle('active', f.dataset.tab === t));
