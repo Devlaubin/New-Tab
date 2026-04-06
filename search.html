@@ -1223,17 +1223,20 @@
 
     // ── CLEAR ──
     function clearUI() {
-      E.meta.textContent = '';
-      [E.wr, E.ig, E.nr, E.vr].forEach(el => { el.innerHTML = ''; el.style.display = 'none'; });
-      E.nores.style.display = 'none'; E.errmsg.style.display = 'none';
-      E.pg.innerHTML = ''; E.sbc.innerHTML = ''; E.warmup.style.display = 'none';
+      if (E.meta) E.meta.textContent = '';
+      [E.wr, E.ig, E.nr, E.vr].forEach(el => { if(el) { el.innerHTML = ''; el.style.display = 'none'; } });
+      if(E.nores) E.nores.style.display = 'none';
+      if(E.errmsg) E.errmsg.style.display = 'none';
+      if(E.pg) E.pg.innerHTML = '';
+      if(E.sbc) E.sbc.innerHTML = '';
+      if(E.warmup) E.warmup.style.display = 'none';
     }
 
     // ── SEARCH ──
     async function doSearch() {
       clearUI();
-      E.loading.style.display = 'flex';
-      if (!warmupShown) { warmupShown = true; E.warmup.style.display = 'flex'; }
+      if (E.loading) E.loading.style.display = 'flex';
+      if (!warmupShown) { warmupShown = true; if(E.warmup) E.warmup.style.display = 'flex'; }
       const t0 = performance.now();
       const params = new URLSearchParams({ q: Q, format: 'json', language: 'fr-FR', categories: TAB, pageno: PAGE });
       try {
@@ -1241,25 +1244,26 @@
         if (!res.ok) throw new Error(`Erreur ${res.status} — le serveur est peut-être en cold start (~30s), réessaie.`);
         const data = await res.json();
         const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
-        E.loading.style.display = 'none'; E.warmup.style.display = 'none';
+        if (E.loading) E.loading.style.display = 'none';
+        if (E.warmup) E.warmup.style.display = 'none';
         const items = data.results || [];
         const total = data.number_of_results || 0;
-        E.meta.innerHTML = `<span>${total ? '~' + Number(total).toLocaleString('fr-FR') + ' résultats' : items.length + ' résultats'}</span><span class="sep">·</span><span>${elapsed}s</span><span class="sep">·</span><span>Google + Bing + DDG</span>`;
-        if (!items.length) { E.nores.style.display = 'block'; return; }
+        if (E.meta) E.meta.innerHTML = `<span>${total ? '~' + Number(total).toLocaleString('fr-FR') + ' résultats' : items.length + ' résultats'}</span><span class="sep">·</span><span>${elapsed}s</span><span class="sep">·</span><span>Google + Bing + DDG</span>`;
+        if (!items.length) { if(E.nores) E.nores.style.display = 'block'; return; }
         if (TAB === 'general') renderWeb(items, data);
         else if (TAB === 'images') renderImages(items);
         else if (TAB === 'news') renderNews(items);
         else renderVideos(items);
         renderPg(items.length);
       } catch (err) {
-        E.loading.style.display = 'none';
-        E.errmsg.innerHTML = `⚠ ${err.message}`;
-        E.errmsg.style.display = 'block';
+        if (E.loading) E.loading.style.display = 'none';
+        if (E.errmsg) { E.errmsg.innerHTML = `⚠ ${err.message}`; E.errmsg.style.display = 'block'; }
       }
     }
 
     // ── WEB ──
     function renderWeb(items, data) {
+      if (!E.wr) return;
       E.wr.innerHTML = items.map((r, i) => {
         const dom = xDom(r.url);
         const engs = (r.engines || []).slice(0, 3).map(e => `<span class="ri-eng-tag">${e}</span>`).join('');
@@ -1278,8 +1282,9 @@
 
     // ── IMAGES ──
     function renderImages(items) {
+      if (!E.ig) return;
       const f = items.filter(r => r.img_src || r.thumbnail_src);
-      if (!f.length) { E.nores.style.display = 'block'; return; }
+      if (!f.length) { if(E.nores) E.nores.style.display = 'block'; return; }
       E.ig.innerHTML = f.map(r => `
     <div class="ic" onclick="window.open('${esc(r.url)}','_blank')">
       <img src="${r.img_src || r.thumbnail_src}" loading="lazy" onerror="this.style.display='none'"/>
@@ -1293,6 +1298,7 @@
 
     // ── NEWS ──
     function renderNews(items) {
+      if (!E.nr) return;
       E.nr.innerHTML = items.map((r, i) => `
     <div class="ni" style="animation-delay:${i * .04}s">
       <div class="ni-thumb">${r.img_src ? `<img src="${r.img_src}" loading="lazy" onerror="this.parentElement.textContent='📰'"/>` : '📰'}</div>
@@ -1307,6 +1313,7 @@
 
     // ── VIDEOS ──
     function renderVideos(items) {
+      if (!E.vr) return;
       E.vr.innerHTML = items.map((r, i) => `
     <div class="vi" style="animation-delay:${i * .04}s">
       <div class="vi-thumb" onclick="window.open('${esc(r.url)}','_blank')">
@@ -1331,7 +1338,7 @@
       const lo = Math.max(1, PAGE - 2), hi = Math.min(10, PAGE + 2);
       for (let p = lo; p <= hi; p++)html += `<button class="pb ${p === PAGE ? 'active' : ''}" onclick="gp(${p})">${p}</button>`;
       if (count >= 10) html += `<button class="pb" onclick="gp(${PAGE + 1})">NEXT<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>`;
-      E.pg.innerHTML = html;
+      if (E.pg) E.pg.innerHTML = html;
     }
     function gp(p) { if (p < 1 || p > 10) return; PAGE = p; pushURL(); clearUI(); doSearch(); document.querySelector('#srp-hd').scrollIntoView({ behavior: 'smooth' }); }
 
