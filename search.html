@@ -17,20 +17,16 @@
     <style>
         :root {
             --bg: linear-gradient(135deg, #888a96 0%, #71a5cf 100%);
-            --glass: rgba(255, 255, 255, 0.14);
-            --glass-border: rgba(255, 255, 255, 0.25);
+            --glass: rgba(255,255,255,0.14);
+            --glass-border: rgba(255,255,255,0.25);
             --text: #ffffff;
-            --text-sub: rgba(255, 255, 255, 0.75);
+            --text-sub: rgba(255,255,255,0.75);
             --accent: #ffffff;
             --radius: 18px;
-            --sidebar-bg: rgba(255, 255, 255, 0.97);
+            --sidebar-bg: rgba(255,255,255,0.97);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'DM Sans', sans-serif;
@@ -87,11 +83,7 @@
             visibility: hidden;
             transition: all 0.3s;
         }
-
-        .overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        .overlay.active { opacity: 1; visibility: visible; }
 
         /* SIDEBAR */
         .sidebar {
@@ -113,9 +105,7 @@
             border-radius: 22px;
         }
 
-        .sidebar.active {
-            left: 0;
-        }
+        .sidebar.active { left: 0; }
 
         .sidebar-header {
             padding: 28px 24px 22px;
@@ -124,10 +114,7 @@
             border-bottom: 1px solid #f0f0f0;
         }
 
-        .sidebar-title {
-            font-size: 20px;
-            font-weight: 500;
-        }
+        .sidebar-title { font-size: 20px; font-weight: 500; }
 
         .sidebar-body {
             padding: 20px;
@@ -162,52 +149,7 @@
             transition: all 0.2s;
         }
 
-        .sidebar-btn:hover {
-            background: #eaeaea;
-        }
-
-        .api-label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: #999;
-            margin-bottom: 8px;
-        }
-
-        .api-input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #e8e8e8;
-            border-radius: 8px;
-            font-size: 13px;
-            margin-bottom: 8px;
-            box-sizing: border-box;
-            font-family: 'Courier New', monospace;
-            transition: border 0.2s;
-        }
-
-        .api-input:focus {
-            outline: none;
-            border-color: #71a5cf;
-            box-shadow: 0 0 0 2px rgba(113, 165, 207, 0.1);
-        }
-
-        .api-save-btn {
-            width: 100%;
-            padding: 8px 12px;
-            background: #71a5cf;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .api-save-btn:hover {
-            background: #5a8fb5;
-        }
+        .sidebar-btn:hover { background: #eaeaea; }
 
         /* MAIN LAYOUT */
         .srp-layout {
@@ -256,7 +198,7 @@
 
         .sbox-input {
             width: 100%;
-            padding: 17px 90px 17px 24px;
+            padding: 17px 24px 17px 24px;
             font-size: 16px;
             border: 1px solid rgba(255, 255, 255, 0.8);
             border-radius: 50px;
@@ -267,7 +209,7 @@
             font-family: 'DM Sans', sans-serif;
         }
 
-        .sbox-input:hover {
+        .sbox-input:hover { 
             background: rgba(211, 211, 211, 0.95);
             border: 1px solid rgba(255, 255, 255, 1);
         }
@@ -278,18 +220,11 @@
             transform: scale(1.01);
         }
 
-        /* Right-side button group */
-        .sbox-actions {
+        .sbox-btn {
             position: absolute;
-            right: 8px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .sbox-btn {
             width: 36px;
             height: 36px;
             border-radius: 50%;
@@ -302,284 +237,16 @@
             justify-content: center;
             transition: all 0.2s;
             font-weight: 700;
-            flex-shrink: 0;
         }
 
         .sbox-btn:hover {
             background: rgba(0, 0, 0, 0.2);
-            transform: scale(1.1);
+            transform: translateY(-50%) scale(1.1);
         }
 
         .sbox-btn svg {
             width: 15px;
-            height: 15px;
-        }
-
-        /* Camera button */
-        .sbox-cam {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            background: rgba(0, 0, 0, 0.1);
-            color: #333;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            flex-shrink: 0;
-            position: relative;
-        }
-
-        .sbox-cam:hover {
-            background: rgba(113, 165, 207, 0.4);
-            color: white;
-            transform: scale(1.1);
-        }
-
-        .sbox-cam.has-image {
-            background: rgba(113, 165, 207, 0.6);
-            color: white;
-        }
-
-        .sbox-cam svg {
-            width: 15px;
-            height: 15px;
-        }
-
-        /* Image preview pill */
-        #img-pill {
-            display: none;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.92);
-            border: 1px solid rgba(113, 165, 207, 0.5);
-            border-radius: 50px;
-            padding: 6px 12px 6px 6px;
-            margin-bottom: 10px;
-            animation: slideDown 0.25s ease;
-        }
-
-        #img-pill.visible {
-            display: flex;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-8px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        #img-pill-thumb {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid rgba(113, 165, 207, 0.5);
-        }
-
-        #img-pill-label {
-            font-size: 12px;
-            color: #555;
-            font-weight: 500;
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 200px;
-        }
-
-        #img-pill-remove {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #e0e0e0;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            color: #555;
-            flex-shrink: 0;
-        }
-
-        #img-pill-remove:hover {
-            background: #f0a0a0;
-            color: #c00;
-        }
-
-        #img-pill-remove svg {
-            width: 10px;
-            height: 10px;
-        }
-
-        /* Vision analyzing overlay */
-        #vision-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(6px);
-            z-index: 3000;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        #vision-overlay.active {
-            display: flex;
-        }
-
-        .vision-card {
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 24px;
-            padding: 32px 40px;
-            text-align: center;
-            max-width: 340px;
-            width: 90%;
-            backdrop-filter: blur(20px);
-        }
-
-        .vision-img-preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 16px;
-            object-fit: cover;
-            margin: 0 auto 20px;
-            display: block;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-        }
-
-        .vision-title {
-            font-family: 'DM Serif Display', serif;
-            font-size: 20px;
-            color: white;
-            margin-bottom: 8px;
-        }
-
-        .vision-sub {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 24px;
-            line-height: 1.5;
-        }
-
-        .vision-dots {
-            display: flex;
-            gap: 6px;
-            justify-content: center;
-        }
-
-        .vision-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            animation: vPulse 1.4s ease-in-out infinite;
-        }
-
-        .vision-dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .vision-dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes vPulse {
-
-            0%,
-            100% {
-                opacity: 0.3;
-                transform: scale(0.8);
-            }
-
-            50% {
-                opacity: 1;
-                transform: scale(1.2);
-            }
-        }
-
-        /* Vision result banner */
-        #vision-banner {
-            display: none;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.13);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 14px;
-            padding: 10px 14px;
-            margin-bottom: 16px;
-            gap: 10px;
-            align-items: flex-start;
-            animation: slideDown 0.3s ease;
-        }
-
-        #vision-banner.visible {
-            display: flex;
-        }
-
-        #vision-banner-thumb {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            object-fit: cover;
-            flex-shrink: 0;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        #vision-banner-text {
-            flex: 1;
-            min-width: 0;
-        }
-
-        #vision-banner-label {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 3px;
-        }
-
-        #vision-banner-desc {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.4;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-
-        #vision-banner-close {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: rgba(255, 255, 255, 0.5);
-            padding: 2px;
-            flex-shrink: 0;
-            transition: color 0.2s;
-        }
-
-        #vision-banner-close:hover {
-            color: white;
-        }
-
-        #vision-banner-close svg {
-            width: 14px;
-            height: 14px;
-            display: block;
+            height: 15px
         }
 
         /* FILTER TABS */
@@ -626,7 +293,7 @@
 
         .ft svg {
             width: 12px;
-            height: 12px;
+            height: 12px
         }
 
         /* RESULTS CONTAINER */
@@ -653,7 +320,7 @@
             gap: 12px;
         }
 
-        /* SEARCH RESULTS */
+        /* SEARCH RESULTS STYLING */
         .ri {
             padding: 16px;
             animation: slideUp 0.3s ease both;
@@ -696,7 +363,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 50%;
+            border-radius: 50%
         }
 
         .ri-crumb {
@@ -792,7 +459,7 @@
         }
 
         .ic:hover .ic-ov {
-            opacity: 1;
+            opacity: 1
         }
 
         .ic-src {
@@ -973,36 +640,17 @@
             border-radius: 6px;
         }
 
-        .sk-a {
-            height: 10px;
-        }
-
-        .sk-b {
-            height: 14px;
-            width: 80%;
-        }
-
-        .sk-c {
-            height: 10px;
-            width: 100%;
-        }
-
-        .sk-d {
-            height: 10px;
-            width: 60%;
-        }
+        .sk-a { height: 10px; }
+        .sk-b { height: 14px; width: 80%; }
+        .sk-c { height: 10px; width: 100%; }
+        .sk-d { height: 10px; width: 60%; }
 
         @keyframes shimmer {
-            0% {
-                background-position: 200% 0;
-            }
-
-            100% {
-                background-position: -200% 0;
-            }
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
-        /* WARMUP */
+        /* WARMUP MESSAGE */
         #warmup {
             display: none;
             align-items: center;
@@ -1029,24 +677,12 @@
             animation: wp 1.2s ease-in-out infinite;
         }
 
-        .wu-dot:nth-child(2) {
-            animation-delay: .2s;
-        }
-
-        .wu-dot:nth-child(3) {
-            animation-delay: .4s;
-        }
+        .wu-dot:nth-child(2) { animation-delay: .2s; }
+        .wu-dot:nth-child(3) { animation-delay: .4s; }
 
         @keyframes wp {
-
-            0%,
-            100% {
-                opacity: .2;
-            }
-
-            50% {
-                opacity: 1;
-            }
+            0%, 100% { opacity: .2; }
+            50% { opacity: 1; }
         }
 
         /* NO RESULTS */
@@ -1070,7 +706,7 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        /* ERROR */
+        /* ERROR MESSAGE */
         #errmsg {
             display: none;
             padding: 12px 16px;
@@ -1170,6 +806,11 @@
             color: white;
         }
 
+        /* SIDEBAR SUGGESTIONS */
+        #sb {
+            display: none;
+        }
+
         /* SHARE TOAST */
         #share-toast {
             position: fixed;
@@ -1244,7 +885,7 @@
             flex-shrink: 0;
         }
 
-        /* HIDDEN RESULT CONTAINERS */
+        /* RESULTS CONTAINERS */
         #srp {
             display: none;
         }
@@ -1271,7 +912,6 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -1307,31 +947,10 @@
                 grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             }
         }
-
-        #img-file-input {
-            display: none;
-        }
     </style>
 </head>
 
 <body>
-
-    <!-- Hidden file input -->
-    <input type="file" id="img-file-input" accept="image/*" />
-
-    <!-- Vision Analyzing Overlay -->
-    <div id="vision-overlay">
-        <div class="vision-card">
-            <img id="vision-preview-img" class="vision-img-preview" src="" alt="" />
-            <div class="vision-title">Analyse en cours...</div>
-            <div class="vision-sub">ChatGPT analyse votre image pour générer une recherche pertinente.</div>
-            <div class="vision-dots">
-                <div class="vision-dot"></div>
-                <div class="vision-dot"></div>
-                <div class="vision-dot"></div>
-            </div>
-        </div>
-    </div>
 
     <!-- Menu Toggle -->
     <div class="menu-toggle" id="menuToggle">
@@ -1352,14 +971,6 @@
         </div>
         <div class="sidebar-body">
             <div class="sidebar-section">
-                <div class="sidebar-section-title">API</div>
-                <div class="setting-row">
-                    <label for="openai-key" class="api-label">Clé OpenAI</label>
-                    <input type="password" id="openai-key" class="api-input" placeholder="sk-..." />
-                    <button class="api-save-btn" onclick="saveOpenAIKey()">Enregistrer</button>
-                </div>
-            </div>
-            <div class="sidebar-section">
                 <div class="sidebar-section-title">Recherche</div>
                 <div class="setting-row">
                     <span>Nouvelle page de résultats</span>
@@ -1378,91 +989,54 @@
 
     <!-- Main Layout -->
     <div class="srp-layout">
+        <!-- SRP -->
         <div id="srp">
             <header id="srp-hd">
-                <div id="srp-logo" onclick="goHome()" role="button" tabindex="0" aria-label="Retour à l'accueil">SRCH
-                </div>
+                <div id="srp-logo" onclick="goHome()" role="button" tabindex="0" aria-label="Retour à l'accueil"
+                    title="Retour à l'accueil">SRCH</div>
                 <div id="srp-sw">
-                    <!-- Image pill -->
-                    <div id="img-pill">
-                        <img id="img-pill-thumb" src="" alt="" />
-                        <span id="img-pill-label">image.jpg</span>
-                        <button id="img-pill-remove" onclick="clearImage()" title="Retirer l'image">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                                stroke-linecap="round">
-                                <line x1="18" y1="6" x2="6" y2="18" />
-                                <line x1="6" y1="6" x2="18" y2="18" />
-                            </svg>
-                        </button>
-                    </div>
-
                     <div class="sbox">
                         <input class="sbox-input" id="sq" type="text" placeholder="Rechercher..." autocomplete="off"
                             spellcheck="false" aria-label="Champ de recherche" />
-                        <div class="sbox-actions">
-                            <!-- Camera button -->
-                            <button class="sbox-cam" id="cam-btn" onclick="triggerImagePick()"
-                                title="Rechercher par image">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path
-                                        d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                                    <circle cx="12" cy="13" r="4" />
-                                </svg>
-                            </button>
-                            <!-- Search button -->
-                            <button class="sbox-btn" onclick="go('sq')" aria-label="Lancer la recherche"
-                                title="Lancer la recherche">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8" />
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="sugg" id="ssugg"></div>
-                    </div>
-
-                    <!-- Vision result banner -->
-                    <div id="vision-banner">
-                        <img id="vision-banner-thumb" src="" alt="" />
-                        <div id="vision-banner-text">
-                            <div id="vision-banner-label">🔍 Recherche par image</div>
-                            <div id="vision-banner-desc"></div>
-                        </div>
-                        <button id="vision-banner-close" onclick="clearVisionBanner()" title="Fermer">
+                        <button class="sbox-btn" onclick="go('sq')" aria-label="Lancer la recherche"
+                            title="Lancer la recherche">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                                stroke-linecap="round">
-                                <line x1="18" y1="6" x2="6" y2="18" />
-                                <line x1="6" y1="6" x2="18" y2="18" />
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
                             </svg>
                         </button>
+                        <div class="sugg" id="ssugg"></div>
                     </div>
                 </div>
             </header>
 
             <div id="fbar" role="tablist" aria-label="Filtres de recherche">
-                <div class="ft active" data-tab="general" onclick="tab('general')" role="tab" tabindex="0">
+                <div class="ft active" data-tab="general" onclick="tab('general')" role="tab" aria-selected="true"
+                    tabindex="0" title="Résultats web">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8" />
                         <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>WEB
                 </div>
-                <div class="ft" data-tab="images" onclick="tab('images')" role="tab" tabindex="-1">
+                <div class="ft" data-tab="images" onclick="tab('images')" role="tab" aria-selected="false" tabindex="-1"
+                    title="Résultats images">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="18" height="18" rx="2" />
                         <circle cx="8.5" cy="8.5" r="1.5" />
                         <polyline points="21 15 16 10 5 21" />
                     </svg>IMAGES
                 </div>
-                <div class="ft" data-tab="news" onclick="tab('news')" role="tab" tabindex="-1">
+                <div class="ft" data-tab="news" onclick="tab('news')" role="tab" aria-selected="false" tabindex="-1"
+                    title="Résultats actualités">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path
                             d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2" />
                         <path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z" />
                     </svg>NEWS
                 </div>
-                <div class="ft" data-tab="videos" onclick="tab('videos')" role="tab" tabindex="-1">
+                <div class="ft" data-tab="videos" onclick="tab('videos')" role="tab" aria-selected="false" tabindex="-1"
+                    title="Résultats vidéos">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polygon points="23 7 16 12 23 17 23 7" />
                         <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
@@ -1517,9 +1091,9 @@
 
             <footer id="srp-ft" role="contentinfo">
                 <div class="ft-right">
-                    <a class="ft-link" href="https://github.com/Devlaubin/New-Tab" target="_blank"
-                        rel="noopener noreferrer">OPEN SOURCE</a>
-                    <a class="ft-link" href="index.html">ACCUEIL</a>
+                    <a class="ft-link" href="https://github.com/Devlaubin/New-Tab" target="_blank" rel="noopener noreferrer"
+                        title="Code source sur GitHub">OPEN SOURCE</a>
+                    <a class="ft-link" href="index.html" title="Retour à l'accueil">ACCUEIL</a>
                 </div>
             </footer>
         </div>
@@ -1528,187 +1102,37 @@
     <div id="share-toast">LIEN COPIÉ !</div>
 
     <script>
-        const API = '/api';
-        let Q = '', TAB = 'general', PAGE = 1;
-        let sgTimer = null, sgIdx = -1, warmupShown = false;
-
-        // ── IMAGE SEARCH STATE ──
-        let currentImageB64 = null;      // base64 data of the loaded image (no prefix)
-        let currentImageMime = 'image/jpeg';
-        let currentImageDataURL = null;  // for display (with prefix)
-        let currentImageName = '';
-        let visionDescription = '';      // Claude's description used as query
+    const API = '/api';
+    let Q = '', TAB = 'general', PAGE = 1;
+    let sgTimer = null, sgIdx = -1, warmupShown = false;
 
         const $ = id => document.getElementById(id);
         const E = {
-            srp: $('srp'), sq: $('sq'), ssugg: $('ssugg'),
+            srp: $('srp'),
+            sq: $('sq'),
+            ssugg: $('ssugg'),
             meta: $('meta'), warmup: $('warmup'),
             loading: $('loading'), wr: $('wr'),
             ig: $('ig'), nr: $('nr'), vr: $('vr'),
             nores: $('nores'), errmsg: $('errmsg'),
-            pg: $('pg'), toast: $('share-toast'),
-            menuToggle: $('menuToggle'), overlay: $('overlay'), sidebar: $('sidebar'),
-            fileInput: $('img-file-input'),
-            camBtn: $('cam-btn'),
-            imgPill: $('img-pill'), imgPillThumb: $('img-pill-thumb'), imgPillLabel: $('img-pill-label'),
-            visionOverlay: $('vision-overlay'), visionPreviewImg: $('vision-preview-img'),
-            visionBanner: $('vision-banner'), visionBannerThumb: $('vision-banner-thumb'), visionBannerDesc: $('vision-banner-desc'),
-            openaiKeyInput: $('openai-key')
+            pg: $('pg'), sbc: $('sbc'), toast: $('share-toast'),
+            menuToggle: $('menuToggle'),
+            overlay: $('overlay'),
+            sidebar: $('sidebar')
         };
 
-        // Load OpenAI key on init
-        let openaiKey = localStorage.getItem('openai-key') || '';
-        if (E.openaiKeyInput) E.openaiKeyInput.value = openaiKey;
-
-        function saveOpenAIKey() {
-            const key = E.openaiKeyInput.value.trim();
-            if (!key) {
-                alert('Veuillez entrer une clé API OpenAI valide');
-                return;
-            }
-            localStorage.setItem('openai-key', key);
-            openaiKey = key;
-            alert('Clé API OpenAI enregistrée avec succès!');
-        }
-
-        // Menu
-        E.menuToggle.addEventListener('click', () => { E.sidebar.classList.toggle('active'); E.overlay.classList.toggle('active'); });
-        E.overlay.addEventListener('click', () => { E.sidebar.classList.remove('active'); E.overlay.classList.remove('active'); });
-
-        // ── IMAGE PICK ──
-        function triggerImagePick() {
-            E.fileInput.click();
-        }
-
-        E.fileInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            E.fileInput.value = ''; // reset so same file can be re-selected
-            await loadImage(file);
+        // Menu Toggle
+        E.menuToggle.addEventListener('click', () => {
+            E.sidebar.classList.toggle('active');
+            E.overlay.classList.toggle('active');
         });
 
-        // Drag & drop on the search box
-        document.getElementById('srp-sw').addEventListener('dragover', e => { e.preventDefault(); });
-        document.getElementById('srp-sw').addEventListener('drop', async e => {
-            e.preventDefault();
-            const file = e.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) await loadImage(file);
+        E.overlay.addEventListener('click', () => {
+            E.sidebar.classList.remove('active');
+            E.overlay.classList.remove('active');
         });
 
-        async function loadImage(file) {
-            currentImageMime = file.type || 'image/jpeg';
-            currentImageName = file.name;
-
-            const dataURL = await readFileAsDataURL(file);
-            currentImageDataURL = dataURL;
-            currentImageB64 = dataURL.split(',')[1];
-
-            // Show pill
-            E.imgPillThumb.src = dataURL;
-            E.imgPillLabel.textContent = file.name.length > 28 ? file.name.slice(0, 25) + '...' : file.name;
-            E.imgPill.classList.add('visible');
-            E.camBtn.classList.add('has-image');
-
-            // Auto-analyze and search
-            await analyzeAndSearch();
-        }
-
-        function readFileAsDataURL(file) {
-            return new Promise((res, rej) => {
-                const reader = new FileReader();
-                reader.onload = e => res(e.target.result);
-                reader.onerror = rej;
-                reader.readAsDataURL(file);
-            });
-        }
-
-        function clearImage() {
-            currentImageB64 = null;
-            currentImageDataURL = null;
-            currentImageName = '';
-            visionDescription = '';
-            E.imgPill.classList.remove('visible');
-            E.camBtn.classList.remove('has-image');
-            clearVisionBanner();
-        }
-
-        function clearVisionBanner() {
-            E.visionBanner.classList.remove('visible');
-        }
-
-        // ── VISION: analyze image with ChatGPT ──
-        async function analyzeAndSearch() {
-            if (!currentImageB64) return;
-
-            if (!openaiKey) {
-                alert('Veuillez configurer votre clé OpenAI dans les paramètres');
-                return;
-            }
-
-            // Show overlay
-            E.visionPreviewImg.src = currentImageDataURL;
-            E.visionOverlay.classList.add('active');
-
-            try {
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${openaiKey}`
-                    },
-                    body: JSON.stringify({
-                        model: 'gpt-4-vision',
-                        max_tokens: 1000,
-                        messages: [{
-                            role: 'user',
-                            content: [
-                                {
-                                    type: 'image_url',
-                                    image_url: { url: `data:${currentImageMime};base64,${currentImageB64}` }
-                                },
-                                { type: 'text', text: 'Analyse cette image et génère une requête de recherche adaptée.\n\nRéponds UNIQUEMENT avec un objet JSON valide (sans backticks, sans commentaire), format :\n{"query": "...", "description": "..."}\n- "query" : requête de recherche concise et précise en français (4-10 mots), optimisée pour un moteur de recherche.\n- "description" : description courte de l\'image en français (1-2 phrases).' }
-                            ]
-                        }]
-                    })
-                });
-
-                const data = await response.json();
-                const raw = data.content?.find(b => b.type === 'text')?.text || '';
-
-                let parsed = { query: '', description: '' };
-                try {
-                    parsed = JSON.parse(raw.trim());
-                } catch {
-                    // fallback: try to extract JSON
-                    const match = raw.match(/\{[\s\S]*\}/);
-                    if (match) parsed = JSON.parse(match[0]);
-                }
-
-                visionDescription = parsed.description || '';
-                const searchQuery = parsed.query || raw.trim().slice(0, 80);
-
-                E.visionOverlay.classList.remove('active');
-
-                // Show banner
-                E.visionBannerThumb.src = currentImageDataURL;
-                E.visionBannerDesc.textContent = visionDescription;
-                E.visionBanner.classList.add('visible');
-
-                // Set query and search
-                E.sq.value = searchQuery;
-                Q = searchQuery; TAB = 'general'; PAGE = 1;
-                showSRP(); pushURL(); doSearch();
-
-            } catch (err) {
-                E.visionOverlay.classList.remove('active');
-                if (E.errmsg) {
-                    E.errmsg.innerHTML = `⚠ Erreur lors de l'analyse de l'image : ${err.message}`;
-                    E.errmsg.style.display = 'block';
-                }
-            }
-        }
-
-        // ── URL STATE ──
+        // ── URL STATE ── ?q=query&tab=general&p=1
         function readURL() {
             const p = new URLSearchParams(location.search);
             const q = p.get('q') || p.get('Q') || '';
@@ -1717,15 +1141,13 @@
             if (!q) { window.location.href = 'index.html'; return; }
             Q = q; TAB = t; PAGE = pg; showSRP(); doSearch();
         }
-
-        function pushURL() {
-            const p = new URLSearchParams();
-            p.set('q', Q);
-            if (TAB !== 'general') p.set('tab', TAB);
-            if (PAGE > 1) p.set('p', PAGE);
-            history.pushState({}, '', `?${p.toString()}`);
-        }
-
+    function pushURL() {
+      const p = new URLSearchParams();
+      p.set('q', Q);
+      if (TAB !== 'general') p.set('tab', TAB);
+      if (PAGE > 1) p.set('p', PAGE);
+      history.pushState({}, '', `?${p.toString()}`);
+    }
         window.addEventListener('popstate', () => {
             const p = new URLSearchParams(location.search);
             const q = p.get('q') || p.get('Q') || '';
@@ -1749,187 +1171,187 @@
                 go('sq');
             } else if (e.key === 'Escape') closeSg();
         }
-
         function hlSg(items) { items.forEach((it, i) => it.classList.toggle('sel', i === sgIdx)); }
         function closeSg() { if (E.ssugg) E.ssugg.classList.remove('open'); }
 
-        // ── SUGGESTIONS ──
-        async function suggest(inp, box) {
-            clearTimeout(sgTimer);
-            const q = inp.value.trim();
-            if (q.length < 2) { box.classList.remove('open'); return; }
-            sgTimer = setTimeout(async () => {
-                try {
-                    const res = await fetch(`${API}/autocompleter?q=${encodeURIComponent(q)}&format=json`);
-                    const data = await res.json();
-                    const sugs = Array.isArray(data[1]) ? data[1] : (Array.isArray(data) ? data.filter(s => typeof s === 'string') : []);
-                    if (!sugs.length) { box.classList.remove('open'); return; }
-                    box.innerHTML = sugs.slice(0, 7).map(s => `
-                    <div class="sugg-item" data-q="${esc(s)}" onclick="pickSg('${esc(s)}',this)">
-                        <svg class="sugg-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                        ${s}
-                    </div>`).join('');
-                    box.classList.add('open'); sgIdx = -1;
-                } catch { }
-            }, 220);
+    // ── SUGGESTIONS ──
+    async function suggest(inp, box) {
+      clearTimeout(sgTimer);
+      const q = inp.value.trim();
+      if (q.length < 2) { box.classList.remove('open'); return; }
+      sgTimer = setTimeout(async () => {
+        try {
+          const res = await fetch(`${API}/autocompleter?q=${encodeURIComponent(q)}&format=json`);
+          const data = await res.json();
+          const sugs = Array.isArray(data[1]) ? data[1] : (Array.isArray(data) ? data.filter(s => typeof s === 'string') : []);
+          if (!sugs.length) { box.classList.remove('open'); return; }
+          box.innerHTML = sugs.slice(0, 7).map(s => `
+        <div class="sugg-item" data-q="${esc(s)}" onclick="pickSg('${esc(s)}',this)">
+          <svg class="sugg-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          ${s}
+        </div>`).join('');
+          box.classList.add('open'); sgIdx = -1;
+        } catch { }
+      }, 220);
+    }
+    function pickSg(val, el) {
+            E.sq.value = val;
+            closeSg(); go('sq');
+    }
+
+    // ── NAV ──
+        function quick(q) { E.sq.value = q; go('sq'); }
+        function goHome() {
+            window.location.href = 'index.html';
         }
-
-        function pickSg(val) { E.sq.value = val; closeSg(); go('sq'); }
-
-        // ── NAV ──
-        function goHome() { window.location.href = 'index.html'; }
-
-        function go(id) {
-            const q = document.getElementById(id).value.trim();
-            if (!q) return;
-            closeSg(); Q = q; TAB = 'general'; PAGE = 1;
-            showSRP(); pushURL(); doSearch();
-        }
-
+    function go(id) {
+      const q = document.getElementById(id).value.trim();
+      if (!q) return;
+      closeSg(); Q = q; TAB = 'general'; PAGE = 1;
+      showSRP(); pushURL(); doSearch();
+    }
         function showSRP() {
             E.srp.style.display = 'block';
             E.sq.value = Q;
             document.querySelectorAll('.ft').forEach(t => t.classList.toggle('active', t.dataset.tab === TAB));
         }
+    function tab(t) {
+      TAB = t; PAGE = 1;
+      document.querySelectorAll('.ft').forEach(f => f.classList.toggle('active', f.dataset.tab === t));
+      pushURL(); clearUI(); doSearch();
+    }
 
-        function tab(t) {
-            TAB = t; PAGE = 1;
-            document.querySelectorAll('.ft').forEach(f => f.classList.toggle('active', f.dataset.tab === t));
-            pushURL(); clearUI(); doSearch();
-        }
+    // ── CLEAR ──
+    function clearUI() {
+      if (E.meta) E.meta.textContent = '';
+      [E.wr, E.ig, E.nr, E.vr].forEach(el => { if(el) { el.innerHTML = ''; el.style.display = 'none'; } });
+      if(E.nores) E.nores.style.display = 'none';
+      if(E.errmsg) E.errmsg.style.display = 'none';
+      if(E.pg) E.pg.innerHTML = '';
+      if(E.sbc) E.sbc.innerHTML = '';
+      if(E.warmup) E.warmup.style.display = 'none';
+    }
 
-        // ── CLEAR ──
-        function clearUI() {
-            if (E.meta) E.meta.textContent = '';
-            [E.wr, E.ig, E.nr, E.vr].forEach(el => { if (el) { el.innerHTML = ''; el.style.display = 'none'; } });
-            if (E.nores) E.nores.style.display = 'none';
-            if (E.errmsg) E.errmsg.style.display = 'none';
-            if (E.pg) E.pg.innerHTML = '';
-            if (E.warmup) E.warmup.style.display = 'none';
-        }
+    // ── SEARCH ──
+    async function doSearch() {
+      clearUI();
+      if (E.loading) E.loading.style.display = 'flex';
+      if (!warmupShown) { warmupShown = true; if(E.warmup) E.warmup.style.display = 'flex'; }
+      const t0 = performance.now();
+      const params = new URLSearchParams({ q: Q, format: 'json', language: 'fr-FR', categories: TAB, pageno: PAGE });
+      try {
+        const res = await fetch(`${API}/search?${params}`);
+        if (!res.ok) throw new Error(`Erreur ${res.status} — le serveur est peut-être en cold start (~30s), réessaie.`);
+        const data = await res.json();
+        const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
+        if (E.loading) E.loading.style.display = 'none';
+        if (E.warmup) E.warmup.style.display = 'none';
+        const items = data.results || [];
+        const total = data.number_of_results || 0;
+        if (E.meta) E.meta.innerHTML = `<span>${total ? '~' + Number(total).toLocaleString('fr-FR') + ' résultats' : items.length + ' résultats'}</span><span class="sep">·</span><span>${elapsed}s</span><span class="sep">·</span><span>Google + Bing + DDG</span>`;
+        if (!items.length) { if(E.nores) E.nores.style.display = 'block'; return; }
+        if (TAB === 'general') renderWeb(items, data);
+        else if (TAB === 'images') renderImages(items);
+        else if (TAB === 'news') renderNews(items);
+        else renderVideos(items);
+        renderPg(items.length);
+      } catch (err) {
+        if (E.loading) E.loading.style.display = 'none';
+        if (E.errmsg) { E.errmsg.innerHTML = `⚠ ${err.message}`; E.errmsg.style.display = 'block'; }
+      }
+    }
 
-        // ── SEARCH ──
-        async function doSearch() {
-            clearUI();
-            if (E.loading) E.loading.style.display = 'flex';
-            if (!warmupShown) { warmupShown = true; if (E.warmup) E.warmup.style.display = 'flex'; }
-            const t0 = performance.now();
-            const params = new URLSearchParams({ q: Q, format: 'json', language: 'fr-FR', categories: TAB, pageno: PAGE });
-            try {
-                const res = await fetch(`${API}/search?${params}`);
-                if (!res.ok) throw new Error(`Erreur ${res.status} — le serveur est peut-être en cold start (~30s), réessaie.`);
-                const data = await res.json();
-                const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
-                if (E.loading) E.loading.style.display = 'none';
-                if (E.warmup) E.warmup.style.display = 'none';
-                const items = data.results || [];
-                const total = data.number_of_results || 0;
-                const imgTag = currentImageB64 ? `<span>📷 Recherche par image</span><span class="sep">·</span>` : '';
-                if (E.meta) E.meta.innerHTML = `${imgTag}<span>${total ? '~' + Number(total).toLocaleString('fr-FR') + ' résultats' : items.length + ' résultats'}</span><span class="sep">·</span><span>${elapsed}s</span><span class="sep">·</span><span>Google + Bing + DDG</span>`;
-                if (!items.length) { if (E.nores) E.nores.style.display = 'block'; return; }
-                if (TAB === 'general') renderWeb(items, data);
-                else if (TAB === 'images') renderImages(items);
-                else if (TAB === 'news') renderNews(items);
-                else renderVideos(items);
-                renderPg(items.length);
-            } catch (err) {
-                if (E.loading) E.loading.style.display = 'none';
-                if (E.errmsg) { E.errmsg.innerHTML = `⚠ ${err.message}`; E.errmsg.style.display = 'block'; }
-            }
-        }
+    // ── WEB ──
+    function renderWeb(items, data) {
+      if (!E.wr) return;
+      E.wr.innerHTML = items.map((r, i) => {
+        const dom = xDom(r.url);
+        const engs = (r.engines || []).slice(0, 3).map(e => `<span class="ri-eng-tag">${e}</span>`).join('');
+        return `<div class="ri" style="animation-delay:${i * .04}s">
+      <div class="ri-top">
+        <div class="ri-fav"><img src="https://www.google.com/s2/favicons?sz=32&domain=${dom}" loading="lazy" onerror="this.parentElement.textContent='${(dom[0] || '?').toUpperCase()}'"/></div>
+        <span class="ri-crumb"><span>${dom}</span>${r.publishedDate ? ` · ${r.publishedDate.slice(0, 10)}` : ''}</span>
+      </div>
+      <a class="ri-title" href="${r.url}" target="_blank">${r.title}</a>
+      <div class="ri-desc">${hlQ(r.content || '', Q)}</div>
+      ${engs ? `<div class="ri-eng">${engs}</div>` : ''}
+    </div>`;
+      }).join('');
+      E.wr.style.display = 'block';
+    }
 
-        // ── WEB ──
-        function renderWeb(items) {
-            if (!E.wr) return;
-            E.wr.innerHTML = items.map((r, i) => {
-                const dom = xDom(r.url);
-                const engs = (r.engines || []).slice(0, 3).map(e => `<span class="ri-eng-tag">${e}</span>`).join('');
-                return `<div class="ri" style="animation-delay:${i * .04}s">
-                <div class="ri-top">
-                    <div class="ri-fav"><img src="https://www.google.com/s2/favicons?sz=32&domain=${dom}" loading="lazy" onerror="this.parentElement.textContent='${(dom[0] || '?').toUpperCase()}'"/></div>
-                    <span class="ri-crumb"><span>${dom}</span>${r.publishedDate ? ` · ${r.publishedDate.slice(0, 10)}` : ''}</span>
-                </div>
-                <a class="ri-title" href="${r.url}" target="_blank">${r.title}</a>
-                <div class="ri-desc">${hlQ(r.content || '', Q)}</div>
-                ${engs ? `<div class="ri-eng">${engs}</div>` : ''}
-            </div>`;
-            }).join('');
-            E.wr.style.display = 'block';
-        }
+    // ── IMAGES ──
+    function renderImages(items) {
+      if (!E.ig) return;
+      const f = items.filter(r => r.img_src || r.thumbnail_src);
+      if (!f.length) { if(E.nores) E.nores.style.display = 'block'; return; }
+      E.ig.innerHTML = f.map(r => `
+    <div class="ic" onclick="window.open('${esc(r.url)}','_blank')">
+      <img src="${r.img_src || r.thumbnail_src}" loading="lazy" onerror="this.style.display='none'"/>
+      <div class="ic-ov">
+        <div class="ic-src">${r.source || xDom(r.url)}</div>
+        <div class="ic-title">${(r.title || '').slice(0, 50)}</div>
+      </div>
+    </div>`).join('');
+      E.ig.style.display = 'grid';
+    }
 
-        // ── IMAGES ──
-        function renderImages(items) {
-            if (!E.ig) return;
-            const f = items.filter(r => r.img_src || r.thumbnail_src);
-            if (!f.length) { if (E.nores) E.nores.style.display = 'block'; return; }
-            E.ig.innerHTML = f.map(r => `
-            <div class="ic" onclick="window.open('${esc(r.url)}','_blank')">
-                <img src="${r.img_src || r.thumbnail_src}" loading="lazy" onerror="this.style.display='none'"/>
-                <div class="ic-ov">
-                    <div class="ic-src">${r.source || xDom(r.url)}</div>
-                    <div class="ic-title">${(r.title || '').slice(0, 50)}</div>
-                </div>
-            </div>`).join('');
-            E.ig.style.display = 'grid';
-        }
+    // ── NEWS ──
+    function renderNews(items) {
+      if (!E.nr) return;
+      E.nr.innerHTML = items.map((r, i) => `
+    <div class="ni" style="animation-delay:${i * .04}s">
+      <div class="ni-thumb">${r.img_src ? `<img src="${r.img_src}" loading="lazy" onerror="this.parentElement.textContent='📰'"/>` : '📰'}</div>
+      <div>
+        <div class="ni-src">${(r.source || xDom(r.url)).toUpperCase()}${r.publishedDate ? ' · ' + r.publishedDate.slice(0, 10) : ''}</div>
+        <div class="ni-title" onclick="window.open('${esc(r.url)}','_blank')">${r.title}</div>
+        <div class="ni-snip">${r.content || ''}</div>
+      </div>
+    </div>`).join('');
+      E.nr.style.display = 'block';
+    }
 
-        // ── NEWS ──
-        function renderNews(items) {
-            if (!E.nr) return;
-            E.nr.innerHTML = items.map((r, i) => `
-            <div class="ni" style="animation-delay:${i * .04}s">
-                <div class="ni-thumb">${r.img_src ? `<img src="${r.img_src}" loading="lazy" onerror="this.parentElement.textContent='📰'"/>` : '📰'}</div>
-                <div>
-                    <div class="ni-src">${(r.source || xDom(r.url)).toUpperCase()}${r.publishedDate ? ' · ' + r.publishedDate.slice(0, 10) : ''}</div>
-                    <div class="ni-title" onclick="window.open('${esc(r.url)}','_blank')">${r.title}</div>
-                    <div class="ni-snip">${r.content || ''}</div>
-                </div>
-            </div>`).join('');
-            E.nr.style.display = 'block';
-        }
+    // ── VIDEOS ──
+    function renderVideos(items) {
+      if (!E.vr) return;
+      E.vr.innerHTML = items.map((r, i) => `
+    <div class="vi" style="animation-delay:${i * .04}s">
+      <div class="vi-thumb" onclick="window.open('${esc(r.url)}','_blank')">
+        ${r.thumbnail ? `<img src="${r.thumbnail}" loading="lazy"/>` : ''}
+        <div class="vi-play">▶</div>
+      </div>
+      <div>
+        <div class="vi-title" onclick="window.open('${esc(r.url)}','_blank')">${r.title}</div>
+        <div class="vi-meta">${[r.source, r.publishedDate?.slice(0, 10)].filter(Boolean).join(' · ')}</div>
+        ${r.content ? `<div class="vi-meta" style="margin-top:4px;color:rgba(255,255,255,0.6)">${r.content.slice(0, 120)}</div>` : ''}
+      </div>
+    </div>`).join('');
+      E.vr.style.display = 'block';
+    }
 
-        // ── VIDEOS ──
-        function renderVideos(items) {
-            if (!E.vr) return;
-            E.vr.innerHTML = items.map((r, i) => `
-            <div class="vi" style="animation-delay:${i * .04}s">
-                <div class="vi-thumb" onclick="window.open('${esc(r.url)}','_blank')">
-                    ${r.thumbnail ? `<img src="${r.thumbnail}" loading="lazy"/>` : ''}
-                    <div class="vi-play">▶</div>
-                </div>
-                <div>
-                    <div class="vi-title" onclick="window.open('${esc(r.url)}','_blank')">${r.title}</div>
-                    <div class="vi-meta">${[r.source, r.publishedDate?.slice(0, 10)].filter(Boolean).join(' · ')}</div>
-                    ${r.content ? `<div class="vi-meta" style="margin-top:4px;color:rgba(255,255,255,0.6)">${r.content.slice(0, 120)}</div>` : ''}
-                </div>
-            </div>`).join('');
-            E.vr.style.display = 'block';
-        }
+    // ── PAGINATION ──
+    function renderPg(count) {
+      if (PAGE === 1 && count < 10) return;
+      let html = `<button class="pb" onclick="gp(${PAGE - 1})" ${PAGE === 1 ? 'disabled' : ''}>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>PREV
+  </button>`;
+      const lo = Math.max(1, PAGE - 2), hi = Math.min(10, PAGE + 2);
+      for (let p = lo; p <= hi; p++)html += `<button class="pb ${p === PAGE ? 'active' : ''}" onclick="gp(${p})">${p}</button>`;
+      if (count >= 10) html += `<button class="pb" onclick="gp(${PAGE + 1})">NEXT<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>`;
+      if (E.pg) E.pg.innerHTML = html;
+    }
+    function gp(p) { if (p < 1 || p > 10) return; PAGE = p; pushURL(); clearUI(); doSearch(); document.querySelector('#srp-hd').scrollIntoView({ behavior: 'smooth' }); }
 
-        // ── PAGINATION ──
-        function renderPg(count) {
-            if (PAGE === 1 && count < 10) return;
-            let html = `<button class="pb" onclick="gp(${PAGE - 1})" ${PAGE === 1 ? 'disabled' : ''}>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>PREV
-        </button>`;
-            const lo = Math.max(1, PAGE - 2), hi = Math.min(10, PAGE + 2);
-            for (let p = lo; p <= hi; p++) html += `<button class="pb ${p === PAGE ? 'active' : ''}" onclick="gp(${p})">${p}</button>`;
-            if (count >= 10) html += `<button class="pb" onclick="gp(${PAGE + 1})">NEXT<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>`;
-            if (E.pg) E.pg.innerHTML = html;
-        }
-
-        function gp(p) { if (p < 1 || p > 10) return; PAGE = p; pushURL(); clearUI(); doSearch(); document.querySelector('#srp-hd').scrollIntoView({ behavior: 'smooth' }); }
-
-        // ── UTILS ──
-        function xDom(url) { try { return new URL(url).hostname.replace('www.', '') } catch { return url } }
-        function esc(s) { return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;') }
-        function hlQ(text, q) {
-            if (!text || !q) return text;
-            q.trim().split(/\s+/).filter(w => w.length > 2).forEach(w => {
-                try { text = text.replace(new RegExp(`(${w})`, 'gi'), '<b>$1</b>') } catch { }
-            });
-            return text;
-        }
+    // ── UTILS ──
+    function xDom(url) { try { return new URL(url).hostname.replace('www.', '') } catch { return url } }
+    function esc(s) { return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;') }
+    function hlQ(text, q) {
+      if (!text || !q) return text;
+      q.trim().split(/\s+/).filter(w => w.length > 2).forEach(w => {
+        try { text = text.replace(new RegExp(`(${w})`, 'gi'), '<b>$1</b>') } catch { }
+      });
+      return text;
+    }
     </script>
 </body>
 
