@@ -1,11 +1,10 @@
 {
   "name": "new-tab-server",
   "version": "2.0.0",
-  "description": "Backend server for New-Tab — search counter (Supabase) + SearXNG proxy",
+  "description": "Compteur de recherches pour New-Tab",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
+    "start": "node server.js"
   },
   "engines": {
     "node": ">=18.0.0"
