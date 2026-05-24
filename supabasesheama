@@ -1,0 +1,17 @@
+-- À coller dans Supabase > SQL Editor > New query
+
+-- 1. Créer la table
+CREATE TABLE IF NOT EXISTS searches (
+    id          INTEGER PRIMARY KEY,
+    total       INTEGER NOT NULL DEFAULT 0,
+    today_count INTEGER NOT NULL DEFAULT 0,
+    last_reset  TEXT    NOT NULL DEFAULT ''
+);
+
+-- 2. Insérer la ligne unique (le serveur la crée aussi auto, mais c'est plus propre de le faire ici)
+INSERT INTO searches (id, total, today_count, last_reset)
+VALUES (1, 0, 0, to_char(now(), 'YYYY-MM-DD'))
+ON CONFLICT (id) DO NOTHING;
+
+-- 3. Désactiver RLS (Row Level Security) pour que le serveur puisse lire/écrire sans auth
+ALTER TABLE searches DISABLE ROW LEVEL SECURITY;
