@@ -86,6 +86,9 @@
   </head>
 
   <body>
+    <!-- AdBlock detector bait -->
+    <div class="adsbox" id="adDetector"></div>
+
     <!-- Background particles -->
     <div class="bg-particles" id="bgParticles"></div>
 
@@ -112,14 +115,21 @@
           <p>Version lite disponible</p>
           <br />
           <button class="sidebar-btn" onclick="window.open('/lite')">
-            Tester la nouvelle version
+            Tester version Lite
           </button>
         </div>
 
         <!-- ── COMPTEUR GLOBAL ── -->
         <div class="sidebar-section">
           <div class="sidebar-section-title">Statistiques</div>
-          <div class="sidebar-counter-block">
+          <div class="setting-row">
+            <span>Afficher le compteur</span>
+            <label class="switch">
+              <input type="checkbox" id="toggleCounter" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="sidebar-counter-block" id="counterSection">
             <div class="sidebar-counter-label">
               <span class="sidebar-counter-dot"></span>RECHERCHES GLOBALES
             </div>
@@ -217,6 +227,24 @@
               <span class="slider"></span>
             </label>
           </div>
+          <div class="import-export-btns">
+            <button class="sidebar-btn-small" onclick="exportShortcuts()">
+              Exporter
+            </button>
+            <button
+              class="sidebar-btn-small"
+              onclick="document.getElementById('importFile').click()"
+            >
+              Importer
+            </button>
+            <input
+              type="file"
+              id="importFile"
+              accept=".json"
+              style="display: none"
+              onchange="importShortcuts(this)"
+            />
+          </div>
         </div>
         <div class="sidebar-section">
           <div class="sidebar-section-title">Plus</div>
@@ -244,6 +272,9 @@
           >
             README
           </button>
+          <button class="sidebar-btn" onclick="window.open('howto.html')">
+            Comment utiliser
+          </button>
         </div>
         <div class="sidebar-section-info">
           <div class="sidebar-section-title-info">Informations</div>
@@ -257,7 +288,7 @@
             >Consulter le code source</a
           >
           <br />
-          <p>Version : 2.7.1</p>
+          <p>Version : 2.8.3</p>
         </div>
       </div>
     </aside>

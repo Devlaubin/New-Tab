@@ -123,6 +123,144 @@ html[data-theme="dark"] .btn-secondary:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
+/* Time section - AMÉLIORÉ MODE SOMBRE */
+html[data-theme="dark"] .time-section {
+  color: #f3f4f6;
+}
+
+html[data-theme="dark"] .greeting-name {
+  color: rgba(243, 244, 246, 0.85);
+}
+
+html[data-theme="dark"] .time {
+  color: #fff;
+}
+
+html[data-theme="dark"] .date {
+  color: rgba(243, 244, 246, 0.75);
+}
+
+/* Search engine button */
+html[data-theme="dark"] .search-engine-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+html[data-theme="dark"] .search-engine-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Weather section */
+html[data-theme="dark"] .weather-section {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+html[data-theme="dark"] .weather-temp {
+  color: #fff;
+}
+
+html[data-theme="dark"] .weather-desc {
+  color: rgba(243, 244, 246, 0.8);
+}
+
+html[data-theme="dark"] .weather-city {
+  color: rgba(243, 244, 246, 0.6);
+}
+
+html[data-theme="dark"] .forecast-day {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+html[data-theme="dark"] .forecast-day-name {
+  color: rgba(243, 244, 246, 0.7);
+}
+
+/* Notes section */
+html[data-theme="dark"] .notes-area {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+html[data-theme="dark"] .notes-area::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+html[data-theme="dark"] .notes-area:focus {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Shortcuts section */
+html[data-theme="dark"] .shortcut {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+html[data-theme="dark"] .shortcut:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+html[data-theme="dark"] .shortcut-add {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+html[data-theme="dark"] .shortcut-add:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+html[data-theme="dark"] .shortcut-add-icon {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Color swatches in modal */
+html[data-theme="dark"] .color-swatch {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+html[data-theme="dark"] .color-swatch:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Menu toggle button */
+html[data-theme="dark"] .menu-toggle {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+html[data-theme="dark"] .menu-toggle:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+html[data-theme="dark"] .menu-toggle:active {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* Overlay */
+html[data-theme="dark"] .overlay {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+/* Modal overlay */
+html[data-theme="dark"] .modal-overlay {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+/* Engine option */
+html[data-theme="dark"] .engine-option {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .engine-option:hover {
+  border-color: #71a5cf;
+  background: rgba(113, 165, 207, 0.15);
+}
+
+html[data-theme="dark"] .engine-option.active {
+  background: rgba(113, 165, 207, 0.2);
+  color: #71a5cf;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -289,6 +427,7 @@ body {
   -ms-user-select: none;
   user-select: none;
   border-radius: 22px;
+  box-sizing: border-box;
 }
 .sidebar::-webkit-scrollbar {
   width: 6px;
@@ -1131,4 +1270,52 @@ a {
   font-weight: 500;
   color: #333;
   margin-bottom: 8px;
+}
+
+/* AdBlock detector */
+.adsbox {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+}
+
+/* Import/Export buttons */
+.import-export-btns {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.sidebar-btn-small {
+  flex: 1;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border: 1px solid #e8e8e8;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sidebar-btn-small:hover {
+  background: #eaeaea;
+  transform: translateX(2px);
+}
+
+/* Mode sombre */
+html[data-theme="dark"] .import-export-btns {
+  gap: 6px;
+}
+
+html[data-theme="dark"] .sidebar-btn-small {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .sidebar-btn-small:hover {
+  background: rgba(255, 255, 255, 0.12);
 }

@@ -51,6 +51,13 @@ const engines = [
     url: "https://www.google.com/search?q=",
   },
   {
+    id: "google-images",
+    name: "Images",
+    icon: "https://www.google.com/favicon.ico",
+    url: "https://www.google.com/search?q=",
+    tbm: "isch",
+  },
+  {
     id: "bing",
     name: "Bing",
     icon: "https://www.bing.com/favicon.ico",
@@ -129,6 +136,7 @@ let showTime = localStorage.getItem("showTime") !== "false";
 let showWeather = localStorage.getItem("showWeather") === "true";
 let showNotes = localStorage.getItem("showNotes") === "true";
 let showShortcuts = localStorage.getItem("showShortcuts") !== "false";
+let showCounter = localStorage.getItem("showCounter") !== "false";
 let secureMode = localStorage.getItem("secureMode") !== "0";
 let shortcuts =
   JSON.parse(localStorage.getItem("shortcuts") || "null") || defaultShortcuts;
@@ -144,12 +152,12 @@ function fmtCount(n) {
 }
 
 // Incrémenter côté serveur après chaque recherche
-async function trackSearch() {
+async function trackSearch(query) {
   try {
     await fetch(`${API_BASE}/count`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tab: "homepage" }),
+      body: JSON.stringify({ tab: "homepage", query: query || "" }),
     });
   } catch (e) {
     /* silencieux — pas critique */
@@ -328,7 +336,7 @@ function doSearch(query) {
   hideSuggestions();
 
   // ── COMPTEUR : incrémenter avant de naviguer ──
-  trackSearch().finally(() => {
+  trackSearch(query).finally(() => {
     // Mise à jour optimiste du badge dans la sidebar
     const el = document.getElementById("sidebar-search-count");
     if (el && el.textContent !== "—") {
@@ -346,7 +354,9 @@ function doSearch(query) {
     window.location.href = "https://" + query;
   } else {
     const e = engines.find((e) => e.id === currentEngine) || engines[0];
-    window.location.href = e.url + encodeURIComponent(query);
+    let url = e.url + encodeURIComponent(query);
+    if (e.tbm) url += "&tbm=" + e.tbm;
+    window.location.href = url;
   }
 }
 
@@ -711,6 +721,23 @@ function initToggles() {
       : "none";
   });
 
+  const counterToggle = document.getElementById("toggleCounter");
+  if (counterToggle) {
+    const savedCounter = localStorage.getItem("showCounter");
+    showCounter = savedCounter !== "false";
+    counterToggle.checked = showCounter;
+    document.getElementById("counterSection").style.display = showCounter
+      ? ""
+      : "none";
+    counterToggle.addEventListener("change", (e) => {
+      showCounter = e.target.checked;
+      localStorage.setItem("showCounter", showCounter);
+      document.getElementById("counterSection").style.display = showCounter
+        ? ""
+        : "none";
+    });
+  }
+
   const AUTOFOCUS_KEY = "searchAutoFocusEnabled";
   const autoToggle = document.getElementById("toggleAutoFocus");
   if (autoToggle) {
@@ -894,6 +921,42 @@ function saveFirstName(save) {
   updateTime();
 }
 
+// Export shortcuts to JSON file
+function exportShortcuts() {
+  const data = JSON.stringify(shortcuts, null, 2);
+  const blob = new Blob([data], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "raccourcis-newtab.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Import shortcuts from JSON file
+function importShortcuts(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (Array.isArray(imported)) {
+        shortcuts = imported;
+        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+        renderShortcuts();
+        alert("Raccourcis imported avec succes !");
+      } else {
+        alert("Format invalide");
+      }
+    } catch {
+      alert("Erreur lors de l'import");
+    }
+  };
+  reader.readAsText(file);
+  input.value = "";
+}
+
 document.querySelectorAll(".modal-overlay").forEach((o) => {
   o.addEventListener("click", (e) => {
     if (e.target === o) o.classList.remove("active");
@@ -944,4 +1007,15 @@ document.getElementById("shortcutUrl").addEventListener("keydown", (e) => {
 });
 
 // ===================== START =====================
+// Detect AdBlock
+(function detectAdBlock() {
+  const ad = document.getElementById("adDetector");
+  if (!ad) return;
+  const rect = ad.getBoundingClientRect();
+  if (rect.height === 0 || rect.width === 0) {
+    // AdBlock detected - can show modal if needed
+    console.log("AdBlock detected!");
+  }
+})();
+
 init();
