@@ -175,8 +175,10 @@ async function loadSidebarCounter() {
 // ===================== INIT =====================
 function init() {
   applyTheme(currentTheme);
+  initThemeMode();
   applyVisibility();
   updateTime();
+
   setInterval(updateTime, 1000);
   renderEngine();
   renderShortcuts();
@@ -219,6 +221,25 @@ function applyTheme(gradient) {
   document.documentElement.style.setProperty("--bg", gradient);
   currentTheme = gradient;
   localStorage.setItem("theme", gradient);
+}
+
+function initThemeMode() {
+  const saved = localStorage.getItem("themeMode");
+  const isDark = saved === "dark";
+  if (isDark) document.documentElement.setAttribute("data-theme", "dark");
+  else document.documentElement.removeAttribute("data-theme");
+
+  const toggle = document.getElementById("toggleDarkMode");
+  if (toggle) toggle.checked = isDark;
+
+  if (toggle) {
+    toggle.addEventListener("change", (e) => {
+      const dark = e.target.checked;
+      if (dark) document.documentElement.setAttribute("data-theme", "dark");
+      else document.documentElement.removeAttribute("data-theme");
+      localStorage.setItem("themeMode", dark ? "dark" : "light");
+    });
+  }
 }
 
 function renderThemeModal() {
@@ -817,6 +838,44 @@ function openEngineModal() {
   renderEngineModal();
   openModal("engineModal");
   closeSidebar();
+}
+function openPrivateSearch() {
+  const query =
+    document.getElementById("searchInput")?.value.trim() || "navigation privée";
+  const engine = engines.find((e) => e.id === "duckduckgo") || engines[0];
+  const url = `${engine.url}${encodeURIComponent(query)}`;
+  window.open(url, "_blank", "noopener,noreferrer");
+  closeSidebar();
+}
+function clearNotes() {
+  if (!confirm("Effacer toutes les notes enregistrées ?")) return;
+  notes = "";
+  localStorage.setItem("notes", notes);
+  const area = document.getElementById("notesArea");
+  if (area) area.value = "";
+  closeSidebar();
+}
+function resetPreferences() {
+  if (!confirm("Réinitialiser les paramètres à leurs valeurs par défaut ?"))
+    return;
+  const keys = [
+    "theme",
+    "themeMode",
+    "engine",
+
+    "userName",
+    "showTime",
+    "showWeather",
+    "showNotes",
+    "showShortcuts",
+    "secureMode",
+    "searchAutoFocusEnabled",
+    "notes",
+    "shortcuts",
+    "visited",
+  ];
+  keys.forEach((key) => localStorage.removeItem(key));
+  location.reload();
 }
 
 function saveName() {
