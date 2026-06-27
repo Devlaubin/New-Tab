@@ -1,6 +1,0 @@
-- [ ] Lire/identifier le CSS et JS liés au thème (variables CSS, applyTheme, modal thème).
-- [ ] Ajouter un toggle “Thème sombre” dans la sidebar (section Apparence) sur index.html.
-- [ ] Étendre styles.css avec un mode sombre via variables CSS (ex: .theme-dark / [data-theme="dark"]).
-- [ ] Mettre à jour index.js pour charger/persister themeMode et appliquer la classe/attribut au démarrage.
-- [ ] Vérifier que les modals, sidebar, inputs et suggestions restent lisibles en mode sombre.
-- [ ] (Optionnel) Ajouter le même comportement à search.html si besoin.

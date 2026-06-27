@@ -1,16 +1,16 @@
 // ===================== SEARCH ENGINES =====================
 const engines = [
   {
-    id: "google",
-    name: "Google",
-    icon: "https://www.google.com/favicon.ico",
-    url: "https://www.google.com/search?q=",
-  },
-  {
     id: "duckduckgo",
     name: "Duck",
     icon: "https://duckduckgo.com/favicon.ico",
     url: "https://duckduckgo.com/?q=",
+  },
+  {
+    id: "google",
+    name: "Google",
+    icon: "https://www.google.com/favicon.ico",
+    url: "https://www.google.com/search?q=",
   },
   {
     id: "startpage",

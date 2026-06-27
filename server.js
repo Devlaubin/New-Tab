@@ -100,7 +100,36 @@ app.post("/count", async (req, res) => {
   }
 });
 
+// ── UPDATES (news) ──
+app.get("/news", async (req, res) => {
+  try {
+    const filePath = require("path").join(__dirname, "new.json");
+    const fs = require("fs");
+    const raw = fs.readFileSync(filePath, "utf-8");
+    const parsed = JSON.parse(raw);
+
+    const updates = Array.isArray(parsed.updates) ? parsed.updates : [];
+
+    // Sort by updatedAt DESC
+    updates.sort((a, b) => {
+      const ta = Date.parse(a.updatedAt || a.updated_at || 0) || 0;
+      const tb = Date.parse(b.updatedAt || b.updated_at || 0) || 0;
+      return tb - ta;
+    });
+
+    res.json({
+      ok: true,
+      updates,
+      count: updates.length,
+    });
+  } catch (e) {
+    console.error("GET /news error:", e.message);
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
 // ── START ──
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
 });
+

@@ -1,9 +1,7 @@
-crer un redame.md  complet,
 régler les problème du code,
 rajouter de l'IA et des recherche d'image google,
-header dans de la sidebar mal positionner partie non couverte a droite,
 ajout de nouvelle fonctionnalité utile,
 savoir quelle recherche on fais les utilisateur et les marque dans le server,
 désactiver les élement de la page comme les raccourci et tout pendant que l'utilisateur écrit dans la barre de recherche,
-mettre le pop-up désactiver ad block si l'utilisateur en a un, avec un test de fausse pub pour détecter,
-un bouton log dans la sidbar en haut avec les nouveauté qui ouvre une frame avec les dernière nouveauté classer par mise a jour.
+meteo marche vraiment
+Pour le chois des moteur de recherche dans la barrre de recherche changer pour un menu deriulent dans le theme du site 

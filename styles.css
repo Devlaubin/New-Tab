@@ -445,13 +445,11 @@ body {
   top: 0;
   z-index: 10;
   padding: 28px 24px 22px;
-  background: rgba(255, 255, 255, 0.95);
   color: #111;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   text-align: center;
 }
 .sidebar-header svg {

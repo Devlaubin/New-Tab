@@ -138,8 +138,10 @@ let showNotes = localStorage.getItem("showNotes") === "true";
 let showShortcuts = localStorage.getItem("showShortcuts") !== "false";
 let showCounter = localStorage.getItem("showCounter") !== "false";
 let secureMode = localStorage.getItem("secureMode") !== "0";
+let blockServer = localStorage.getItem("blockServer") === "true";
 let shortcuts =
   JSON.parse(localStorage.getItem("shortcuts") || "null") || defaultShortcuts;
+
 let editingShortcutIndex = null;
 let notes = localStorage.getItem("notes") || "";
 let notesTimer = null;
@@ -851,6 +853,79 @@ function openModal(id) {
 function closeModal(id) {
   document.getElementById(id).classList.remove("active");
 }
+
+// ===================== NEWS / UPDATES =====================
+async function loadNews() {
+  const container = document.getElementById("newsContainer");
+  const loading = document.getElementById("newsLoading");
+  if (!container || !loading) return;
+
+  container.style.display = "none";
+  loading.style.display = "block";
+
+  try {
+    const res = await fetch(`${API_BASE}/news`);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    const updates = Array.isArray(data.updates) ? data.updates : [];
+
+    updates.sort((a, b) => {
+      const ta = Date.parse(a.updatedAt || a.updated_at || 0) || 0;
+      const tb = Date.parse(b.updatedAt || b.updated_at || 0) || 0;
+      return tb - ta;
+    });
+
+    if (!updates.length) {
+      loading.textContent = "Aucune nouveauté pour le moment.";
+      container.innerHTML = "";
+      container.style.display = "none";
+      return;
+    }
+
+    container.innerHTML = updates
+      .map((u) => {
+        const title = u.title || u.name || u.id || "Mise à jour";
+        const source = u.source || "Changelog";
+        const updatedAt = u.updatedAt || u.updated_at || "";
+        const dateLabel = updatedAt
+          ? new Date(updatedAt).toLocaleDateString("fr-FR", {
+              year: "numeric",
+              month: "short",
+              day: "2-digit",
+            })
+          : "";
+        const url = u.url || "#";
+
+        const right = dateLabel
+          ? `<div class="news-source">${source} • ${dateLabel}</div>`
+          : `<div class="news-source">${source}</div>`;
+
+        return `
+          <a class="news-item" href="${url}" target="_blank" rel="noopener noreferrer">
+            <div class="news-title">${escHtml(title)}</div>
+            ${right}
+          </a>
+        `;
+      })
+      .join("");
+
+    loading.style.display = "none";
+    container.style.display = "block";
+  } catch (e) {
+    loading.textContent = "Impossible de charger les nouveautés.";
+    container.innerHTML = "";
+    container.style.display = "none";
+  }
+}
+
+function openNewsModal() {
+  const el = document.getElementById("newsModal");
+  if (!el) return;
+  openModal("newsModal");
+  loadNews();
+  closeSidebar();
+}
+
 function openThemeModal() {
   renderThemeModal();
   openModal("themeModal");

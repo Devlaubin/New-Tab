@@ -110,6 +110,16 @@
         <span class="sidebar-title">Paramètres</span>
       </div>
       <div class="sidebar-body">
+        <!-- Bouton Nouveautés en haut -->
+        <button
+          class="sidebar-btn"
+          style="margin-bottom: 18px"
+          onclick="openNewsModal()"
+        >
+          Log / Nouveautés
+        </button>
+
+        <!-- Ancien bloc Nouveautés (Lite) -->
         <div class="sidebar-section-new">
           <div class="sidebar-section-title-new">Nouveautés</div>
           <p>Version lite disponible</p>
@@ -163,9 +173,6 @@
           <button class="sidebar-btn" onclick="openEngineModal()">
             Moteur de recherche
           </button>
-          <button class="sidebar-btn" onclick="openPrivateSearch()">
-            Recherche privée
-          </button>
           <div class="setting-row">
             <span>Ouverture nouvel onglet</span>
             <label class="switch">
@@ -193,10 +200,20 @@
           <button class="sidebar-btn" onclick="clearNotes()">
             Effacer les notes
           </button>
+
+          <div class="setting-row">
+            <span>Bloquer l’envoi au serveur</span>
+            <label class="switch">
+              <input type="checkbox" id="toggleBlockServer" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
           <button class="sidebar-btn" onclick="resetPreferences()">
             Réinitialiser les paramètres
           </button>
         </div>
+
         <div class="sidebar-section">
           <div class="sidebar-section-title">Affichage</div>
           <div class="setting-row">
@@ -466,6 +483,24 @@
           </button>
           <button class="btn btn-primary" onclick="saveFirstName(true)">
             Commencer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEWS / UPDATES MODAL -->
+    <div class="modal-overlay" id="newsModal">
+      <div class="modal">
+        <div class="modal-title">Nouveautés</div>
+        <div id="newsLoading" class="news-loading">Chargement...</div>
+        <div
+          id="newsContainer"
+          class="news-container"
+          style="display: none"
+        ></div>
+        <div class="modal-btns" style="margin-top: 16px">
+          <button class="btn btn-secondary" onclick="closeModal('newsModal')">
+            Fermer
           </button>
         </div>
       </div>
