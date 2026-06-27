@@ -103,8 +103,31 @@ app.post("/count", async (req, res) => {
 // ── UPDATES (news) ──
 app.get("/news", async (req, res) => {
   try {
-    const filePath = require("path").join(__dirname, "new.json");
+    const path = require("path");
     const fs = require("fs");
+
+    // Cherche le fichier `new.json` dans le dossier du serveur (robuste)
+    // puis fallback sur le dossier courant.
+    const candidates = [
+      path.join(__dirname, "new.json"),
+      path.join(process.cwd(), "new.json"),
+      path.join(process.cwd(), "new.json"),
+    ];
+
+    let filePath = null;
+    for (const c of candidates) {
+      if (fs.existsSync(c)) {
+        filePath = c;
+        break;
+      }
+    }
+
+    if (!filePath) {
+      throw new Error(
+        "new.json introuvable. Vérifie que le fichier est présent à la racine du serveur (au même niveau que server.js) ou que le serveur est lancé depuis le bon dossier.",
+      );
+    }
+
     const raw = fs.readFileSync(filePath, "utf-8");
     const parsed = JSON.parse(raw);
 
@@ -127,6 +150,7 @@ app.get("/news", async (req, res) => {
     res.status(500).json({ ok: false, error: e.message });
   }
 });
+
 
 // ── START ──
 app.listen(PORT, () => {
