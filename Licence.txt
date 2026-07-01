@@ -1,7 +1,7 @@
                     LICENCE PUBLIQUE GÉNÉRALE GNU
                        Version 3, 29 juin 2007
 
-Copyright (C) 2026 [Votre Nom ou Nom de l'Entreprise]
+Copyright (C) 2026 [New-Tab]
 Chacun est permis de copier et de distribuer des copies conformes de ce 
 document de licence, mais sa modification n'est pas autorisée.
 
