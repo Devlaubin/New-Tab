@@ -123,162 +123,6 @@ html[data-theme="dark"] .btn-secondary:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* Time section - AMÉLIORÉ MODE SOMBRE */
-html[data-theme="dark"] .time-section {
-  color: #f3f4f6;
-}
-
-html[data-theme="dark"] .greeting-name {
-  color: rgba(243, 244, 246, 0.85);
-}
-
-html[data-theme="dark"] .time {
-  color: #fff;
-}
-
-html[data-theme="dark"] .date {
-  color: rgba(243, 244, 246, 0.75);
-}
-
-/* Search engine dropdown - dark mode */
-html[data-theme="dark"] .search-engine-btn {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.8);
-}
-
-html[data-theme="dark"] .search-engine-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-html[data-theme="dark"] .engine-dropdown-menu {
-  background: rgba(30, 32, 40, 0.98);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-}
-
-html[data-theme="dark"] .engine-dropdown-item {
-  color: #e5e7eb;
-}
-
-html[data-theme="dark"] .engine-dropdown-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-html[data-theme="dark"] .engine-dropdown-item.active {
-  background: rgba(113, 165, 207, 0.2);
-  color: #71a5cf;
-}
-
-/* Weather section */
-html[data-theme="dark"] .weather-section {
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-html[data-theme="dark"] .weather-temp {
-  color: #fff;
-}
-
-html[data-theme="dark"] .weather-desc {
-  color: rgba(243, 244, 246, 0.8);
-}
-
-html[data-theme="dark"] .weather-city {
-  color: rgba(243, 244, 246, 0.6);
-}
-
-html[data-theme="dark"] .forecast-day {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-html[data-theme="dark"] .forecast-day-name {
-  color: rgba(243, 244, 246, 0.7);
-}
-
-/* Notes section */
-html[data-theme="dark"] .notes-area {
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-html[data-theme="dark"] .notes-area::placeholder {
-  color: rgba(255, 255, 255, 0.35);
-}
-
-html[data-theme="dark"] .notes-area:focus {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-/* Shortcuts section */
-html[data-theme="dark"] .shortcut {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-html[data-theme="dark"] .shortcut:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-html[data-theme="dark"] .shortcut-add {
-  border-color: rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.6);
-}
-
-html[data-theme="dark"] .shortcut-add:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.85);
-}
-
-html[data-theme="dark"] .shortcut-add-icon {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-/* Color swatches in modal */
-html[data-theme="dark"] .color-swatch {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-html[data-theme="dark"] .color-swatch:hover {
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-/* Menu toggle button */
-html[data-theme="dark"] .menu-toggle {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.25);
-}
-
-html[data-theme="dark"] .menu-toggle:hover {
-  background: rgba(255, 255, 255, 0.25);
-}
-
-html[data-theme="dark"] .menu-toggle:active {
-  background: rgba(255, 255, 255, 0.35);
-}
-
-/* Overlay */
-html[data-theme="dark"] .overlay {
-  background: rgba(0, 0, 0, 0.55);
-}
-
-/* Modal overlay */
-html[data-theme="dark"] .modal-overlay {
-  background: rgba(0, 0, 0, 0.65);
-}
-
-/* Engine option */
-html[data-theme="dark"] .engine-option {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
-  color: #e5e7eb;
-}
-
-html[data-theme="dark"] .engine-option:hover {
-  border-color: #71a5cf;
-  background: rgba(113, 165, 207, 0.15);
-}
-
-html[data-theme="dark"] .engine-option.active {
-  background: rgba(113, 165, 207, 0.2);
-  color: #71a5cf;
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -287,7 +131,7 @@ html[data-theme="dark"] .engine-option.active {
 
 body {
   font-family: "DM Sans", sans-serif;
-  background: var(--bg);
+  background: black;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -297,37 +141,6 @@ body {
   color: var(--text);
   overflow-x: hidden;
   transition: background 0.6s ease;
-}
-
-/* Animated background particles */
-.bg-particles {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-}
-.particle {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
-  animation: float linear infinite;
-}
-@keyframes float {
-  0% {
-    transform: translateY(110vh) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-10vh) rotate(360deg);
-    opacity: 0;
-  }
 }
 
 /* Main container */
@@ -340,7 +153,11 @@ body {
   flex-direction: column;
   gap: 24px;
 }
-
+#lite-p{
+    color: white;
+    text-align: center;
+    font-size: 30px;
+}
 /* Fade-in animation */
 .fade-in {
   opacity: 0;
@@ -445,7 +262,6 @@ body {
   -ms-user-select: none;
   user-select: none;
   border-radius: 22px;
-  box-sizing: border-box;
 }
 .sidebar::-webkit-scrollbar {
   width: 6px;
@@ -463,11 +279,13 @@ body {
   top: 0;
   z-index: 10;
   padding: 28px 24px 22px;
+  background: rgba(255, 255, 255, 0.95);
   color: #111;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   text-align: center;
 }
 .sidebar-header svg {
@@ -662,14 +480,11 @@ input:checked + .slider:before {
 .search-box {
   position: relative;
 }
-.search-engine-dropdown {
+.search-engine-btn {
   position: absolute;
   left: 16px;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 10;
-}
-.search-engine-btn {
   background: rgba(0, 0, 0, 0.08);
   border: none;
   border-radius: 8px;
@@ -678,6 +493,7 @@ input:checked + .slider:before {
   font-weight: 600;
   color: #555;
   cursor: pointer;
+  z-index: 2;
   transition: all 0.2s;
   display: flex;
   align-items: center;
@@ -694,55 +510,6 @@ input:checked + .slider:before {
 .search-engine-btn img {
   width: 14px;
   height: 14px;
-  border-radius: 2px;
-}
-.dropdown-arrow {
-  transition: transform 0.2s ease;
-}
-.search-engine-dropdown.open .dropdown-arrow {
-  transform: rotate(180deg);
-}
-.engine-dropdown-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  min-width: 160px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-8px);
-  transition: all 0.2s ease;
-  overflow: hidden;
-  z-index: 100;
-}
-.search-engine-dropdown.open .engine-dropdown-menu {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-.engine-dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #333;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.engine-dropdown-item:hover {
-  background: #f0f0f0;
-}
-.engine-dropdown-item.active {
-  background: #eef5fb;
-  color: #2d78a8;
-}
-.engine-dropdown-item img {
-  width: 16px;
-  height: 16px;
   border-radius: 2px;
 }
 
@@ -1337,52 +1104,4 @@ a {
   font-weight: 500;
   color: #333;
   margin-bottom: 8px;
-}
-
-/* AdBlock detector */
-.adsbox {
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-}
-
-/* Import/Export buttons */
-.import-export-btns {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.sidebar-btn-small {
-  flex: 1;
-  padding: 8px 12px;
-  background: #f5f5f5;
-  border: 1px solid #e8e8e8;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #555;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.sidebar-btn-small:hover {
-  background: #eaeaea;
-  transform: translateX(2px);
-}
-
-/* Mode sombre */
-html[data-theme="dark"] .import-export-btns {
-  gap: 6px;
-}
-
-html[data-theme="dark"] .sidebar-btn-small {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.12);
-  color: #e5e7eb;
-}
-
-html[data-theme="dark"] .sidebar-btn-small:hover {
-  background: rgba(255, 255, 255, 0.12);
 }

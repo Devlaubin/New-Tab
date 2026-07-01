@@ -140,7 +140,7 @@ html[data-theme="dark"] .date {
   color: rgba(243, 244, 246, 0.75);
 }
 
-/* Search engine dropdown - dark mode */
+/* Search engine button */
 html[data-theme="dark"] .search-engine-btn {
   background: rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.8);
@@ -148,24 +148,6 @@ html[data-theme="dark"] .search-engine-btn {
 
 html[data-theme="dark"] .search-engine-btn:hover {
   background: rgba(255, 255, 255, 0.18);
-}
-
-html[data-theme="dark"] .engine-dropdown-menu {
-  background: rgba(30, 32, 40, 0.98);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-}
-
-html[data-theme="dark"] .engine-dropdown-item {
-  color: #e5e7eb;
-}
-
-html[data-theme="dark"] .engine-dropdown-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-html[data-theme="dark"] .engine-dropdown-item.active {
-  background: rgba(113, 165, 207, 0.2);
-  color: #71a5cf;
 }
 
 /* Weather section */
@@ -662,14 +644,11 @@ input:checked + .slider:before {
 .search-box {
   position: relative;
 }
-.search-engine-dropdown {
+.search-engine-btn {
   position: absolute;
   left: 16px;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 10;
-}
-.search-engine-btn {
   background: rgba(0, 0, 0, 0.08);
   border: none;
   border-radius: 8px;
@@ -678,6 +657,7 @@ input:checked + .slider:before {
   font-weight: 600;
   color: #555;
   cursor: pointer;
+  z-index: 2;
   transition: all 0.2s;
   display: flex;
   align-items: center;
@@ -694,55 +674,6 @@ input:checked + .slider:before {
 .search-engine-btn img {
   width: 14px;
   height: 14px;
-  border-radius: 2px;
-}
-.dropdown-arrow {
-  transition: transform 0.2s ease;
-}
-.search-engine-dropdown.open .dropdown-arrow {
-  transform: rotate(180deg);
-}
-.engine-dropdown-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  min-width: 160px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-8px);
-  transition: all 0.2s ease;
-  overflow: hidden;
-  z-index: 100;
-}
-.search-engine-dropdown.open .engine-dropdown-menu {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-.engine-dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #333;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.engine-dropdown-item:hover {
-  background: #f0f0f0;
-}
-.engine-dropdown-item.active {
-  background: #eef5fb;
-  color: #2d78a8;
-}
-.engine-dropdown-item img {
-  width: 16px;
-  height: 16px;
   border-radius: 2px;
 }
 

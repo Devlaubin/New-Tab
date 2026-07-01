@@ -156,10 +156,17 @@ function fmtCount(n) {
 // Incrémenter côté serveur après chaque recherche
 async function trackSearch(query) {
   try {
+    // Check if server tracking is blocked by user
+    if (localStorage.getItem("blockServer") === "true") return;
+
     await fetch(`${API_BASE}/count`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tab: "homepage", query: query || "" }),
+      body: JSON.stringify({
+        query: query || "",
+        engine: currentEngine || "google",
+        source: "homepage",
+      }),
     });
   } catch (e) {
     /* silencieux — pas critique */
@@ -193,7 +200,7 @@ function init() {
   renderEngine();
   renderShortcuts();
   renderThemeModal();
-  renderEngineModal();
+  initEngineDropdown();
   initToggles();
   initSecurity();
   initSearch();
@@ -201,6 +208,9 @@ function init() {
   createParticles();
   updateWeather();
   loadSidebarCounter();
+
+  // Update search input padding after fonts load
+  setTimeout(() => renderEngine(), 100);
 
   if (!localStorage.getItem("visited")) {
     setTimeout(() => openModal("firstVisitModal"), 600);
@@ -311,26 +321,90 @@ function renderEngine() {
   const e = engines.find((e) => e.id === currentEngine) || engines[0];
   document.getElementById("engineIcon").src = e.icon;
   document.getElementById("engineLabel").textContent = e.name;
+
+  // Adjust search input padding based on dropdown button width
+  const btn = document.getElementById("engineBtn");
+  const input = document.getElementById("searchInput");
+  if (btn && input) {
+    const btnWidth = btn.offsetWidth;
+    // 16px base left position + button width + 12px gap
+    const padding = 16 + btnWidth + 12;
+    input.style.paddingLeft = `${padding}px`;
+  }
 }
 
-function renderEngineModal() {
-  const grid = document.getElementById("engineGrid");
-  grid.innerHTML = "";
+// ===================== ENGINE DROPDOWN =====================
+function initEngineDropdown() {
+  const dropdown = document.getElementById("engineDropdown");
+  const btn = document.getElementById("engineBtn");
+  const menu = document.getElementById("engineDropdownMenu");
+
+  if (!dropdown || !btn || !menu) return;
+
+  // Populate dropdown menu
+  menu.innerHTML = "";
   engines.forEach((e) => {
-    const btn = document.createElement("button");
-    btn.className = "engine-option" + (e.id === currentEngine ? " active" : "");
-    btn.innerHTML = `<img src="${e.icon}" alt=""> ${e.name}`;
-    btn.onclick = () => {
+    const item = document.createElement("div");
+    item.className = "engine-dropdown-item" + (e.id === currentEngine ? " active" : "");
+    item.dataset.engineId = e.id;
+    item.innerHTML = `<img src="${e.icon}" alt=""> ${e.name}`;
+    item.addEventListener("click", (ev) => {
+      ev.stopPropagation();
       currentEngine = e.id;
       localStorage.setItem("engine", e.id);
       renderEngine();
-      document
-        .querySelectorAll(".engine-option")
-        .forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-    };
-    grid.appendChild(btn);
+      updateDropdownActive();
+      closeEngineDropdown();
+    });
+    menu.appendChild(item);
   });
+
+  // Toggle dropdown on button click
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const isOpen = dropdown.classList.toggle("open");
+    btn.setAttribute("aria-expanded", isOpen);
+  });
+
+  // Close on outside click
+  document.addEventListener("click", (e) => {
+    if (!dropdown.contains(e.target)) {
+      closeEngineDropdown();
+    }
+  });
+
+  // Close on Escape
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeEngineDropdown();
+  });
+}
+
+function closeEngineDropdown() {
+  const dropdown = document.getElementById("engineDropdown");
+  const btn = document.getElementById("engineBtn");
+  if (dropdown) dropdown.classList.remove("open");
+  if (btn) btn.setAttribute("aria-expanded", "false");
+}
+
+function updateDropdownActive() {
+  const items = document.querySelectorAll(".engine-dropdown-item");
+  items.forEach((item) => {
+    item.classList.toggle("active", item.dataset.engineId === currentEngine);
+  });
+}
+
+// Keep for compatibility with sidebar button
+function renderEngineModal() {
+  openEngineDropdown();
+}
+
+function openEngineDropdown() {
+  const dropdown = document.getElementById("engineDropdown");
+  const btn = document.getElementById("engineBtn");
+  if (dropdown) {
+    dropdown.classList.add("open");
+    if (btn) btn.setAttribute("aria-expanded", "true");
+  }
 }
 
 function doSearch(query) {
@@ -404,6 +478,7 @@ function initSearch() {
     "shortcutsSection",
     "notesSection",
   ];
+
   function setSearchActive(active) {
     _searchToggleIds.forEach((id) => {
       const el = document.getElementById(id);
@@ -429,10 +504,35 @@ function initSearch() {
     });
   }
 
-  input.addEventListener("focus", () => setSearchActive(true));
-  input.addEventListener("blur", () =>
-    setTimeout(() => setSearchActive(false), 180),
-  );
+  // Check if we need to hide elements based on input content
+  function checkSearchContent() {
+    const hasContent = input.value.trim().length > 0;
+    if (hasContent) {
+      setSearchActive(true);
+    } else {
+      setSearchActive(false);
+    }
+  }
+
+  // Hide elements when there's text in search bar
+  input.addEventListener("input", () => {
+    checkSearchContent();
+  });
+
+  input.addEventListener("focus", () => {
+    // Only hide if there's content, or keep focus behavior minimal
+    if (input.value.trim()) {
+      setSearchActive(true);
+    }
+  });
+
+  input.addEventListener("blur", () => {
+    // Only show elements again if no text
+    if (!input.value.trim()) {
+      setTimeout(() => setSearchActive(false), 180);
+    }
+  });
+
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".search-box")) hideSuggestions();
   });
@@ -626,8 +726,21 @@ function getWeatherIcon(desc) {
 
 async function updateWeather() {
   if (!showWeather) return;
+
+  const section = document.getElementById("weatherSection");
+  if (section) section.classList.add("weather-loading");
+
   try {
-    const res = await fetch("https://wttr.in/Chambray-les-Tours?format=j1");
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+    const res = await fetch(
+      "https://wttr.in/Chambray-les-Tours?format=j1&lang=fr",
+      { signal: controller.signal }
+    );
+    clearTimeout(timeoutId);
+
+    if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
     const cur = data.current_condition[0];
     const temp = cur.temp_C;
@@ -658,9 +771,11 @@ async function updateWeather() {
             `;
       forecastEl.appendChild(el);
     });
+    if (section) section.classList.remove("weather-loading");
   } catch (e) {
     document.getElementById("weatherDesc").textContent = "Météo non disponible";
     document.getElementById("weatherIcon").textContent = "🌡️";
+    if (section) section.classList.remove("weather-loading");
   }
 }
 
@@ -757,6 +872,16 @@ function initToggles() {
         const si = document.getElementById("searchInput");
         if (si) setTimeout(() => si.focus(), 50);
       }
+    });
+  }
+
+  // Block server tracking toggle
+  const blockServerToggle = document.getElementById("toggleBlockServer");
+  if (blockServerToggle) {
+    blockServerToggle.checked = blockServer;
+    blockServerToggle.addEventListener("change", (e) => {
+      blockServer = e.target.checked;
+      localStorage.setItem("blockServer", blockServer ? "true" : "false");
     });
   }
 }
@@ -1082,6 +1207,9 @@ document.getElementById("shortcutUrl").addEventListener("keydown", (e) => {
 });
 
 // ===================== START =====================
+// Update search input padding on resize
+window.addEventListener("resize", () => renderEngine());
+
 // Detect AdBlock
 (function detectAdBlock() {
   const ad = document.getElementById("adDetector");

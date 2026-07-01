@@ -88,19 +88,6 @@ app.get("/count", async (req, res) => {
 
 app.post("/count", async (req, res) => {
   try {
-    // Save search query to database
-    const { query, engine, source } = req.body;
-    if (query && typeof query === "string" && query.trim()) {
-      await supabase.from("search_queries").insert([
-        {
-          query: query.trim().slice(0, 500), // Limit query length
-          engine: engine || "unknown",
-          source: source || "homepage",
-        },
-      ]);
-    }
-
-    // Increment counter
     const row = await incrementCounter();
     res.json({
       total: row.total,

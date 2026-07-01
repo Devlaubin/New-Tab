@@ -305,7 +305,7 @@
             >Consulter le code source</a
           >
           <br />
-          <p>Version : 2.8.3</p>
+          <p>Version : 2.9.03</p>
         </div>
       </div>
     </aside>
@@ -322,14 +322,36 @@
       <!-- Search -->
       <div class="search-section fade-in">
         <div class="search-box">
-          <button
-            class="search-engine-btn"
-            id="engineBtn"
-            onclick="openEngineModal()"
-          >
-            <img id="engineIcon" src="" alt="" />
-            <span id="engineLabel">Google</span>
-          </button>
+          <div class="search-engine-dropdown" id="engineDropdown">
+            <button
+              class="search-engine-btn"
+              id="engineBtn"
+              type="button"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+            >
+              <img id="engineIcon" src="" alt="" />
+              <span id="engineLabel">Google</span>
+              <svg
+                class="dropdown-arrow"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div
+              class="engine-dropdown-menu"
+              id="engineDropdownMenu"
+              role="listbox"
+            >
+              <!-- Populated by JS -->
+            </div>
+          </div>
           <input
             type="text"
             class="search-input"

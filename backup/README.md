@@ -1,20 +1,5 @@
 # New Tab (New-Tab)
 
-Copyright (C) 2026 [New-Tab]
-
-Ce site web (et son code source) est un logiciel libre ; vous pouvez le
-redistribuer et/ou le modifier selon les termes de la Licence Publique
-Générale GNU telle que publiée par la Free Software Foundation ; soit
-la version 3 de la licence, soit (à votre discrétion) toute version ultérieure.
-
-Ce programme est distribué dans l'espoir qu'il sera utile, mais SANS
-AUCUNE GARANTIE ; sans même la garantie implicite de COMMERCIALISATION
-ou d'ADÉQUATION À UN BUT PARTICULIER. Voir la Licence Publique Générale
-GNU pour plus de détails.
-
-Vous devriez avoir reçu une copie de la Licence Publique Générale GNU
-avec ce programme. Sinon, voir <https://gnu.org>.
-
 Une page **New Tab** personnalisable : thème, sidebar paramètres, moteur de recherche, suggestions, notes, raccourcis, météo, compteur de recherches (via serveur Supabase), etc.
 
 > Projet en HTML/CSS/JS avec un backend Node/Express pour stocker le compteur.
@@ -97,12 +82,6 @@ Le backend crée automatiquement une ligne si elle n’existe pas, via `getCount
 ## Déploiement
 
 Le projet est compatible Netlify (fichiers présents : `netlify.toml`).
-
----
-
-## ScreenShot
-
-![Screenshot du site internet](/images/screenshot.png)
 
 ---
 

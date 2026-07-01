@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Tab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="images/search.png" type="image/png" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* ── COMPTEUR SIDEBAR ── */
+      .sidebar-counter-block {
+        background: linear-gradient(135deg, #71a5cf22, #888a9622);
+        border: 1px solid #e0e0e0;
+        border-radius: 16px;
+        padding: 14px 16px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .sidebar-counter-block::before {
+        content: "";
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #71a5cf33, transparent);
+        pointer-events: none;
+      }
+
+      .sidebar-counter-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: #aaa;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+
+      .sidebar-counter-value {
+        font-size: 36px;
+        font-weight: 300;
+        color: #111;
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+        letter-spacing: -1px;
+      }
+
+      .sidebar-counter-sub {
+        font-size: 11px;
+        color: #71a5cf;
+        margin-top: 4px;
+        font-weight: 500;
+        min-height: 16px;
+      }
+
+      .sidebar-counter-dot {
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #5dcaa5;
+        margin-right: 5px;
+        vertical-align: middle;
+        animation: sdpulse 2s ease infinite;
+      }
+
+      @keyframes sdpulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+
+        50% {
+          opacity: 0.3;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- Main container -->
+    <main class="container" id="mainContainer">
+
+        <h1 id="lite-p">
+            Lite
+        </h1>
+
+      <!-- Search -->
+      <div class="search-section fade-in">
+        <div class="search-box">
+          <button
+            class="search-engine-btn"
+            id="engineBtn"
+            onclick="openEngineModal()"
+          >
+            <img id="engineIcon" src="" alt="" />
+            <span id="engineLabel">Google</span>
+          </button>
+          <input
+            type="text"
+            class="search-input"
+            id="searchInput"
+            placeholder="Rechercher ou entrer une URL..."
+            autocomplete="off"
+            aria-label="Recherche"
+          />
+          <div class="suggestions" id="suggestions"></div>
+        </div>
+      </div>
+    <!-- ENGINE MODAL -->
+    <div class="modal-overlay" id="engineModal">
+      <div class="modal">
+        <div class="modal-title">Moteur de recherche</div>
+        <p id="pengine">Moteur recommandé &gt; Qwant</p>
+        <div class="engine-grid" id="engineGrid"></div>
+        <div class="modal-btns">
+          <button
+            id="btn-modal-engine"
+            class="btn btn-secondary"
+            onclick="closeModal('engineModal')"
+          >
+            Fermer
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>
