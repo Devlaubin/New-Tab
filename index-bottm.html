@@ -337,7 +337,37 @@
               />
               <path d="m19 16-.7 2.3L16 19l2.3.7L19 22l.7-2.3L22 19l-2.3-.7Z" />
             </svg>
-            <span id="spanjsp">Recherche IA</span>
+            <span id="spanjsp" >Recherche IA</span>
+          </div>
+          <div class="search-engine-dropdown" id="engineDropdown">
+            <button
+              class="search-engine-btn"
+              id="engineBtn"
+              type="button"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+            >
+              <img id="engineIcon" src="" alt="" />
+              <span id="engineLabel">Google</span>
+              <svg
+                class="dropdown-arrow"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div
+              class="engine-dropdown-menu"
+              id="engineDropdownMenu"
+              role="listbox"
+            >
+              <!-- Populated by JS -->
+            </div>
           </div>
           <input
             type="text"
@@ -348,36 +378,15 @@
             aria-label="Recherche"
           />
           <div class="search-actions">
-            <div class="search-engine-dropdown" id="engineDropdown">
-              <button
-                class="search-engine-btn"
-                id="engineBtn"
-                type="button"
-                aria-haspopup="listbox"
-                aria-expanded="false"
-              >
-                <img id="engineIcon" src="" alt="" />
-                <span id="engineLabel">Google</span>
-                <svg
-                  class="dropdown-arrow"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
-              </button>
-              <div
-                class="engine-dropdown-menu"
-                id="engineDropdownMenu"
-                role="listbox"
-              >
-                <!-- Populated by JS -->
-              </div>
-            </div>
+            <button
+              class="search-action search-add"
+              type="button"
+              onclick="openShortcutModal()"
+              aria-label="Ajouter un raccourci"
+              title="Ajouter un raccourci"
+            >
+              <span aria-hidden="true">+</span>
+            </button>
             <div class="search-actions-right">
               <button
                 class="search-action search-tool"
@@ -421,13 +430,6 @@
                   <path d="m21 15-4.5-4.5L8 19" />
                 </svg>
               </button>
-              <input
-                type="file"
-                id="lensImageInput"
-                accept="image/*"
-                hidden
-                aria-label="Choisir une image pour Google Lens"
-              />
               <button
                 class="search-action search-submit"
                 type="button"

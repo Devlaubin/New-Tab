@@ -325,12 +325,6 @@ function renderEngine() {
   // Adjust search input padding based on dropdown button width
   const btn = document.getElementById("engineBtn");
   const input = document.getElementById("searchInput");
-  if (btn && input) {
-    const btnWidth = btn.offsetWidth;
-    // 16px base left position + button width + 12px gap
-    const padding = 16 + btnWidth + 12;
-    input.style.paddingLeft = `${padding}px`;
-  }
 }
 
 // ===================== ENGINE DROPDOWN =====================
@@ -345,7 +339,8 @@ function initEngineDropdown() {
   menu.innerHTML = "";
   engines.forEach((e) => {
     const item = document.createElement("div");
-    item.className = "engine-dropdown-item" + (e.id === currentEngine ? " active" : "");
+    item.className =
+      "engine-dropdown-item" + (e.id === currentEngine ? " active" : "");
     item.dataset.engineId = e.id;
     item.innerHTML = `<img src="${e.icon}" alt=""> ${e.name}`;
     item.addEventListener("click", (ev) => {
@@ -434,6 +429,63 @@ function doSearch(query) {
     if (e.tbm) url += "&tbm=" + e.tbm;
     window.location.href = url;
   }
+}
+
+function startVoiceSearch() {
+  const input = document.getElementById("searchInput");
+  const voiceButton = document.getElementById("voiceSearchBtn");
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    input.placeholder = "La recherche vocale n'est pas disponible";
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = "fr-FR";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+  voiceButton.classList.add("is-listening");
+  recognition.onresult = (event) => {
+    input.value = event.results[0][0].transcript;
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    doSearch(input.value);
+  };
+  recognition.onerror = () => {
+    input.placeholder = "Impossible d'utiliser le microphone";
+  };
+  recognition.onend = () => voiceButton.classList.remove("is-listening");
+  recognition.start();
+}
+
+function searchByImage() {
+  const imageInput = document.getElementById("lensImageInput");
+  if (!imageInput) return;
+
+  imageInput.onchange = () => {
+    const image = imageInput.files && imageInput.files[0];
+    if (!image) return;
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "https://lens.google.com/v3/upload?ep=gisbubb&hl=fr";
+    form.enctype = "multipart/form-data";
+    form.target = "_blank";
+    form.hidden = true;
+    imageInput.name = "encoded_image";
+    form.appendChild(imageInput);
+    document.body.appendChild(form);
+    form.submit();
+
+    setTimeout(() => {
+      form.remove();
+      document.querySelector(".search-box").appendChild(imageInput);
+      imageInput.value = "";
+    }, 1000);
+  };
+
+  imageInput.click();
 }
 
 let suggestTimer = null;
@@ -736,7 +788,7 @@ async function updateWeather() {
 
     const res = await fetch(
       "https://wttr.in/Chambray-les-Tours?format=j1&lang=fr",
-      { signal: controller.signal }
+      { signal: controller.signal },
     );
     clearTimeout(timeoutId);
 
