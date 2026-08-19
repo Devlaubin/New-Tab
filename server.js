@@ -1,20 +1,19 @@
 const express = require("express");
 const cors = require("cors");
-const { createClient } = require("@supabase/supabase-js");
+const { Pool } = require("@neondatabase/serverless");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ── SUPABASE ──
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_KEY = process.env.SUPABASE_KEY;
+// ── NEON ──
+const DATABASE_URL = process.env.DATABASE_URL;
 
-if (!SUPABASE_URL || !SUPABASE_KEY) {
-  console.error("❌ SUPABASE_URL et SUPABASE_KEY sont requis !");
+if (!DATABASE_URL) {
+  console.error("❌ DATABASE_URL est requis !");
   process.exit(1);
 }
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const pool = new Pool({ connectionString: DATABASE_URL });
 
 // ── MIDDLEWARE ──
 app.use(cors({ origin: "*", methods: ["GET", "POST", "OPTIONS"] }));
@@ -26,43 +25,32 @@ function today() {
 }
 
 async function getCounter() {
-  const { data, error } = await supabase
-    .from("searches")
-    .select("*")
-    .eq("id", 1)
-    .single();
+  const result = await pool.query(`
+    INSERT INTO searches (id, total, today_count, last_reset)
+    VALUES (1, 0, 0, CURRENT_DATE)
+    ON CONFLICT (id) DO NOTHING;
 
-  if (error || !data) {
-    const { data: newRow, error: insertError } = await supabase
-      .from("searches")
-      .insert([{ id: 1, total: 0, today_count: 0, last_reset: today() }])
-      .select()
-      .single();
-    if (insertError)
-      throw new Error(
-        "Impossible de créer le compteur : " + insertError.message,
-      );
-    return newRow;
-  }
-  return data;
+    SELECT total, today_count, last_reset::text AS last_reset
+    FROM searches
+    WHERE id = 1;
+  `);
+  return result[result.length - 1]?.rows[0];
 }
 
 async function incrementCounter() {
-  const row = await getCounter();
-  const needsReset = row.last_reset !== today();
-  const updates = {
-    total: (row.total || 0) + 1,
-    today_count: needsReset ? 1 : (row.today_count || 0) + 1,
-    last_reset: today(),
-  };
-  const { data, error } = await supabase
-    .from("searches")
-    .update(updates)
-    .eq("id", 1)
-    .select()
-    .single();
-  if (error) throw new Error("Erreur update : " + error.message);
-  return data;
+  const result = await pool.query(`
+    INSERT INTO searches (id, total, today_count, last_reset)
+    VALUES (1, 1, 1, CURRENT_DATE)
+    ON CONFLICT (id) DO UPDATE SET
+      total = searches.total + 1,
+      today_count = CASE
+        WHEN searches.last_reset = CURRENT_DATE THEN searches.today_count + 1
+        ELSE 1
+      END,
+      last_reset = CURRENT_DATE
+    RETURNING total, today_count, last_reset::text AS last_reset;
+  `);
+  return result.rows[0];
 }
 
 // ── ROUTES ──
@@ -91,13 +79,11 @@ app.post("/count", async (req, res) => {
     // Save search query to database
     const { query, engine, source } = req.body;
     if (query && typeof query === "string" && query.trim()) {
-      await supabase.from("search_queries").insert([
-        {
-          query: query.trim().slice(0, 500), // Limit query length
-          engine: engine || "unknown",
-          source: source || "homepage",
-        },
-      ]);
+      await pool.query(
+        `INSERT INTO search_queries (query, engine, source)
+         VALUES ($1, $2, $3);`,
+        [query.trim().slice(0, 500), engine || "unknown", source || "homepage"],
+      );
     }
 
     // Increment counter
@@ -164,9 +150,7 @@ app.get("/news", async (req, res) => {
   }
 });
 
-
 // ── START ──
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
 });
-

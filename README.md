@@ -15,7 +15,9 @@ GNU pour plus de détails.
 Vous devriez avoir reçu une copie de la Licence Publique Générale GNU
 avec ce programme. Sinon, voir <https://gnu.org>.
 
-Une page **New Tab** personnalisable : thème, sidebar paramètres, moteur de recherche, suggestions, notes, raccourcis, météo, compteur de recherches (via serveur Supabase), etc.
+[![Netlify Status](https://api.netlify.com/api/v1/badges/882115d8-6da4-434c-b5f7-27105e0fd60e/deploy-status)](https://app.netlify.com/projects/new-tab-devlaubin/deploys)
+
+Une page **New Tab** personnalisable : thème, sidebar paramètres, moteur de recherche, suggestions, notes, raccourcis, météo, compteur de recherches (via serveur Neon), etc.
 
 > Projet en HTML/CSS/JS avec un backend Node/Express pour stocker le compteur.
 
@@ -60,9 +62,9 @@ Une page **New Tab** personnalisable : thème, sidebar paramètres, moteur de re
    ```bash
    npm install
    ```
-2. Configurer Supabase :
-   - `SUPABASE_URL`
-   - `SUPABASE_KEY`
+2. Configurer Neon :
+
+- `DATABASE_URL` : chaîne de connexion fournie par Neon
 
 3. Lancer le serveur :
    ```bash
@@ -79,9 +81,9 @@ Le serveur expose :
 
 ---
 
-## Configuration Supabase
+## Configuration Neon
 
-Le compteur utilise une table **`searches`**.
+Le compteur utilise une table PostgreSQL **`searches`**. Le schéma complet, compatible Neon, se trouve dans `neon/migrations/20260701083045_create_search_queries_table.sql`.
 
 Attendu (schéma implicite) :
 
@@ -111,14 +113,14 @@ Le projet est compatible Netlify (fichiers présents : `netlify.toml`).
 - `index.html` : page principale + sidebar + modals
 - `index.js` : logique front (thème, recherche, suggestions, compteur, etc.)
 - `styles.css` : styles + mode sombre
-- `server.js` : backend compteur Supabase
+- `server.js` : backend compteur Neon
 - `Lite/` : version “lite”
 
 ---
 
 ## Notes sur la confidentialité
 
-- Les **recherches** sont comptées côté serveur (table Supabase `searches`).
+- Les **recherches** sont comptées côté serveur (table Neon `searches`).
 - Les **notes** et préférences visuelles (ex : thème, moteur, toggles) sont stockées dans le navigateur via `localStorage`.
 
 ---
