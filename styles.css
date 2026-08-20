@@ -773,7 +773,7 @@ input:checked + .slider:before {
   visibility: hidden;
   transform: translateY(-8px);
   transition: all 0.2s ease;
-  overflow: hidden;
+  overflow: visible;
   z-index: 100;
 }
 .search-engine-dropdown.open .engine-dropdown-menu {
@@ -791,6 +791,58 @@ input:checked + .slider:before {
   color: #333;
   cursor: pointer;
   transition: background 0.15s;
+}
+.engine-dropdown-name {
+  flex: 1;
+}
+.engine-info {
+  position: relative;
+  flex: 0 0 auto;
+  width: 17px;
+  height: 17px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  color: #6b7280;
+  font-family: Georgia, serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 15px;
+  text-align: center;
+  cursor: help;
+}
+.engine-info:hover,
+.engine-info:focus-visible {
+  color: #2d78a8;
+  outline: none;
+}
+.engine-info::after {
+  position: absolute;
+  right: -8px;
+  bottom: calc(100% + 8px);
+  width: 220px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #202124;
+  color: #fff;
+  content: attr(title);
+  font-family: "DM Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.35;
+  opacity: 0;
+  pointer-events: none;
+  text-align: left;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  visibility: hidden;
+  z-index: 110;
+}
+.engine-info:hover::after,
+.engine-info:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
 }
 .engine-dropdown-item:hover {
   background: #f0f0f0;

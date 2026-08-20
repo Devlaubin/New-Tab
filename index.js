@@ -47,36 +47,42 @@ const engines = [
   {
     id: "google",
     name: "Google",
+    description: "Le moteur généraliste de Google, pratique pour trouver rapidement des réponses, des sites et des images.",
     icon: "https://www.google.com/favicon.ico",
     url: "https://www.google.com/search?q=",
   },
   {
     id: "bing",
     name: "Bing",
+    description: "Une alternative à Google avec une recherche d’images performante et des réponses enrichies.",
     icon: "https://www.bing.com/favicon.ico",
     url: "https://www.bing.com/search?q=",
   },
   {
     id: "duckduckgo",
     name: "Duck",
+    description: "Une recherche axée sur la confidentialité, sans personnalisation basée sur votre historique.",
     icon: "https://duckduckgo.com/favicon.ico",
     url: "https://duckduckgo.com/?q=",
   },
   {
     id: "brave",
     name: "Brave",
+    description: "Une recherche indépendante qui limite le suivi et favorise une expérience plus privée.",
     icon: "https://brave.com/favicon.ico",
     url: "https://search.brave.com/search?q=",
   },
   {
     id: "qwant",
     name: "Qwant",
+    description: "Un moteur européen qui met l’accent sur la confidentialité et une recherche non filtrée par profil.",
     icon: "images/qwant_logo.png",
     url: "https://www.qwant.com/?q=",
   },
   {
     id: "startpage",
     name: "Start",
+    description: "Les résultats de Google avec une couche supplémentaire de confidentialité et sans profilage.",
     icon: "https://www.startpage.com/favicon.ico",
     url: "https://www.startpage.com/sp/search?q=",
   },
@@ -335,7 +341,15 @@ function initEngineDropdown() {
     item.className =
       "engine-dropdown-item" + (e.id === currentEngine ? " active" : "");
     item.dataset.engineId = e.id;
-    item.innerHTML = `<img src="${e.icon}" alt=""> ${e.name}`;
+    item.innerHTML = `
+      <img src="${e.icon}" alt="">
+      <span class="engine-dropdown-name">${e.name}</span>
+      <button class="engine-info" type="button" aria-label="À propos de ${e.name}" title="${e.description}">
+        i
+      </button>`;
+    item.querySelector(".engine-info").addEventListener("click", (ev) => {
+      ev.stopPropagation();
+    });
     item.addEventListener("click", (ev) => {
       ev.stopPropagation();
       currentEngine = e.id;
