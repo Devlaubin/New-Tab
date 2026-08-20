@@ -982,7 +982,7 @@ input:checked + .slider:before {
   width: 100%;
   padding: 12px 16px;
   border: 1.5px solid #e0e0e0;
-  border-radius: 10px;
+  border-radius: 32px;
   font-size: 14px;
   font-family: "DM Sans", sans-serif;
   outline: none;

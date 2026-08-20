@@ -2,43 +2,43 @@
 const themes = [
   {
     name: "Défaut",
-    gradient: "linear-gradient(135deg, #888a96 0%, #71a5cf 100%)",
+    gradient: "linear-gradient(135deg, #536976 0%, #292e49 100%)",
   },
   {
     name: "Océan",
-    gradient: "linear-gradient(135deg, #1a3a5c 0%, #2980b9 100%)",
+    gradient: "linear-gradient(135deg, #0f2027 0%, #203a43 48%, #2c5364 100%)",
   },
   {
-    name: "Aurore",
-    gradient: "linear-gradient(135deg, #f7971e 0%, #ffd200 100%)",
+    name: "Solaire",
+    gradient: "linear-gradient(135deg, #ff512f 0%, #f09819 100%)",
   },
   {
     name: "Forêt",
-    gradient: "linear-gradient(135deg, #134E5E 0%, #71B280 100%)",
+    gradient: "linear-gradient(135deg, #134e5e 0%, #71b280 100%)",
   },
   {
-    name: "Nuit",
-    gradient: "linear-gradient(135deg, #0F2027 0%, #2C5364 100%)",
+    name: "Minuit",
+    gradient: "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
   },
   {
     name: "Rose",
-    gradient: "linear-gradient(135deg, #c94b9e 0%, #f8a5c2 100%)",
+    gradient: "linear-gradient(135deg, #7f1d4d 0%, #d76d77 52%, #ffafbd 100%)",
   },
   {
-    name: "Lavande",
-    gradient: "linear-gradient(135deg, #4a3f8c 0%, #9b59b6 100%)",
+    name: "Iris",
+    gradient: "linear-gradient(135deg, #42275a 0%, #734b6d 100%)",
   },
   {
     name: "Menthe",
-    gradient: "linear-gradient(135deg, #1abc9c 0%, #2ecc71 100%)",
+    gradient: "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)",
   },
   {
-    name: "Cramoisi",
-    gradient: "linear-gradient(135deg, #900 0%, #e74c3c 100%)",
+    name: "Corail",
+    gradient: "linear-gradient(135deg, #cb356b 0%, #bd3f32 100%)",
   },
   {
-    name: "Nuit étoilée",
-    gradient: "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
+    name: "Citron vert",
+    gradient: "linear-gradient(135deg, #56ab2f 0%, #a8e063 100%)",
   },
 ];
 
@@ -47,42 +47,48 @@ const engines = [
   {
     id: "google",
     name: "Google",
-    description: "Le moteur généraliste de Google, pratique pour trouver rapidement des réponses, des sites et des images.",
+    description:
+      "Le moteur généraliste de Google, pratique pour trouver rapidement des réponses, des sites et des images.",
     icon: "https://www.google.com/favicon.ico",
     url: "https://www.google.com/search?q=",
   },
   {
     id: "bing",
     name: "Bing",
-    description: "Une alternative à Google avec une recherche d’images performante et des réponses enrichies.",
+    description:
+      "Une alternative à Google avec une recherche d’images performante et des réponses enrichies.",
     icon: "https://www.bing.com/favicon.ico",
     url: "https://www.bing.com/search?q=",
   },
   {
     id: "duckduckgo",
     name: "Duck",
-    description: "Une recherche axée sur la confidentialité, sans personnalisation basée sur votre historique.",
+    description:
+      "Une recherche axée sur la confidentialité, sans personnalisation basée sur votre historique.",
     icon: "https://duckduckgo.com/favicon.ico",
     url: "https://duckduckgo.com/?q=",
   },
   {
     id: "brave",
     name: "Brave",
-    description: "Une recherche indépendante qui limite le suivi et favorise une expérience plus privée.",
+    description:
+      "Une recherche indépendante qui limite le suivi et favorise une expérience plus privée.",
     icon: "https://brave.com/favicon.ico",
     url: "https://search.brave.com/search?q=",
   },
   {
     id: "qwant",
     name: "Qwant",
-    description: "Un moteur européen qui met l’accent sur la confidentialité et une recherche non filtrée par profil.",
-    icon: "images/qwant_logo.png",
+    description:
+      "Un moteur européen qui met l’accent sur la confidentialité et une recherche non filtrée par profil.",
+    icon: "https://logosandtypes.com/wp-content/uploads/2025/04/qwant.svg",
     url: "https://www.qwant.com/?q=",
   },
   {
     id: "startpage",
     name: "Start",
-    description: "Les résultats de Google avec une couche supplémentaire de confidentialité et sans profilage.",
+    description:
+      "Les résultats de Google avec une couche supplémentaire de confidentialité et sans profilage.",
     icon: "https://www.startpage.com/favicon.ico",
     url: "https://www.startpage.com/sp/search?q=",
   },
@@ -270,13 +276,24 @@ function renderThemeModal() {
     el.className =
       "color-swatch" + (t.gradient === currentTheme ? " active" : "");
     el.style.background = t.gradient;
+    el.dataset.name = t.name;
+    el.setAttribute("role", "button");
+    el.setAttribute("tabindex", "0");
+    el.setAttribute("aria-label", `Choisir le thème ${t.name}`);
     el.title = t.name;
-    el.onclick = () => {
+    const selectTheme = () => {
       applyTheme(t.gradient);
       document
         .querySelectorAll(".color-swatch")
         .forEach((s) => s.classList.remove("active"));
       el.classList.add("active");
+    };
+    el.onclick = selectTheme;
+    el.onkeydown = (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        selectTheme();
+      }
     };
     grid.appendChild(el);
   });
@@ -1174,6 +1191,7 @@ function resetPreferences() {
     "showWeather",
     "showNotes",
     "showShortcuts",
+    "showSuggestions",
     "secureMode",
     "searchAutoFocusEnabled",
     "notes",

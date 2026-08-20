@@ -111,40 +111,32 @@
       </div>
       <div class="sidebar-body">
         <!-- Bouton Nouveautés en haut -->
-        <button
-          class="sidebar-btn"
-          style="margin-bottom: 18px"
-          onclick="openNewsModal()"
-        >
-          Log / Nouveautés
-        </button>
 
         <!-- Ancien bloc Nouveautés (Lite) -->
         <div class="sidebar-section-new">
           <div class="sidebar-section-title-new">Nouveautés</div>
-          <p>Version lite disponible</p>
+          <p>Nouvelle version disponible !</p>
           <br />
-          <button class="sidebar-btn" onclick="window.open('/lite')">
-            Tester version Lite
+          <button class="sidebar-btn" onclick="window.open('/')">
+            Tester version 3.0
           </button>
         </div>
 
         <!-- ── COMPTEUR GLOBAL ── -->
         <div class="sidebar-section">
           <div class="sidebar-section-title">Statistiques</div>
-          <div class="setting-row">
-            <span>Afficher le compteur</span>
-            <label class="switch">
-              <input type="checkbox" id="toggleCounter" checked />
-              <span class="slider"></span>
-            </label>
-          </div>
           <div class="sidebar-counter-block" id="counterSection">
-            <div class="sidebar-counter-label">
-              <span class="sidebar-counter-dot"></span>RECHERCHES GLOBALES
-            </div>
+            <div class="sidebar-counter-label">RECHERCHES GLOBALES</div>
+
             <div class="sidebar-counter-value" id="sidebar-search-count">—</div>
             <div class="sidebar-counter-sub" id="sidebar-count-today"></div>
+            <div class="setting-row">
+              <span>Bloquer l’envoi au serveur</span>
+              <label class="switch">
+                <input type="checkbox" id="toggleBlockServer" />
+                <span class="slider"></span>
+              </label>
+            </div>
           </div>
         </div>
 
@@ -153,13 +145,6 @@
           <button class="sidebar-btn" onclick="openThemeModal()">
             Changer le thème
           </button>
-          <div class="setting-row">
-            <span>Mode sombre</span>
-            <label class="switch">
-              <input type="checkbox" id="toggleDarkMode" />
-              <span class="slider"></span>
-            </label>
-          </div>
         </div>
 
         <div class="sidebar-section">
@@ -170,9 +155,6 @@
         </div>
         <div class="sidebar-section">
           <div class="sidebar-section-title">Recherche</div>
-          <button class="sidebar-btn" onclick="openEngineModal()">
-            Moteur de recherche
-          </button>
           <div class="setting-row">
             <span>Ouverture nouvel onglet</span>
             <label class="switch">
@@ -207,15 +189,6 @@
           <button class="sidebar-btn" onclick="clearNotes()">
             Effacer les notes
           </button>
-
-          <div class="setting-row">
-            <span>Bloquer l’envoi au serveur</span>
-            <label class="switch">
-              <input type="checkbox" id="toggleBlockServer" />
-              <span class="slider"></span>
-            </label>
-          </div>
-
           <button class="sidebar-btn" onclick="resetPreferences()">
             Réinitialiser les paramètres
           </button>
@@ -312,7 +285,7 @@
             >Consulter le code source</a
           >
           <br />
-          <p>Version : 3.0.0</p>
+          <p>Version : 3.0.51</p>
         </div>
       </div>
     </aside>
@@ -494,6 +467,7 @@
     <div class="modal-overlay" id="themeModal">
       <div class="modal">
         <div class="modal-title">Choisir un thème</div>
+        <p class="theme-modal-subtitle">Une ambiance pour chaque moment.</p>
         <div class="color-grid" id="colorGrid"></div>
         <div class="modal-btns">
           <button class="btn btn-secondary" onclick="closeModal('themeModal')">
