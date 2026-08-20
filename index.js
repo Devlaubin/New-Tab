@@ -135,6 +135,7 @@ let showTime = localStorage.getItem("showTime") !== "false";
 let showWeather = localStorage.getItem("showWeather") === "true";
 let showNotes = localStorage.getItem("showNotes") === "true";
 let showShortcuts = localStorage.getItem("showShortcuts") === "true";
+let suggestionsEnabled = localStorage.getItem("showSuggestions") === "true";
 let showCounter = localStorage.getItem("showCounter") !== "false";
 let secureMode = localStorage.getItem("secureMode") !== "0";
 let blockServer = localStorage.getItem("blockServer") === "true";
@@ -524,7 +525,7 @@ function initSearch() {
   input.addEventListener("input", () => {
     activeSugg = -1;
     const q = input.value.trim();
-    if (!q) {
+    if (!suggestionsEnabled || !q) {
       hideSuggestions();
       return;
     }
@@ -598,9 +599,11 @@ function initSearch() {
 }
 
 function fetchSuggestions(q) {
+  if (!suggestionsEnabled) return;
   const old = document.getElementById("suggScript");
   if (old) old.remove();
   window._suggCallback = function (data) {
+    if (!suggestionsEnabled) return;
     const suggestions = data[1].slice(0, 6);
     showSuggestions(q, suggestions);
   };
@@ -616,6 +619,7 @@ setTimeout(() => {
 }, 2000);
 
 function showSuggestions(query, items) {
+  if (!suggestionsEnabled) return;
   const sugg = document.getElementById("suggestions");
   sugg.innerHTML = "";
   if (!items.length) {
@@ -865,6 +869,7 @@ function applyVisibility() {
   document.getElementById("toggleWeather").checked = showWeather;
   document.getElementById("toggleNotes").checked = showNotes;
   document.getElementById("toggleShortcuts").checked = showShortcuts;
+  document.getElementById("toggleSuggestions").checked = suggestionsEnabled;
 }
 
 function initToggles() {
@@ -931,6 +936,21 @@ function initToggles() {
         const si = document.getElementById("searchInput");
         if (si) setTimeout(() => si.focus(), 50);
       }
+    });
+  }
+
+  const suggestionsToggle = document.getElementById("toggleSuggestions");
+  if (suggestionsToggle) {
+    suggestionsToggle.checked = suggestionsEnabled;
+    suggestionsToggle.addEventListener("change", (e) => {
+      suggestionsEnabled = e.target.checked;
+      localStorage.setItem("showSuggestions", suggestionsEnabled);
+      if (!suggestionsEnabled) {
+        hideSuggestions();
+        return;
+      }
+      const query = document.getElementById("searchInput")?.value.trim();
+      if (query) fetchSuggestions(query);
     });
   }
 
