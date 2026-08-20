@@ -1,7 +1,0 @@
-régler les problème du code,
-rajouter de l'IA et des recherche d'image google,
-ajout de nouvelle fonctionnalité utile,
-savoir quelle recherche on fais les utilisateur et les marque dans le server,
-désactiver les élement de la page comme les raccourci et tout pendant que l'utilisateur écrit dans la barre de recherche,
-meteo marche vraiment
-Pour le chois des moteur de recherche dans la barrre de recherche changer pour un menu deriulent dans le theme du site 
