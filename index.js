@@ -51,13 +51,6 @@ const engines = [
     url: "https://www.google.com/search?q=",
   },
   {
-    id: "google-images",
-    name: "Images",
-    icon: "https://www.google.com/favicon.ico",
-    url: "https://www.google.com/search?q=",
-    tbm: "isch",
-  },
-  {
     id: "bing",
     name: "Bing",
     icon: "https://www.bing.com/favicon.ico",
@@ -135,7 +128,7 @@ let userName = localStorage.getItem("userName") || "";
 let showTime = localStorage.getItem("showTime") !== "false";
 let showWeather = localStorage.getItem("showWeather") === "true";
 let showNotes = localStorage.getItem("showNotes") === "true";
-let showShortcuts = localStorage.getItem("showShortcuts") !== "false";
+let showShortcuts = localStorage.getItem("showShortcuts") === "true";
 let showCounter = localStorage.getItem("showCounter") !== "false";
 let secureMode = localStorage.getItem("secureMode") !== "0";
 let blockServer = localStorage.getItem("blockServer") === "true";
