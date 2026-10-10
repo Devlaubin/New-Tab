@@ -92,6 +92,48 @@ const engines = [
     icon: "https://www.startpage.com/favicon.ico",
     url: "https://www.startpage.com/sp/search?q=",
   },
+  {
+    id: "chatgpt",
+    name: "ChatGPT",
+    description: "Ouvre une nouvelle discussion avec ChatGPT.",
+    icon: "https://chatgpt.com/favicon.ico",
+    url: "https://chatgpt.com/?q=",
+  },
+  {
+    id: "claude",
+    name: "Claude",
+    description: "Ouvre une nouvelle discussion avec Claude.",
+    icon: "https://claude.ai/favicon.ico",
+    url: "https://claude.ai/new?q=",
+  },
+  {
+    id: "gemini",
+    name: "Gemini",
+    description: "Ouvre Gemini avec votre demande.",
+    icon: "https://gemini.google.com/favicon.ico",
+    url: "https://gemini.google.com/app?prompt=",
+  },
+  {
+    id: "perplexity",
+    name: "Perplexity",
+    description: "Ouvre une nouvelle recherche avec Perplexity.",
+    icon: "https://www.perplexity.ai/favicon.ico",
+    url: "https://www.perplexity.ai/search/new?q=",
+  },
+  {
+    id: "copilot",
+    name: "Copilot",
+    description: "Ouvre une nouvelle discussion avec Microsoft Copilot.",
+    icon: "https://copilot.microsoft.com/favicon.ico",
+    url: "https://copilot.microsoft.com/?q=",
+  },
+  {
+    id: "mistral",
+    name: "Le Chat",
+    description: "Ouvre une nouvelle discussion avec Le Chat de Mistral.",
+    icon: "https://chat.mistral.ai/favicon.ico",
+    url: "https://chat.mistral.ai/chat?q=",
+  },
 ];
 
 // ===================== DEFAULT SHORTCUTS =====================
@@ -135,9 +177,10 @@ const defaultShortcuts = [
 
 // ===================== STATE =====================
 let currentTheme = localStorage.getItem("theme") || themes[0].gradient;
+let showParticles = localStorage.getItem("showParticles") !== "false";
 let currentEngine = localStorage.getItem("engine") || "google";
 let userName = localStorage.getItem("userName") || "";
-let showTime = localStorage.getItem("showTime") !== "false";
+let showTime = localStorage.getItem("showTime") === "true";
 let showWeather = localStorage.getItem("showWeather") === "true";
 let showNotes = localStorage.getItem("showNotes") === "true";
 let showShortcuts = localStorage.getItem("showShortcuts") === "true";
@@ -226,6 +269,9 @@ function init() {
 // ===================== BACKGROUND PARTICLES =====================
 function createParticles() {
   const container = document.getElementById("bgParticles");
+  container.hidden = !showParticles;
+  if (!showParticles) return;
+
   for (let i = 0; i < 12; i++) {
     const p = document.createElement("div");
     p.className = "particle";
@@ -270,6 +316,8 @@ function initThemeMode() {
 
 function renderThemeModal() {
   const grid = document.getElementById("colorGrid");
+  const particlesToggle = document.getElementById("toggleParticles");
+  if (particlesToggle) particlesToggle.checked = showParticles;
   grid.innerHTML = "";
   themes.forEach((t) => {
     const el = document.createElement("div");
@@ -485,20 +533,27 @@ function startVoiceSearch() {
 }
 
 function searchByImage() {
-  const imageInput = document.getElementById("lensImageInput");
+  const imageInput = document.getElementById("imageSearchInput");
   if (!imageInput) return;
+
+  const targetName = `bing-visual-${Date.now()}`;
+  const searchWindow = window.open("about:blank", targetName);
 
   imageInput.onchange = () => {
     const image = imageInput.files && imageInput.files[0];
-    if (!image) return;
+    if (!image) {
+      if (searchWindow && !searchWindow.closed) searchWindow.close();
+      return;
+    }
 
     const form = document.createElement("form");
     form.method = "POST";
-    form.action = "https://lens.google.com/v3/upload?ep=gisbubb&hl=fr";
+    form.action =
+      "https://www.bing.com/images/searchbyimage/upload?FORM=IRFLTR";
     form.enctype = "multipart/form-data";
-    form.target = "_blank";
+    form.target = searchWindow ? targetName : "_self";
     form.hidden = true;
-    imageInput.name = "encoded_image";
+    imageInput.name = "image";
     form.appendChild(imageInput);
     document.body.appendChild(form);
     form.submit();
@@ -508,6 +563,10 @@ function searchByImage() {
       document.querySelector(".search-box").appendChild(imageInput);
       imageInput.value = "";
     }, 1000);
+  };
+
+  imageInput.oncancel = () => {
+    if (searchWindow && !searchWindow.closed) searchWindow.close();
   };
 
   imageInput.click();
@@ -647,7 +706,8 @@ function showSuggestions(query, items) {
     const div = document.createElement("div");
     div.className = "suggestion-item";
     div.dataset.value = text;
-    div.innerHTML = `<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> ${escHtml(text)}`;
+    div.title = text;
+    div.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><span class="suggestion-text">${escHtml(text)}</span>`;
     div.onclick = () => doSearch(text);
     sugg.appendChild(div);
   });
@@ -890,6 +950,16 @@ function applyVisibility() {
 }
 
 function initToggles() {
+  const particlesToggle = document.getElementById("toggleParticles");
+  if (particlesToggle) {
+    particlesToggle.checked = showParticles;
+    particlesToggle.addEventListener("change", (e) => {
+      showParticles = e.target.checked;
+      localStorage.setItem("showParticles", showParticles);
+      document.getElementById("bgParticles").hidden = !showParticles;
+    });
+  }
+
   document.getElementById("toggleTime").addEventListener("change", (e) => {
     showTime = e.target.checked;
     localStorage.setItem("showTime", showTime);
@@ -1184,6 +1254,7 @@ function resetPreferences() {
   const keys = [
     "theme",
     "themeMode",
+    "showParticles",
     "engine",
 
     "userName",

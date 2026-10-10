@@ -113,12 +113,12 @@
         <!-- Bouton Nouveautés en haut -->
 
         <!-- Ancien bloc Nouveautés (Lite) -->
-        <div class="sidebar-section-new">
+        <!-- <div class="sidebar-section-new">
           <div class="sidebar-section-title-new">Nouveautés</div>
           <p>Nouvelle version disponible !</p>
           <br />
           <button class="sidebar-btn" onclick="window.open('/')">
-            Tester version 3.0
+            Tester version 3.1
           </button>
         </div>
 
@@ -128,10 +128,11 @@
           <div class="sidebar-counter-block" id="counterSection">
             <div class="sidebar-counter-label">RECHERCHES GLOBALES</div>
 
-            <div class="sidebar-counter-value" id="sidebar-search-count">—</div>
+            <div class="sidebar-counter-value" id="sidebar-search-count">-</div>
             <div class="sidebar-counter-sub" id="sidebar-count-today"></div>
+            <br>
             <div class="setting-row">
-              <span>Bloquer l’envoi au serveur</span>
+              <span>Bloquer</span>
               <label class="switch">
                 <input type="checkbox" id="toggleBlockServer" />
                 <span class="slider"></span>
@@ -199,7 +200,7 @@
           <div class="setting-row">
             <span>Afficher l'heure</span>
             <label class="switch">
-              <input type="checkbox" id="toggleTime" checked />
+              <input type="checkbox" id="toggleTime" />
               <span class="slider"></span>
             </label>
           </div>
@@ -317,7 +318,7 @@
               />
               <path d="m19 16-.7 2.3L16 19l2.3.7L19 22l.7-2.3L22 19l-2.3-.7Z" />
             </svg>
-            <span id="spanjsp">Recherche IA</span>
+            <span id="spanjsp">Le Web condensé. </span>
           </div>
           <input
             type="text"
@@ -384,8 +385,8 @@
                 class="search-action search-tool"
                 type="button"
                 onclick="searchByImage()"
-                aria-label="Recherche par image Google"
-                title="Recherche par image Google"
+                aria-label="Recherche visuelle Bing"
+                title="Recherche visuelle Bing"
               >
                 <svg
                   width="18"
@@ -403,10 +404,10 @@
               </button>
               <input
                 type="file"
-                id="lensImageInput"
+                id="imageSearchInput"
                 accept="image/*"
                 hidden
-                aria-label="Choisir une image pour Google Lens"
+                aria-label="Choisir une image pour Bing Visual Search"
               />
               <button
                 class="search-action search-submit"
@@ -469,6 +470,17 @@
         <div class="modal-title">Choisir un thème</div>
         <p class="theme-modal-subtitle">Une ambiance pour chaque moment.</p>
         <div class="color-grid" id="colorGrid"></div>
+        <div class="setting-row">
+          <span>Afficher les bulles en arrière-plan</span>
+          <label class="switch">
+            <input
+              type="checkbox"
+              id="toggleParticles"
+              aria-label="Afficher les bulles en arrière-plan"
+            />
+            <span class="slider"></span>
+          </label>
+        </div>
         <div class="modal-btns">
           <button class="btn btn-secondary" onclick="closeModal('themeModal')">
             Fermer

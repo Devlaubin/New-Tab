@@ -30,13 +30,13 @@ Une page **New Tab** personnalisable : thème, sidebar paramètres, moteur de re
 - **Sidebar “Paramètres”** (ouvrable/fermeture avec un bouton burger)
 - **Thème** : choix d’une couleur/gradient (modal “Choisir un thème”)
 - **Mode sombre** : toggle persistant (`localStorage.themeMode`)
-- **Moteur de recherche** : sélection (modal “Moteur de recherche”)
+- **Moteur de recherche** : sélection entre les moteurs classiques et les assistants IA (ChatGPT, Claude, Gemini, Perplexity, Copilot et Le Chat), qui ouvrent une nouvelle recherche ou discussion avec la demande saisie
 - **Recherche privée** : ouverture dans un moteur différent (modal via bouton)
 - **Suggestions** : auto-complétion via Google Suggest
 - **Raccourcis** : grille de raccourcis + ajout/édition/suppression
 - **Notes** : sauvegarde automatique dans `localStorage.notes`
 - **Météo** : récupération Wttr.in (toggle “Afficher la météo”)
-- **Heure/date & salutation** : affichage en français (toggle “Afficher l’heure”)
+- **Heure/date & salutation** : affichage en français, désactivé par défaut (toggle “Afficher l’heure”)
 
 ### Compteur de recherches
 

@@ -50,7 +50,7 @@ html[data-theme="dark"] .sidebar-btn:hover {
 
 html[data-theme="dark"] .sidebar-section-new,
 html[data-theme="dark"] .sidebar-section-info {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(221, 216, 216, 0.07);
 }
 
 html[data-theme="dark"] .sidebar-counter-block {
@@ -128,7 +128,17 @@ html[data-theme="dark"] .suggestion-item {
 
 html[data-theme="dark"] .suggestion-item:hover,
 html[data-theme="dark"] .suggestion-item.active {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(96, 165, 250, 0.16);
+  color: #bfdbfe;
+}
+
+html[data-theme="dark"] .suggestion-item svg {
+  stroke: #9ca3af;
+}
+
+html[data-theme="dark"] .suggestion-item:hover svg,
+html[data-theme="dark"] .suggestion-item.active svg {
+  stroke: #93c5fd;
 }
 
 html[data-theme="dark"] .modal {
@@ -996,12 +1006,16 @@ input:checked + .slider:before {
   left: 0;
   right: 0;
   background: white;
-  border-radius: 26px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
+  border: 1px solid rgba(20, 30, 50, 0.1);
+  border-radius: 18px;
+  box-shadow: 0 16px 36px rgba(18, 28, 45, 0.18);
+  backdrop-filter: blur(16px);
+  max-height: min(330px, calc(100vh - 24px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px;
   z-index: 100;
   display: none;
-  transition: all 0.15s ease;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   -moz-user-select: none;
@@ -1010,48 +1024,63 @@ input:checked + .slider:before {
 }
 .suggestions.visible {
   display: block;
+  animation: suggestionsIn 0.16s ease-out;
+}
+@keyframes suggestionsIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .suggestion-item {
-  padding: 12px 20px;
+  min-height: 44px;
+  padding: 10px 12px;
   color: #333;
-  font-size: 15px;
+  font-size: 14px;
+  line-height: 1.4;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
-  transition: background 0.15s;
-  transition: all 0.15s ease;
+  gap: 12px;
+  border-radius: 12px;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
 }
 .suggestion-item:hover,
 .suggestion-item.active {
-  background: #cbcdd3;
-  transform: scale(1.02);
+  background: rgba(26, 115, 232, 0.1);
+  color: #174ea6;
 }
 .suggestion-item svg {
-  width: 14px;
-  height: 14px;
-  stroke: #999;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  stroke: #8b95a5;
   fill: none;
-  opacity: 0.7;
+  stroke-width: 1.8;
+  opacity: 0.9;
+  transition: stroke 0.15s ease;
 }
-.suggestion-item:hover svg {
-  stroke: #555;
-  opacity: 1;
-}
+.suggestion-item:hover svg,
 .suggestion-item.active svg {
-  stroke: #555;
-  opacity: 1;
+  stroke: #1a73e8;
 }
-.suggestions::before {
-  content: "";
-  position: absolute;
-  top: -6px;
-  left: 20px;
-  width: 12px;
-  height: 12px;
-  background: white;
-  transform: rotate(45deg);
-  box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.1);
+.suggestion-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .suggestions.visible {
+    animation: none;
+  }
 }
 
 /* Shortcuts */
@@ -1470,9 +1499,15 @@ input:checked + .slider:before {
   transition: border 0.2s;
   margin-bottom: 10px;
   margin-top: 6px;
+  background: #f0f0f0;
+  color: #555;
+  border: 1.5px solid #e0e0e0;
 }
-.modal-input:focus {
-  border-color: #71a5cf;
+.modal-input::placeholder {
+  color: #999;
+}
+.modal-input:active {
+  background-color: #ced1d3;
 }
 
 .modal-btns {
