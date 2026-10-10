@@ -81,7 +81,7 @@ const engines = [
     name: "Qwant",
     description:
       "Un moteur européen qui met l’accent sur la confidentialité et une recherche non filtrée par profil.",
-    icon: "https://logosandtypes.com/wp-content/uploads/2025/04/qwant.svg",
+    icon: "images/qwant_logo.png",
     url: "https://www.qwant.com/?q=",
   },
   {
@@ -103,14 +103,14 @@ const engines = [
     id: "claude",
     name: "Claude",
     description: "Ouvre une nouvelle discussion avec Claude.",
-    icon: "https://claude.ai/favicon.ico",
+    icon: "https://www.google.com/s2/favicons?domain=claude.ai&sz=64",
     url: "https://claude.ai/new?q=",
   },
   {
     id: "gemini",
     name: "Gemini",
     description: "Ouvre Gemini avec votre demande.",
-    icon: "https://gemini.google.com/favicon.ico",
+    icon: "https://www.google.com/s2/favicons?domain=gemini.google.com&sz=64",
     url: "https://gemini.google.com/app?prompt=",
   },
   {
@@ -131,10 +131,59 @@ const engines = [
     id: "mistral",
     name: "Le Chat",
     description: "Ouvre une nouvelle discussion avec Le Chat de Mistral.",
-    icon: "https://chat.mistral.ai/favicon.ico",
+    icon: "https://www.google.com/s2/favicons?domain=chat.mistral.ai&sz=64",
     url: "https://chat.mistral.ai/chat?q=",
   },
 ];
+
+const AI_PROVIDERS = {
+  chatgpt: {
+    name: "ChatGPT",
+    keyId: "openai",
+    keyLabel: "OpenAI API key",
+    keyUrl: "https://platform.openai.com/api-keys",
+    endpoint: "https://api.openai.com/v1/chat/completions",
+    model: "gpt-4o-mini",
+    type: "openai",
+  },
+  claude: {
+    name: "Claude",
+    keyId: "anthropic",
+    keyLabel: "Anthropic API key",
+    keyUrl: "https://console.anthropic.com/settings/keys",
+    endpoint: "https://api.anthropic.com/v1/messages",
+    model: "claude-3-5-haiku-latest",
+    type: "anthropic",
+  },
+  gemini: {
+    name: "Gemini",
+    keyId: "gemini",
+    keyLabel: "Google AI API key",
+    keyUrl: "https://aistudio.google.com/app/apikey",
+    endpoint:
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+    model: "gemini",
+    type: "gemini",
+  },
+  perplexity: {
+    name: "Perplexity",
+    keyId: "perplexity",
+    keyLabel: "Perplexity API key",
+    keyUrl: "https://www.perplexity.ai/account/api",
+    endpoint: "https://api.perplexity.ai/chat/completions",
+    model: "sonar",
+    type: "openai",
+  },
+  mistral: {
+    name: "Le Chat",
+    keyId: "mistral",
+    keyLabel: "Mistral API key",
+    keyUrl: "https://console.mistral.ai/api-keys/",
+    endpoint: "https://api.mistral.ai/v1/chat/completions",
+    model: "mistral-small-latest",
+    type: "openai",
+  },
+};
 
 // ===================== DEFAULT SHORTCUTS =====================
 const defaultShortcuts = [
@@ -184,7 +233,9 @@ let showTime = localStorage.getItem("showTime") === "true";
 let showWeather = localStorage.getItem("showWeather") === "true";
 let showNotes = localStorage.getItem("showNotes") === "true";
 let showShortcuts = localStorage.getItem("showShortcuts") === "true";
-let suggestionsEnabled = localStorage.getItem("showSuggestions") === "true";
+const savedSuggestions = localStorage.getItem("showSuggestions");
+let suggestionsEnabled =
+  savedSuggestions === null ? true : savedSuggestions === "true";
 let showCounter = localStorage.getItem("showCounter") !== "false";
 let secureMode = localStorage.getItem("secureMode") !== "0";
 let blockServer = localStorage.getItem("blockServer") === "true";
@@ -200,6 +251,14 @@ const API_BASE = "/api";
 
 function fmtCount(n) {
   return Number(n || 0).toLocaleString("fr-FR");
+}
+
+function setImageWithFallback(image, source) {
+  image.onerror = () => {
+    image.onerror = null;
+    image.src = "images/search.png";
+  };
+  image.src = source || "images/search.png";
 }
 
 // Incrémenter côté serveur après chaque recherche
@@ -250,6 +309,8 @@ function init() {
   renderShortcuts();
   renderThemeModal();
   initEngineDropdown();
+  initAIProviderSettings();
+  initAIChat();
   initToggles();
   initSecurity();
   initSearch();
@@ -384,7 +445,7 @@ function updateTime() {
 // ===================== SEARCH =====================
 function renderEngine() {
   const e = engines.find((e) => e.id === currentEngine) || engines[0];
-  document.getElementById("engineIcon").src = e.icon;
+  setImageWithFallback(document.getElementById("engineIcon"), e.icon);
   document.getElementById("engineLabel").textContent = e.name;
 
   // Adjust search input padding based on dropdown button width
@@ -393,6 +454,8 @@ function renderEngine() {
 }
 
 // ===================== ENGINE DROPDOWN =====================
+let engineMenuExpanded = false;
+
 function initEngineDropdown() {
   const dropdown = document.getElementById("engineDropdown");
   const btn = document.getElementById("engineBtn");
@@ -400,32 +463,75 @@ function initEngineDropdown() {
 
   if (!dropdown || !btn || !menu) return;
 
-  // Populate dropdown menu
+  const renderEngineMenu = () => {
+    const visibleEngines = new Set(
+      engines.slice(0, engineMenuExpanded ? engines.length : 6).map((e) => e.id),
+    );
+    if (!engineMenuExpanded && !visibleEngines.has(currentEngine)) {
+      visibleEngines.delete(engines[5].id);
+      visibleEngines.add(currentEngine);
+    }
+
+    menu.querySelectorAll(".engine-dropdown-item").forEach((item) => {
+      item.hidden = !visibleEngines.has(item.dataset.engineId);
+    });
+    const moreButton = menu.querySelector(".engine-dropdown-more");
+    if (moreButton) {
+      moreButton.hidden = engines.length <= 6;
+      moreButton.textContent = engineMenuExpanded ? "Voir moins" : "Voir plus";
+      moreButton.setAttribute("aria-expanded", String(engineMenuExpanded));
+    }
+  };
+
   menu.innerHTML = "";
   engines.forEach((e) => {
     const item = document.createElement("div");
     item.className =
       "engine-dropdown-item" + (e.id === currentEngine ? " active" : "");
     item.dataset.engineId = e.id;
+    item.setAttribute("role", "button");
+    item.tabIndex = 0;
     item.innerHTML = `
       <img src="${e.icon}" alt="">
       <span class="engine-dropdown-name">${e.name}</span>
       <button class="engine-info" type="button" aria-label="À propos de ${e.name}" title="${e.description}">
         i
       </button>`;
+    setImageWithFallback(item.querySelector("img"), e.icon);
     item.querySelector(".engine-info").addEventListener("click", (ev) => {
       ev.stopPropagation();
     });
-    item.addEventListener("click", (ev) => {
+    const selectEngine = (ev) => {
       ev.stopPropagation();
       currentEngine = e.id;
       localStorage.setItem("engine", e.id);
       renderEngine();
       updateDropdownActive();
+      engineMenuExpanded = false;
+      renderEngineMenu();
       closeEngineDropdown();
+    };
+    item.addEventListener("click", selectEngine);
+    item.addEventListener("keydown", (ev) => {
+      if (ev.target !== item) return;
+      if (ev.key === "Enter" || ev.key === " ") {
+        ev.preventDefault();
+        selectEngine(ev);
+      }
     });
     menu.appendChild(item);
   });
+
+  const moreButton = document.createElement("button");
+  moreButton.type = "button";
+  moreButton.className = "engine-dropdown-more";
+  moreButton.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    engineMenuExpanded = !engineMenuExpanded;
+    renderEngineMenu();
+  });
+  menu.appendChild(moreButton);
+  renderEngineMenu();
 
   // Toggle dropdown on button click
   btn.addEventListener("click", (e) => {
@@ -478,9 +584,10 @@ function openEngineDropdown() {
 function doSearch(query) {
   if (!query.trim()) return;
   hideSuggestions();
+  const aiProvider = AI_PROVIDERS[currentEngine];
 
   // ── COMPTEUR : incrémenter avant de naviguer ──
-  trackSearch(query).finally(() => {
+  trackSearch(aiProvider ? "" : query).finally(() => {
     // Mise à jour optimiste du badge dans la sidebar
     const el = document.getElementById("sidebar-search-count");
     if (el && el.textContent !== "—") {
@@ -488,6 +595,12 @@ function doSearch(query) {
       el.textContent = fmtCount(cur + 1);
     }
   });
+
+  const apiKey = aiProvider && localStorage.getItem(`aiApiKey:${aiProvider.keyId}`);
+  if (aiProvider && apiKey) {
+    openAIChat(currentEngine, query);
+    return;
+  }
 
   if (query.match(/^https?:\/\//)) {
     window.location.href = query;
@@ -501,6 +614,310 @@ function doSearch(query) {
     let url = e.url + encodeURIComponent(query);
     if (e.tbm) url += "&tbm=" + e.tbm;
     window.location.href = url;
+  }
+}
+
+function initAIProviderSettings() {
+  const container = document.getElementById("aiProviderSettings");
+  if (!container) return;
+
+  Object.values(AI_PROVIDERS).forEach((provider) => {
+    const details = document.createElement("details");
+    details.className = "ai-key-provider";
+
+    const summary = document.createElement("summary");
+    summary.textContent = provider.name;
+
+    const content = document.createElement("div");
+    content.className = "ai-key-content";
+
+    const label = document.createElement("label");
+    const inputId = `ai-api-key-${provider.keyId}`;
+    label.htmlFor = inputId;
+    label.textContent = provider.keyLabel;
+
+    const input = document.createElement("input");
+    input.id = inputId;
+    input.type = "password";
+    input.autocomplete = "off";
+    input.spellcheck = false;
+    input.placeholder = "Collez votre clé API";
+    input.className = "ai-key-input";
+    input.setAttribute("aria-describedby", `${inputId}-status`);
+
+    const actions = document.createElement("div");
+    actions.className = "ai-key-actions";
+
+    const saveButton = document.createElement("button");
+    saveButton.type = "button";
+    saveButton.className = "sidebar-btn-small";
+    saveButton.textContent = "Enregistrer";
+
+    const clearButton = document.createElement("button");
+    clearButton.type = "button";
+    clearButton.className = "sidebar-btn-small";
+    clearButton.textContent = "Supprimer";
+
+    const status = document.createElement("p");
+    status.id = `${inputId}-status`;
+    status.className = "ai-key-status";
+    status.setAttribute("role", "status");
+    status.textContent = localStorage.getItem(`aiApiKey:${provider.keyId}`)
+      ? "Une clé est enregistrée dans ce navigateur."
+      : "Aucune clé enregistrée.";
+
+    saveButton.addEventListener("click", () => {
+      const value = input.value.trim();
+      if (!value) {
+        status.textContent = "Collez une clé API avant de l’enregistrer.";
+        input.focus();
+        return;
+      }
+
+      try {
+        localStorage.setItem(`aiApiKey:${provider.keyId}`, value);
+        input.value = "";
+        status.textContent = "Clé enregistrée dans ce navigateur.";
+      } catch (error) {
+        console.error("Impossible d’enregistrer la clé API.", error);
+        status.textContent =
+          "Enregistrement impossible. Vérifiez les paramètres de stockage du navigateur.";
+      }
+    });
+
+    clearButton.addEventListener("click", () => {
+      localStorage.removeItem(`aiApiKey:${provider.keyId}`);
+      input.value = "";
+      status.textContent = "Clé supprimée de ce navigateur.";
+    });
+
+    actions.append(saveButton, clearButton);
+    content.append(label, input, actions, status);
+    details.append(summary, content);
+    container.appendChild(details);
+  });
+
+  const copilotNotice = document.createElement("p");
+  copilotNotice.className = "ai-key-provider-notice";
+  copilotNotice.textContent =
+    "Copilot : Microsoft ne propose pas de clé API publique pour les discussions personnelles. La sélection Copilot continue d’ouvrir son site.";
+  container.appendChild(copilotNotice);
+}
+
+let activeAIEngine = null;
+let aiChatMessages = [];
+let aiChatBusy = false;
+
+function initAIChat() {
+  const form = document.getElementById("aiChatForm");
+  const input = document.getElementById("aiChatInput");
+  const overlay = document.getElementById("aiChatModal");
+  if (!form || !input || !overlay) return;
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const message = input.value.trim();
+    if (!message || aiChatBusy) return;
+    input.value = "";
+    input.style.height = "";
+    sendAIMessage(message);
+  });
+
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      form.requestSubmit();
+    }
+  });
+
+  input.addEventListener("input", () => {
+    input.style.height = "auto";
+    input.style.height = `${Math.min(input.scrollHeight, 140)}px`;
+  });
+
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) closeAIChat();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && overlay.classList.contains("active")) {
+      closeAIChat();
+    }
+  });
+}
+
+function openAIChat(engineId, initialPrompt) {
+  const provider = AI_PROVIDERS[engineId];
+  if (!provider) return;
+
+  activeAIEngine = engineId;
+  aiChatMessages = [];
+  aiChatBusy = false;
+  document.getElementById("aiChatTitle").textContent = provider.name;
+  document.getElementById("aiChatProvider").textContent =
+    `Discussion avec ${provider.name}`;
+  document.getElementById("aiChatMessages").replaceChildren();
+  document.getElementById("aiChatStatus").textContent = "";
+  document.getElementById("aiChatInput").value = "";
+  document.getElementById("aiChatSend").disabled = false;
+  openModal("aiChatModal");
+  sendAIMessage(initialPrompt);
+  setTimeout(() => document.getElementById("aiChatInput").focus(), 0);
+}
+
+function closeAIChat() {
+  closeModal("aiChatModal");
+  document.getElementById("aiChatInput").blur();
+}
+
+function addAIChatMessage(role, text) {
+  const list = document.getElementById("aiChatMessages");
+  const row = document.createElement("div");
+  row.className = `ai-chat-message ${role}`;
+
+  const bubble = document.createElement("div");
+  bubble.className = "ai-chat-bubble";
+  bubble.textContent = text;
+  row.appendChild(bubble);
+  list.appendChild(row);
+  list.scrollTop = list.scrollHeight;
+  return row;
+}
+
+async function requestAIResponse(provider, apiKey, messages) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 60000);
+  const headers = { "Content-Type": "application/json" };
+  let body;
+
+  if (provider.type === "anthropic") {
+    headers["x-api-key"] = apiKey;
+    headers["anthropic-version"] = "2023-06-01";
+    headers["anthropic-dangerous-direct-browser-access"] = "true";
+    body = JSON.stringify({
+      model: provider.model,
+      max_tokens: 1200,
+      messages,
+    });
+  } else if (provider.type === "gemini") {
+    headers["x-goog-api-key"] = apiKey;
+    body = JSON.stringify({
+      contents: messages.map((message) => ({
+        role: message.role === "assistant" ? "model" : "user",
+        parts: [{ text: message.content }],
+      })),
+      generationConfig: { maxOutputTokens: 1200 },
+    });
+  } else {
+    headers.Authorization = `Bearer ${apiKey}`;
+    body = JSON.stringify({
+      model: provider.model,
+      messages,
+      max_tokens: 1200,
+    });
+  }
+
+  try {
+    const response = await fetch(provider.endpoint, {
+      method: "POST",
+      headers,
+      body,
+      signal: controller.signal,
+    });
+
+    let data;
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error(`Le fournisseur a renvoyé une réponse invalide (HTTP ${response.status}).`);
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        data.error?.message ||
+          data.message ||
+          `La requête a échoué (HTTP ${response.status}). Vérifiez la clé et les droits API.`,
+      );
+    }
+
+    let text;
+    if (provider.type === "anthropic") {
+      text = data.content
+        ?.filter((part) => part.type === "text")
+        .map((part) => part.text)
+        .join("\n");
+    } else if (provider.type === "gemini") {
+      text = data.candidates?.[0]?.content?.parts
+        ?.map((part) => part.text || "")
+        .join("");
+      if (!text && data.promptFeedback?.blockReason) {
+        throw new Error("La demande a été bloquée par les règles du fournisseur.");
+      }
+    } else {
+      const content = data.choices?.[0]?.message?.content;
+      text = Array.isArray(content)
+        ? content.map((part) => part.text || "").join("")
+        : content;
+    }
+
+    if (typeof text !== "string" || !text.trim()) {
+      throw new Error("Le fournisseur n’a renvoyé aucun texte de réponse.");
+    }
+    return text.trim();
+  } catch (error) {
+    if (error.name === "AbortError") {
+      throw new Error("La requête a dépassé une minute. Réessayez.");
+    }
+    if (error instanceof TypeError) {
+      throw new Error(
+        "Connexion impossible. Vérifiez Internet et la prise en charge des requêtes depuis le navigateur par ce fournisseur.",
+      );
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+async function sendAIMessage(message) {
+  if (!activeAIEngine || aiChatBusy || !message) return;
+
+  const provider = AI_PROVIDERS[activeAIEngine];
+  const apiKey = localStorage.getItem(`aiApiKey:${provider.keyId}`);
+  if (!apiKey) {
+    document.getElementById("aiChatStatus").textContent =
+      "Aucune clé enregistrée. Ajoutez-la dans la barre latérale.";
+    return;
+  }
+
+  aiChatMessages.push({ role: "user", content: message });
+  addAIChatMessage("user", message);
+  const status = document.getElementById("aiChatStatus");
+  const sendButton = document.getElementById("aiChatSend");
+  const typing = document.createElement("div");
+  typing.className = "ai-chat-message assistant";
+  typing.innerHTML =
+    '<div class="ai-chat-bubble ai-chat-typing" aria-label="Réponse en cours"><span></span><span></span><span></span></div>';
+  document.getElementById("aiChatMessages").appendChild(typing);
+  document.getElementById("aiChatMessages").scrollTop =
+    document.getElementById("aiChatMessages").scrollHeight;
+  status.textContent = "Réponse en cours…";
+  sendButton.disabled = true;
+  aiChatBusy = true;
+
+  try {
+    const answer = await requestAIResponse(provider, apiKey, aiChatMessages);
+    aiChatMessages.push({ role: "assistant", content: answer });
+    addAIChatMessage("assistant", answer);
+    status.textContent = "";
+  } catch (error) {
+    console.error(`Échec de la discussion avec ${provider.name}.`, error);
+    status.textContent = error.message;
+  } finally {
+    typing.remove();
+    sendButton.disabled = false;
+    aiChatBusy = false;
+    document.getElementById("aiChatInput").focus();
   }
 }
 
@@ -740,7 +1157,18 @@ function renderShortcuts() {
 
     const iconDiv = document.createElement("div");
     iconDiv.className = "shortcut-icon";
-    iconDiv.innerHTML = `<img src="${s.icon}" alt="${escHtml(s.name)}" onerror="this.style.display='none';this.parentElement.textContent='${escHtml(s.name[0].toUpperCase())}'">`;
+    const icon = document.createElement("img");
+    icon.alt = "";
+    icon.setAttribute("aria-hidden", "true");
+    icon.src = s.icon || "images/search.png";
+    icon.addEventListener("error", () => {
+      icon.hidden = true;
+      const fallback = document.createElement("span");
+      fallback.className = "shortcut-icon-fallback";
+      fallback.textContent = s.name.charAt(0).toUpperCase();
+      iconDiv.appendChild(fallback);
+    }, { once: true });
+    iconDiv.appendChild(icon);
     a.appendChild(iconDiv);
 
     const label = document.createElement("span");
@@ -932,21 +1360,28 @@ function initNotes() {
 }
 
 function applyVisibility() {
-  document.getElementById("timeSection").style.display = showTime ? "" : "none";
-  document.getElementById("weatherSection").style.display = showWeather
-    ? ""
-    : "none";
-  document.getElementById("notesSection").style.display = showNotes
-    ? ""
-    : "none";
-  document.getElementById("shortcutsSection").style.display = showShortcuts
-    ? ""
-    : "none";
-  document.getElementById("toggleTime").checked = showTime;
-  document.getElementById("toggleWeather").checked = showWeather;
-  document.getElementById("toggleNotes").checked = showNotes;
-  document.getElementById("toggleShortcuts").checked = showShortcuts;
-  document.getElementById("toggleSuggestions").checked = suggestionsEnabled;
+  const visibility = [
+    ["timeSection", showTime],
+    ["weatherSection", showWeather],
+    ["notesSection", showNotes],
+    ["shortcutsSection", showShortcuts],
+  ];
+  visibility.forEach(([id, visible]) => {
+    const section = document.getElementById(id);
+    if (section) section.style.display = visible ? "" : "none";
+  });
+
+  const toggles = [
+    ["toggleTime", showTime],
+    ["toggleWeather", showWeather],
+    ["toggleNotes", showNotes],
+    ["toggleShortcuts", showShortcuts],
+    ["toggleSuggestions", suggestionsEnabled],
+  ];
+  toggles.forEach(([id, checked]) => {
+    const toggle = document.getElementById(id);
+    if (toggle) toggle.checked = checked;
+  });
 }
 
 function initToggles() {
@@ -960,33 +1395,55 @@ function initToggles() {
     });
   }
 
-  document.getElementById("toggleTime").addEventListener("change", (e) => {
-    showTime = e.target.checked;
-    localStorage.setItem("showTime", showTime);
-    document.getElementById("timeSection").style.display = showTime
-      ? ""
-      : "none";
-  });
-  document.getElementById("toggleWeather").addEventListener("change", (e) => {
-    showWeather = e.target.checked;
-    localStorage.setItem("showWeather", showWeather);
-    document.getElementById("weatherSection").style.display = showWeather
-      ? ""
-      : "none";
-  });
-  document.getElementById("toggleNotes").addEventListener("change", (e) => {
-    showNotes = e.target.checked;
-    localStorage.setItem("showNotes", showNotes);
-    document.getElementById("notesSection").style.display = showNotes
-      ? ""
-      : "none";
-  });
-  document.getElementById("toggleShortcuts").addEventListener("change", (e) => {
-    showShortcuts = e.target.checked;
-    localStorage.setItem("showShortcuts", showShortcuts);
-    document.getElementById("shortcutsSection").style.display = showShortcuts
-      ? ""
-      : "none";
+  const visibilityToggles = [
+    [
+      "toggleTime",
+      "timeSection",
+      "showTime",
+      () => showTime,
+      (value) => (showTime = value),
+    ],
+    [
+      "toggleWeather",
+      "weatherSection",
+      "showWeather",
+      () => showWeather,
+      (value) => (showWeather = value),
+    ],
+    [
+      "toggleNotes",
+      "notesSection",
+      "showNotes",
+      () => showNotes,
+      (value) => (showNotes = value),
+    ],
+    [
+      "toggleShortcuts",
+      "shortcutsSection",
+      "showShortcuts",
+      () => showShortcuts,
+      (value) => (showShortcuts = value),
+    ],
+  ];
+  visibilityToggles.forEach(
+    ([toggleId, sectionId, storageKey, getValue, setValue]) => {
+      const toggle = document.getElementById(toggleId);
+      if (!toggle) return;
+      toggle.checked = getValue();
+      toggle.addEventListener("change", (event) => {
+        setValue(event.target.checked);
+        localStorage.setItem(storageKey, event.target.checked);
+        const section = document.getElementById(sectionId);
+        if (section) section.style.display = event.target.checked ? "" : "none";
+      });
+    });
+
+  document.querySelectorAll(".setting-row").forEach((row) => {
+    row.addEventListener("click", (event) => {
+      if (event.target.closest("input, label, button")) return;
+      const toggle = row.querySelector('input[type="checkbox"]');
+      if (toggle && !toggle.disabled) toggle.click();
+    });
   });
 
   const counterToggle = document.getElementById("toggleCounter");
@@ -1268,6 +1725,11 @@ function resetPreferences() {
     "notes",
     "shortcuts",
     "visited",
+    "aiApiKey:openai",
+    "aiApiKey:anthropic",
+    "aiApiKey:gemini",
+    "aiApiKey:perplexity",
+    "aiApiKey:mistral",
   ];
   keys.forEach((key) => localStorage.removeItem(key));
   location.reload();

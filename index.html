@@ -130,7 +130,7 @@
 
             <div class="sidebar-counter-value" id="sidebar-search-count">-</div>
             <div class="sidebar-counter-sub" id="sidebar-count-today"></div>
-            <br>
+            <br />
             <div class="setting-row">
               <span>Bloquer</span>
               <label class="switch">
@@ -164,32 +164,30 @@
             </label>
           </div>
           <div class="setting-row">
-            <span>Renforcer la securité</span>
-            <label class="switch">
-              <input type="checkbox" id="toggletab" checked />
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="setting-row">
             <span>Focus auto sur recherche</span>
             <label class="switch">
-              <input type="checkbox" id="toggleAutoFocus" />
+              <input type="checkbox" id="toggleAutoFocus" checked />
               <span class="slider"></span>
             </label>
           </div>
           <div class="setting-row">
             <span>Afficher les propositions</span>
             <label class="switch">
-              <input type="checkbox" id="toggleSuggestions" />
+              <input type="checkbox" id="toggleSuggestions" checked />
               <span class="slider"></span>
             </label>
           </div>
         </div>
         <div class="sidebar-section">
+          <div class="sidebar-section-title">Clés API des assistants</div>
+          <p class="api-key-notice">
+            Les clés sont conservées dans ce navigateur et envoyées directement
+            au fournisseur choisi. Ne les saisissez pas sur un appareil partagé.
+          </p>
+          <div id="aiProviderSettings"></div>
+        </div>
+        <div class="sidebar-section">
           <div class="sidebar-section-title">Confidentialité</div>
-          <button class="sidebar-btn" onclick="clearNotes()">
-            Effacer les notes
-          </button>
           <button class="sidebar-btn" onclick="resetPreferences()">
             Réinitialiser les paramètres
           </button>
@@ -205,23 +203,9 @@
             </label>
           </div>
           <div class="setting-row">
-            <span>Afficher la météo</span>
-            <label class="switch">
-              <input type="checkbox" id="toggleWeather" />
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="setting-row">
-            <span>Afficher les notes</span>
-            <label class="switch">
-              <input type="checkbox" id="toggleNotes" />
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="setting-row">
             <span>Afficher les raccourcis</span>
             <label class="switch">
-              <input type="checkbox" id="toggleShortcuts" checked />
+              <input type="checkbox" id="toggleShortcuts" />
               <span class="slider"></span>
             </label>
           </div>
@@ -270,9 +254,6 @@
           >
             README
           </button>
-          <button class="sidebar-btn" onclick="window.open('howto.html')">
-            Comment utiliser
-          </button>
         </div>
         <div class="sidebar-section-info">
           <div class="sidebar-section-title-info">Informations</div>
@@ -286,7 +267,7 @@
             >Consulter le code source</a
           >
           <br />
-          <p>Version : 3.0.51</p>
+          <p>Version : 3.1.156</p>
         </div>
       </div>
     </aside>
@@ -354,7 +335,8 @@
               <div
                 class="engine-dropdown-menu"
                 id="engineDropdownMenu"
-                role="listbox"
+                role="group"
+                aria-label="Moteurs de recherche"
               >
                 <!-- Populated by JS -->
               </div>
@@ -609,6 +591,72 @@
           </button>
         </div>
       </div>
+    </div>
+
+    <!-- AI CHAT MODAL -->
+    <div class="modal-overlay ai-chat-overlay" id="aiChatModal">
+      <section
+        class="ai-chat-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="aiChatTitle"
+      >
+        <header class="ai-chat-header">
+          <div>
+            <div class="modal-title" id="aiChatTitle">Discussion</div>
+            <p class="ai-chat-provider" id="aiChatProvider"></p>
+          </div>
+          <button
+            class="ai-chat-close"
+            type="button"
+            onclick="closeAIChat()"
+            aria-label="Fermer la discussion"
+            title="Fermer"
+          >
+            ×
+          </button>
+        </header>
+        <div
+          class="ai-chat-messages"
+          id="aiChatMessages"
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions text"
+        ></div>
+        <p class="ai-chat-status" id="aiChatStatus" role="status"></p>
+        <form class="ai-chat-composer" id="aiChatForm">
+          <textarea
+            id="aiChatInput"
+            rows="1"
+            maxlength="12000"
+            placeholder="Écrivez votre message…"
+            aria-label="Votre message"
+            required
+          ></textarea>
+          <button
+            class="ai-chat-send"
+            id="aiChatSend"
+            type="submit"
+            aria-label="Envoyer"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="M22 2 11 13" />
+              <path d="m22 2-7 20-4-9-9-4Z" />
+            </svg>
+          </button>
+        </form>
+        <p class="ai-chat-disclaimer">
+          Les réponses sont générées par le fournisseur sélectionné.
+        </p>
+      </section>
     </div>
 
     <script src="index.js"></script>

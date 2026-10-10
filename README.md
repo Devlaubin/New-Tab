@@ -31,6 +31,7 @@ Une page **New Tab** personnalisable : thème, sidebar paramètres, moteur de re
 - **Thème** : choix d’une couleur/gradient (modal “Choisir un thème”)
 - **Mode sombre** : toggle persistant (`localStorage.themeMode`)
 - **Moteur de recherche** : sélection entre les moteurs classiques et les assistants IA (ChatGPT, Claude, Gemini, Perplexity, Copilot et Le Chat), qui ouvrent une nouvelle recherche ou discussion avec la demande saisie
+- **Discussions IA intégrées** : ajoutez une clé API OpenAI, Anthropic, Google AI, Perplexity ou Mistral dans la barre latérale pour discuter dans une fenêtre intégrée ; sans clé, l’assistant continue de s’ouvrir sur son site. Les clés sont enregistrées dans le `localStorage` du navigateur et envoyées directement au fournisseur. Copilot reste en redirection, Microsoft ne proposant pas de clé API publique pour ses discussions personnelles.
 - **Recherche privée** : ouverture dans un moteur différent (modal via bouton)
 - **Suggestions** : auto-complétion via Google Suggest
 - **Raccourcis** : grille de raccourcis + ajout/édition/suppression
